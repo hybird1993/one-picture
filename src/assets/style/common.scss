@@ -1,0 +1,46 @@
+.panel-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+  .panel-title {
+    height: 36px;
+    line-height: 36px;
+    z-index: 15;
+    font-size: 16px;
+  }
+
+  .panel-content {
+    flex: 1;
+    user-select: none;
+  }
+}
+
+.over-hide {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-btn {
+  background-image: linear-gradient(0deg,
+      rgba(18, 112, 172, 0.8) 0%,
+      rgba(12, 125, 168, 0.8) 0%,
+      rgba(6, 138, 163, 0.8) 0%,
+      rgba(9, 84, 99, 0.8) 42%,
+      rgba(12, 29, 35, 0.8) 100%),
+    linear-gradient(#3c1443, #3c1443);
+  background-blend-mode: normal, normal;
+  border: solid 1px #1ebdde;
+}
+
+.btn-small {
+  width: 90px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.chart-title /deep/ .el-radio__label {
+  color: #fff;
+}
