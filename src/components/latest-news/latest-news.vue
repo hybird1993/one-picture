@@ -3,14 +3,16 @@
     <div class="panel-title">最新资讯</div>
     <el-scrollbar class="panel-content">
       <ul>
-        <li v-for="item of list" class="over-hide" :key="item.id">{{item.title}}</li>
+        <li v-for="item of list" class="over-hide" :key="item.id">
+          {{item.title}}
+        </li>
       </ul>
     </el-scrollbar>
   </div>
 </template>
 
 <script>
-import {API} from '../../request/api';
+import { API } from "../../request/api";
 export default {
   name: "latest-news",
   data() {
@@ -24,18 +26,19 @@ export default {
   methods: {
     getLatestNews() {
       const self = this;
-      API.getLatestNews().then(res => {
-        console.log(res);
-        self.list = res.list.map(item => {
-          return {
-            id: item.newsId,
-            title: item.title,
-          }
-        })
-      }, err => {
-
-      })
-    }
+      API.getLatestNews().then(
+        res => {
+          console.log(res);
+          self.list = res.list.map(item => {
+            return {
+              id: item.newsId,
+              title: item.title
+            };
+          });
+        },
+        err => {}
+      );
+    },
   }
 };
 </script>

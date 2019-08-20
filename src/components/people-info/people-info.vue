@@ -44,6 +44,16 @@ export default {
         labels: ["户籍人口", "重点青少年"]
       };
     });
+    this.getPeopleInfo();
+  },
+  methods: {
+    getPeopleInfo() {
+      API.getPeopleInfo().then(res => {
+
+      }, err => {
+
+      })
+    }
   }
 };
 </script>

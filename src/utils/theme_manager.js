@@ -1,5 +1,8 @@
 import $ from 'jquery';
-import THEME_CONFIG from './theme.config';
+import {
+  THEME_CONFIG,
+  BG_OBJ
+} from './theme.config';
 
 function ThemeManager() {
 
@@ -73,7 +76,7 @@ function StarSkyTheme() {
 
   this.setOption = function (options) {
     numPoints = parseInt(options.star_num);
-    w_b = options.animatebg;
+    w_b = BG_OBJ['starsky'][options.animatebg];
     fov = parseInt(options.star_depth);
     speed = 100 - parseInt(options.star_speed);
   }

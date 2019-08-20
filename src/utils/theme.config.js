@@ -199,5 +199,20 @@ const THEME_CONFIG = {
     ]
   }
 }
-
-export default THEME_CONFIG;
+const BG_OBJ = {};
+Object.keys(THEME_CONFIG).forEach(item => {
+   if (THEME_CONFIG[item]['config']) {
+    BG_OBJ[item] = {};
+    THEME_CONFIG[item]['config'].forEach(_item => {
+      if (_item.name === 'animatebg') {
+        _item.bgcolor.forEach(bg => {
+          BG_OBJ[item][bg.id] = bg.bg;
+        })
+      }
+    })
+   }
+})
+export {
+  THEME_CONFIG,
+  BG_OBJ
+};

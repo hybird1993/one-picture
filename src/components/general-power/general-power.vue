@@ -8,26 +8,51 @@
 </template>
 
 <script>
-import {API} from '../../request/api';
+import { API } from "../../request/api";
 export default {
   name: "general-power",
+  data() {
+    return {
+      powerChart: null
+    };
+  },
   mounted() {
-    this.drawLine(false);
+    this.initChart();
+    this.getPowerStatistics();
   },
   methods: {
-    drawLine(isanimation) {
+    initChart() {
       const self = this;
       // 绘制图表
-      let myChart = self.$echarts.init(document.getElementById("pieChart"));
-      myChart.setOption({
+      self.powerChart = self.$echarts.init(document.getElementById("pieChart"));
+    },
+    getPowerStatistics() {
+      const self = this;
+      API.getPowerStatistics().then(
+        res => {
+          const data = res.map(item => {
+            return {
+              name: item.groupName,
+              value: item.onlineStat["编制"]
+            };
+          });
+          const total = data.reduce((pre, next) => {
+            return pre + next.value;
+          }, 0);
+          self.powerChart.setOption(self.setChartOption(data, total));
+        },
+        err => {}
+      );
+    },
+    setChartOption(data = [], total) {
+      return {
         title: {
-          text: "586",
-          x: "45%",
-          y: "45%",
+          text: total,
+          x: "center",
+          y: "center",
           textStyle: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            color: "rgba(255, 255, 255)",
-             align:"center",
+            color: "rgba(255, 255, 255)"
           }
         },
         tooltip: {
@@ -79,17 +104,11 @@ export default {
               }
             },
             color: ["#fac007", "#5551a8", "#1aa980", "#f86531", "#53c9ce"],
-            data: [
-              { value: 15, name: "保安" },
-              { value: 10, name: "协警" },
-              { value: 25, name: "警察" },
-              { value: 35, name: "网格员" },
-              { value: 40, name: "自愿者" }
-            ]
+            data: data
           }
         ],
-        animation: isanimation
-      });
+        animation: false
+      };
     }
   }
 };

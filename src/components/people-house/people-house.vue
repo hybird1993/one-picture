@@ -10,14 +10,14 @@
               <img class="statistics-bg" src="../../assets/image/icon-text-bg.png" />
               <div class="statistics-title">重点人口</div>
               <div class="statistics-value">
-                <span>137</span>人
+                <span>{{keyPersonCount}}</span>人
               </div>
             </div>
             <div class="statistics-text">
               <img class="statistics-bg" src="../../assets/image/icon-text-bg.png" />
               <div class="statistics-title">实有人口</div>
               <div class="statistics-value">
-                <span>137</span>人
+                <span>{{personCount}}</span>人
               </div>
             </div>
           </div>
@@ -29,7 +29,7 @@
               <img class="statistics-bg" src="../../assets/image/icon-text-bg.png" />
               <div class="statistics-title">实有房屋总数</div>
               <div class="statistics-value">
-                <span>1376</span>间
+                <span>{{houseCount}}</span>间
               </div>
             </div>
           </div>
@@ -44,99 +44,88 @@ import { API } from "../../request/api";
 import { setTimeout } from "timers";
 export default {
   name: "people-house",
+  data() {
+    return {
+      houseChart: null,
+      peopleChart: null,
+      houseCount: "",
+      personCount: "",
+      keyPersonCount: "",
+      color1: ["#fac007", "#6560c1", "#3793d9", "#20eeac"],
+      color2: ["#f0a724", "#5551a8", "#256ca7", "#16a98a"],
+    };
+  },
   mounted() {
     const self = this;
-    self.drawChart();
-    setTimeout(() => {
-      self.getPeopleInfo();
-      self.getHouseInfo();
-    }, 1000);
+    self.initChart();
+    self.getPeopleStatistics();
+    self.getHouseStatistics();
   },
   methods: {
-    drawChart(isanimation) {
+    initChart() {
       const self = this;
       console.log(self.$echarts);
       // 基于准备好的dom，初始化echarts实例
-      let myChart1 = self.$echarts.init(document.getElementById("peoplepie"));
-      let myChart2 = self.$echarts.init(document.getElementById("housepie"));
-      myChart1.setOption(
-        {
-          title: {
-            text: "586",
-            x: "center",
-            y: "center",
-            textStyle: {
-              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-              color: "rgba(255, 255, 255)"
-            }
-          },
-          tooltip: {
-            show: true,
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-            show: false
-          },
-          calculable: true,
-          series: [
-            {
-              name: "访问来源",
-              type: "pie",
-              center: ["50%", "50%"],
-              radius: [30, 70],
-              //标签
-              label: {
-                normal: {
-                  show: true,
-                  position: "inside",
-                  textStyle: {
-                    align: "center",
-                    baseline: "middle",
-                    fontFamily: "微软雅黑",
-                    color: "#fff",
-                    fontSize: 8,
-                    fontWeight: "bolder"
-                  }
-                }
-              },
-              data: [
-                { value: 335, name: "直达" },
-                { value: 679, name: "营销广告" },
-                { value: 1548, name: "搜索引擎" }
-              ]
-            },
-            {
-              name: "访问来源",
-              type: "pie",
-              center: ["50%", "50%"],
-              radius: [70, 100],
-              //标签
-              label: {
-                normal: {
-                  show: true,
-                  position: "inside",
-                  textStyle: {
-                    align: "center",
-                    baseline: "middle",
-                    fontFamily: "微软雅黑",
-                    color: "#fff",
-                    fontSize: 8,
-                    fontWeight: "bolder"
-                  }
-                }
-              },
-              data: [
-                { value: 1048, name: "百度" },
-                { value: 147, name: "其他" }
-              ]
-            }
-          ],
-          animation: isanimation
-        },
-        true
+      self.peopleChart = self.$echarts.init(
+        document.getElementById("peoplepie")
       );
-
-      myChart2.setOption({
+      self.houseChart = self.$echarts.init(document.getElementById("housepie"));
+    },
+    getPeopleStatistics() {
+      const self = this;
+      API.getPeopleStatistics().then(
+        res => {
+          console.log(res);
+          const color1 = [];
+          const data1 = Object.keys(res.detail).map((item, index) => {
+            color1.push(self.color1[index]);
+            return {
+              value: res.detail[item]["total"],
+              name: item,
+            };
+          });
+          console.log(data1)
+          const data2 = [], color2 = [];
+          data1.forEach((_item, index) => {
+            const _arr = Object.keys(res.detail[_item["name"]])
+              .filter(item => item !== "total")
+              .map(item => {
+                color2.push(self.color2[index]);
+                return {
+                  value: res.detail[_item["name"]][item],
+                  name: item,
+                };
+              });
+            data2.push(..._arr);
+          });
+          console.log(data2);
+          self.keyPersonCount = res.focal;
+          self.personCount = res.total;
+          self.peopleChart.setOption(self.getPeopleChartOption(data1, data2, color1, color2));
+        },
+        err => {}
+      );
+    },
+    getHouseStatistics() {
+      const self = this;
+      API.getHouseStatistics().then(
+        res => {
+          const data = Object.keys(res)
+            .filter(item => item !== "total")
+            .map(item => {
+              return {
+                value: res[item],
+                name: item
+              };
+            });
+          self.houseChart.setOption(self.getHouseChartOption(data));
+          self.houseCount = res.total;
+        },
+        err => {}
+      );
+    },
+    getHouseChartOption(data = []) {
+      return {
         // title: {
         //   text: "34.6%",
         //   subtext: "商铺",
@@ -150,6 +139,72 @@ export default {
         // },
         tooltip: {
           show: true,
+          formatter: "{b} : {c} ({d}%)"
+        },
+        legend: {
+          show: false
+        },
+        calculable: true,
+        color: [
+          "#f86531",
+          "#fac007",
+          "#3c9ce5",
+          "#5551a8",
+          "#5551a8",
+          "#23ffb4"
+        ],
+        series: [
+          {
+            type: "pie",
+            clockWise: true,
+            startAngle: 135,
+            minAngle: 20,
+            center: ["50%", "50%"],
+            radius: [50, 80],
+            //标签
+            label: {
+              normal: {
+                show: true,
+                position: "inside",
+                textStyle: {
+                  align: "center",
+                  baseline: "middle",
+                  fontFamily: "微软雅黑",
+                  color: "#fff",
+                  fontSize: 8,
+                  fontWeight: "bolder"
+                }
+              }
+              // emphasis: {
+              //   show: true,
+              //   position: "center",
+              //   textStyle: {
+              //     fontSize: 14,
+              //     fontWeight: "bold"
+              //   },
+              //   formatter: "{b}:{d}%"
+              // }
+            },
+            data: data
+          }
+        ],
+        animation: false
+      };
+    },
+    getPeopleChartOption(data1 = [], data2 = [], color1 = [], color2 = []) {
+      return {
+        title: {
+          text: "人口分布",
+          x: "center",
+          y: "center",
+          textStyle: {
+            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+            color: "rgba(255, 255, 255)",
+            fontSize: 14
+          }
+        },
+        tooltip: {
+          show: true,
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
@@ -158,12 +213,12 @@ export default {
         calculable: true,
         series: [
           {
+            name: "访问来源",
             type: "pie",
-            clockWise: true,
-            startAngle: 135,
             center: ["50%", "50%"],
-            radius: [50, 80],
-
+            startAngle: 135,
+            radius: [30, 70],
+            color: color1,
             //标签
             label: {
               normal: {
@@ -179,33 +234,35 @@ export default {
                 }
               }
             },
-            data: [
-              { value: 335, name: "直达" },
-              { value: 310, name: "邮件营销" },
-              { value: 234, name: "联盟广告" },
-              { value: 135, name: "视频广告" },
-              { value: 1548, name: "搜索引擎" }
-            ]
+            data: data1
+          },
+          {
+            name: "访问来源",
+            type: "pie",
+            center: ["50%", "50%"],
+            startAngle: 135,
+            radius: [70, 100],
+            color: color2,
+            //标签
+            label: {
+              normal: {
+                show: true,
+                position: "inside",
+                textStyle: {
+                  align: "center",
+                  baseline: "middle",
+                  fontFamily: "微软雅黑",
+                  color: "#fff",
+                  fontSize: 8,
+                  fontWeight: "bolder"
+                }
+              }
+            },
+            data: data2
           }
         ],
-        animation: isanimation
-      });
-    },
-    getPeopleInfo() {
-      API.getPeopleInfo().then(
-        res => {
-          console.log(res);
-        },
-        err => {}
-      );
-    },
-    getHouseInfo() {
-      API.getHouseInfo().then(
-        res => {
-          console.log(res);
-        },
-        err => {}
-      );
+        animation: false
+      };
     }
   }
 };
@@ -239,8 +296,12 @@ export default {
         }
         .statistics-value {
           span {
+            display: inline-block;
             color: #ffffff;
             font-size: 24px;
+            min-width: 60px;
+            text-align: right;
+            padding-right: 5px;
           }
         }
       }

@@ -3,6 +3,7 @@
     <div id="themeContainer" style="width: 100%;height: 100%;"></div>
     <!-- 最新资讯 -->
     <div
+      v-if="isLogin"
       class="item-box"
       id="latestNews"
       :style="styleMap.latestNews"
@@ -17,6 +18,7 @@
 
     <!-- 告警视图总览 -->
     <div
+       v-if="isLogin"
       class="item-box"
       id="alarmOverview"
       :style="styleMap.alarmOverview"
@@ -31,6 +33,7 @@
 
     <!-- 通行记录 -->
     <div
+       v-if="isLogin"
       class="item-box"
       id="passRecords"
       :style="styleMap.passRecords"
@@ -45,6 +48,7 @@
 
     <!-- 分项指数 -->
     <div
+       v-if="isLogin"
       class="item-box"
       id="optionIndex"
       :style="styleMap.optionIndex"
@@ -59,6 +63,7 @@
 
     <!-- 人口信息 -->
     <div
+       v-if="isLogin"
       class="item-box"
       id="peopleInfo"
       :style="styleMap.peopleInfo"
@@ -73,6 +78,7 @@
 
     <!-- 人口与房屋 -->
     <div
+       v-if="isLogin"
       class="item-box"
       id="peopleHouse"
       :style="styleMap.peopleHouse"
@@ -87,6 +93,7 @@
 
     <!-- 房屋用电情况 -->
     <div
+       v-if="isLogin"
       class="item-box"
       id="houseElectricity"
       :style="styleMap.houseElectricity"
@@ -101,6 +108,7 @@
 
     <!-- 综治力量 -->
     <div
+       v-if="isLogin"
       class="item-box"
       id="generalPower"
       :style="styleMap.generalPower"
@@ -155,7 +163,8 @@ export default {
       borderWidthCol: "10px", // 列之间border宽度
       itemMinWidth: 468,
       itemMinHeight: 316,
-      borderColor: "rgba(0, 0, 0, 0)"
+      borderColor: "rgba(0, 0, 0, 0)",
+      isLogin: false,   // 是否登录
     };
   },
   mounted() {
@@ -164,6 +173,7 @@ export default {
       res => {
         console.log(res);
         self.init();
+        self.isLogin = true;
       },
       err => {}
     );

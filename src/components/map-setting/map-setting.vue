@@ -83,7 +83,7 @@
   </div>
 </template>
 <script>
-import THEME_CONFIG from "../../utils/theme.config";
+import {THEME_CONFIG} from "../../utils/theme.config";
 import {
   ThemeManager,
   StarSkyTheme,
