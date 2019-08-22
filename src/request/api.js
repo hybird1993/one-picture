@@ -55,11 +55,18 @@ const API = {
   getPeopleInfo: () => get('/pscm/m/dict/get/RESIDENT', {}),
 
   /**
-   * 分项指数
+   * 网格级分项指数
    * param {string} startDate  开始日期  
    * param {string} startDate  结束日期  eg:20190807
    */
-  getOptionIndex: (startDate, endDate) => get('/pscm/m/eval/gridRank', {startDate, endDate}),
+  getGridOptionIndex: (startDate, endDate) => get('/pscm/m/eval/gridRank', {startDate, endDate}),
+  
+  /**
+   * 社区级分项指数
+   * param {string} startDate  开始日期  
+   * param {string} startDate  结束日期  eg:20190807
+   */
+  getCommunityOptionIndex: (startDate, endDate) => get('/pscm/m/eval/community', {startDate, endDate}),
 }
 export {
   API

@@ -18,7 +18,7 @@
 
     <!-- 告警视图总览 -->
     <div
-       v-if="isLogin"
+      v-if="isLogin"
       class="item-box"
       id="alarmOverview"
       :style="styleMap.alarmOverview"
@@ -33,7 +33,7 @@
 
     <!-- 通行记录 -->
     <div
-       v-if="isLogin"
+      v-if="isLogin"
       class="item-box"
       id="passRecords"
       :style="styleMap.passRecords"
@@ -48,7 +48,7 @@
 
     <!-- 分项指数 -->
     <div
-       v-if="isLogin"
+      v-if="isLogin"
       class="item-box"
       id="optionIndex"
       :style="styleMap.optionIndex"
@@ -63,7 +63,7 @@
 
     <!-- 人口信息 -->
     <div
-       v-if="isLogin"
+      v-if="isLogin"
       class="item-box"
       id="peopleInfo"
       :style="styleMap.peopleInfo"
@@ -78,7 +78,7 @@
 
     <!-- 人口与房屋 -->
     <div
-       v-if="isLogin"
+      v-if="isLogin"
       class="item-box"
       id="peopleHouse"
       :style="styleMap.peopleHouse"
@@ -93,7 +93,7 @@
 
     <!-- 房屋用电情况 -->
     <div
-       v-if="isLogin"
+      v-if="isLogin"
       class="item-box"
       id="houseElectricity"
       :style="styleMap.houseElectricity"
@@ -108,7 +108,7 @@
 
     <!-- 综治力量 -->
     <div
-       v-if="isLogin"
+      v-if="isLogin"
       class="item-box"
       id="generalPower"
       :style="styleMap.generalPower"
@@ -164,19 +164,27 @@ export default {
       itemMinWidth: 468,
       itemMinHeight: 316,
       borderColor: "rgba(0, 0, 0, 0)",
-      isLogin: false,   // 是否登录
+      isLogin: false // 是否登录
     };
   },
   mounted() {
     const self = this;
-    API.login("_ONSCREEN", "AF21B8C562854").then(
-      res => {
-        console.log(res);
-        self.init();
-        self.isLogin = true;
-      },
-      err => {}
-    );
+    if (process.env.NODE_ENV === "production") {
+      self.init();
+      self.isLogin = true;
+    } else {
+      API.login("_ONSCREEN", "AF21B8C562854").then(
+        res => {
+          console.log(res);
+          self.init();
+          self.isLogin = true;
+        },
+        err => {
+          self.init();
+          self.isLogin = true;
+        }
+      );
+    }
   },
   methods: {
     init() {

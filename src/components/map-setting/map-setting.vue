@@ -83,7 +83,7 @@
   </div>
 </template>
 <script>
-import {THEME_CONFIG} from "../../utils/theme.config";
+import { THEME_CONFIG } from "../../utils/theme.config";
 import {
   ThemeManager,
   StarSkyTheme,
@@ -91,6 +91,7 @@ import {
   ShootingstarTheme,
   StarplaitTheme
 } from "../../utils/theme_manager";
+import { setTimeout } from "timers";
 export default {
   name: "map-container",
   props: ["itemMap"],
@@ -107,7 +108,8 @@ export default {
     };
   },
   mounted() {
-    this.itemList = [
+    const self = this;
+    self.itemList = [
       { id: "latestNews", name: "最新资讯", checked: true },
       { id: "alarmOverview", name: "告警视图总览", checked: true },
       { id: "generalPower", name: "综治力量", checked: true },
@@ -120,11 +122,11 @@ export default {
     const cacheStyle = localStorage.getItem("cacheStyle");
     if (cacheStyle) {
       const itemMap = new Map(JSON.parse(cacheStyle));
-      this.itemList.forEach(item => {
+      self.itemList.forEach(item => {
         item.checked = itemMap.get(item.id).display === "block";
       });
     }
-    this.themeList = [
+    self.themeList = [
       "default",
       "starsky",
       "starflash",
@@ -138,11 +140,9 @@ export default {
         imgUrl: theme.descImg
       };
     });
-    if (false) {
-    } else {
-      this.activedThemeId = "default";
-    }
-    this.initTheme();
+    setTimeout(() => {
+      self.initTheme();
+    }, 0);
   },
   methods: {
     showMapSetting() {
@@ -156,6 +156,8 @@ export default {
       if (this.type === "theme") {
         this.type = "";
       } else {
+        const themeId = localStorage.getItem("themeId") || "default";
+        this.changeTheme({ id: themeId });
         this.type = "theme";
       }
     },
@@ -171,8 +173,13 @@ export default {
       self.activedThemeId = theme.id;
       const themeObj = self.themeManager.getThemeObj(self.activedThemeId); //取得所需的背景动画对象
       self.paramList = themeObj.getOptionsDefine() || [];
-      if (false) {
+      const themeId = localStorage.getItem("themeId");
+      if (self.activedThemeId === themeId) {
         // 如果有缓存值
+        const config = JSON.parse(localStorage.getItem("themeConfig"));
+        self.paramList.forEach(item => {
+          self.$set(item, "value", config[item.name]);
+        });
       } else {
         self.paramList.forEach(item => {
           self.$set(item, "value", item.default);
@@ -188,10 +195,16 @@ export default {
       console.log(self.activedThemeId);
       console.log(self.paramList);
 
-      const type = self.activedThemeId;
-      self.creatThemeDiv(type);
-      self.themeManager.setThemeName(type);
-      const themeObj = self.themeManager.getThemeObj(type);
+      const themeId = self.activedThemeId;
+      self.creatThemeDiv(themeId);
+      localStorage.setItem("themeId", themeId);
+      // TODO 待优化
+      if (themeId === "default") {
+        self.isShowMapSetting = false;
+        return;
+      }
+      self.themeManager.setThemeName(themeId);
+      const themeObj = self.themeManager.getThemeObj(themeId);
       themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
       const config = {};
       self.paramList.forEach(item => {
@@ -199,6 +212,8 @@ export default {
       });
       themeObj.setOption(config); //初始化主题参数默认
       themeObj.startAnimate();
+      localStorage.setItem("themeConfig", JSON.stringify(config));
+      self.isShowMapSetting = false;
     },
     initTheme() {
       const self = this;
@@ -208,6 +223,19 @@ export default {
       self.themeManager.add("starflash", new ShootingstarTheme());
       self.themeManager.add("starplait", new StarplaitTheme());
       console.log(self.themeManager);
+      const themeId = localStorage.getItem("themeId");
+      if (themeId && themeId !== "default") {
+        self.activedThemeId = themeId;
+        self.creatThemeDiv(themeId);
+        self.themeManager.setThemeName(themeId);
+        const themeObj = self.themeManager.getThemeObj(themeId);
+        themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
+        const config = JSON.parse(localStorage.getItem("themeConfig"));
+        themeObj.setOption(config); //初始化主题参数默认
+        themeObj.startAnimate();
+      } else {
+        self.activedThemeId = "default";
+      }
     },
     useBg(item, param) {
       this.$set(param, "value", item.id);
@@ -215,7 +243,7 @@ export default {
     creatThemeDiv(type) {
       if (type == "clouds") {
         document.getElementById("themeContainer").innerHTML =
-          '<div id="themeBox" style="width: 100%;height: 100%;"><div class="dynamic-area1"></div></div>';
+          '<div id="themeBox" style="width: 100%;height: 100%;"><div id="dynamic-area1" class="dynamic-area1"></div></div>';
       } else {
         document.getElementById("themeContainer").innerHTML =
           '<canvas id="themeBox" style="width: 100%;height: 100%;">Internet Explorer 8 Not Supported</canvas>';

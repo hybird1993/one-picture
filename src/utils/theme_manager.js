@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import {
   THEME_CONFIG,
   BG_OBJ
@@ -60,15 +59,13 @@ function StarSkyTheme() {
   var loop;
   var c; //canvas上下文
   var points = [];
-  var countpaint = 0;
 
   this.setDom = function (domdiv) {
     dom = domdiv;
-    // dom.attr({
-    //   width: SCREEN_WIDTH,
-    //   height: SCREEN_HEIGHT
-    // });
+    dom.width = SCREEN_WIDTH;
+    dom.height = SCREEN_HEIGHT;
   }
+
 
   this.getOptionsDefine = function () {
     return THEME_CONFIG.starsky.config;
@@ -136,7 +133,6 @@ function StarSkyTheme() {
 //云朵
 function CloudsTheme() {
 
-  var s_color = "#FFF";
   var dom;
 
   this.getOptionsDefine = function () {
@@ -149,28 +145,26 @@ function CloudsTheme() {
 
   this.setOption = function (options) {
     var speed = (11 - options.cloud_speed) * 1000;
-    $(".dynamic-area1").css("animation", "posterDrop1 " + speed + "s linear infinite");
-    dom.css("background", options.animatebg);
+    document.getElementById('dynamic-area1').style.animation = `posterDrop1 ${speed}s linear infinite`;
+    dom.style.background = BG_OBJ['clouds'][options.animatebg];
   }
   this.stopAnimate = function () {
-    $(".dynamic-area1").css("animation-play-state", "paused");
-    $(".dynamic-area2").css("animation-play-state", "paused");
+    document.getElementById('dynamic-area1').style.nimationPlayState = "paused";
   }
 
   this.startAnimate = function () {
-    $(".dynamic-area1").css("animation-play-state", "running");
-    $(".dynamic-area2").css("animation-play-state", "running");
+    document.getElementById('dynamic-area1').style.nimationPlayState = "running";
   }
 
 }
 
 
-
+// 流行划过
 function ShootingstarTheme() {
-  var WINDOW_WIDTH = window.screen.width;
   // 屏幕高度
-  var WINDOW_HEIGHT = window.screen.height;
-  var canvas, context;
+  var SCREEN_HEIGHT = window.screen.height;
+  var SCREEN_WIDTH = window.screen.width;
+  var dom, context;
   // 星星数量
   var num;
   // 星星数组
@@ -183,10 +177,8 @@ function ShootingstarTheme() {
 
   this.setDom = function (domdiv) {
     dom = domdiv;
-    // canvas.attr({
-    //   width: WINDOW_WIDTH,
-    //   height: WINDOW_HEIGHT
-    // });
+    dom.width = SCREEN_WIDTH;
+    dom.height = SCREEN_HEIGHT;
     context = dom.getContext('2d');
   }
 
@@ -197,8 +189,8 @@ function ShootingstarTheme() {
   this.setOption = function (options) {
     speed = parseInt(options.flash_speed);
     num = parseInt(options.flash_num);
-    canvas.css("background", options.animatebg);
-    canvas.css("background-size", "cover");
+    dom.style.background = BG_OBJ['starflash'][options.animatebg];
+    dom.style.backgroundSize = "cover";
   }
 
   this.stopAnimate = function () {
@@ -227,10 +219,10 @@ function ShootingstarTheme() {
     img.src="./images2/firstbgb.jpg";
     var pattern = context.createPattern(img, "no-repeat");
     context.fillStyle=pattern;*/
-    context.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     context.fillStyle = 'rgba(0,0,0,0)';
     // 画布位置
-    context.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     for (var i = 0; i < num; i++) {
       var star = stars[i];
       // 画流星
@@ -259,21 +251,21 @@ function ShootingstarTheme() {
       }
       star.x += star.vx;
       // x轴坐标判断
-      if (star.x >= WINDOW_WIDTH) {
-        star.x = Math.random() * WINDOW_WIDTH;
+      if (star.x >= SCREEN_WIDTH) {
+        star.x = Math.random() * SCREEN_WIDTH;
       } else if (star.x < 0) {
-        star.x = Math.random() * WINDOW_WIDTH;
+        star.x = Math.random() * SCREEN_WIDTH;
         star.vx = Math.random() * 0.2 - 0.1;
         star.vy = Math.random() * 0.2 - 0.1;
       }
       star.y += star.vy;
       // y轴坐标判断
-      if (star.y >= WINDOW_HEIGHT) {
-        star.y = Math.random() * WINDOW_HEIGHT;
+      if (star.y >= SCREEN_HEIGHT) {
+        star.y = Math.random() * SCREEN_HEIGHT;
         star.vy = Math.random() * 0.2 - 0.1;
         star.vx = Math.random() * 0.2 - 0.1;
       } else if (star.y < 0) {
-        star.y = Math.random() * WINDOW_HEIGHT;
+        star.y = Math.random() * SCREEN_HEIGHT;
       }
       // 开始绘制
       context.beginPath();
@@ -293,9 +285,9 @@ function ShootingstarTheme() {
     for (var i = 0; i < num; i++) {
       var aStar = {
         // x轴坐标
-        x: Math.round(Math.random() * WINDOW_WIDTH),
+        x: Math.round(Math.random() * SCREEN_WIDTH),
         // y轴坐标
-        y: Math.round(Math.random() * WINDOW_HEIGHT),
+        y: Math.round(Math.random() * SCREEN_HEIGHT),
         // 圆半径
         r: Math.random() * 3,
         ra: Math.random() * 0.05,
@@ -317,24 +309,20 @@ function StarplaitTheme() {
 
   var SCREEN_WIDTH = window.screen.width;
   var SCREEN_HEIGHT = window.screen.height;
-  var canvasEl;
+  var dom;
   var ctx;
-  var easingFactor = 5.0;
   var nodeColor = '#fff';
-  var edgeColor = '#fff';
 
   var nodes = [];
   var edges = [];
-  var num, speed, radio, alpha;
+  var num, speed, radio;
   var loop;
 
   this.setDom = function (domdiv) {
-    canvasEl = domdiv;
-    canvasEl.attr({
-      width: SCREEN_WIDTH,
-      height: SCREEN_HEIGHT
-    });
-    ctx = document.getElementById(canvasEl.attr("id")).getContext('2d');
+    dom = domdiv;
+    dom.width = SCREEN_WIDTH;
+    dom.height = SCREEN_HEIGHT;
+    ctx = dom.getContext('2d');
   }
 
   this.getOptionsDefine = function () {
@@ -346,8 +334,8 @@ function StarplaitTheme() {
     speed = 250 - parseInt(options.plait_speed);
     radio = parseInt(options.plait_radio) / 10;
     //	alpha = parseInt(options.plait_alpha)/10;
-    canvasEl.css("background", options.animatebg);
-    canvasEl.css("background-size", "cover");
+    dom.style.background = BG_OBJ['starplait'][options.animatebg];
+    dom.style.backgroundSize = "cover";
   }
 
   this.stopAnimate = function () {

@@ -4,18 +4,18 @@
     <div class="panel-content">
       <div class="chart-title">
         <div>
-          <el-radio v-model="radio" label="3">社区级</el-radio>
+          <el-radio v-model="radio" label="1">社区级</el-radio>
           <el-radio v-model="radio" label="2">网格级</el-radio>
         </div>
         <div class="date">
-          <span>&lt;</span>
-          {{"2018年 09周"}}
-          <span>&gt;</span>
+          <span @click="preWeek">&lt;</span>
+          {{year}}年&nbsp;{{week}}周
+          <span @click="nextWeek">&gt;</span>
         </div>
       </div>
-      <div class="chart-container">
+      <div v-if="radio === '1'" class="chart-container">
         <div id="indexbar" :style="{width: '340px', height: '230px'}"></div>
-        <el-scrollbar class="panel-content">
+        <el-scrollbar class="chart-content">
           <ul>
             <li v-for="item of list" class="over-hide" :key="item.id">
               <span :class="{'checked': item.checked}"></span>
@@ -38,14 +38,26 @@ const legend6 = require("../../assets/image/icon-legend-6.png");
 const legend7 = require("../../assets/image/icon-legend-7.png");
 const legend8 = require("../../assets/image/icon-legend-8.png");
 import { API } from "../../request/api";
+import { TimeUtil } from "../../utils/time-util";
 export default {
   name: "option-index",
   data() {
     return {
       list: [],
       indexChart: null,
-      radio: 3
+      radio: "1",
+      year: null,
+      week: null,
+      weekList: []
     };
+  },
+  computed: {
+    startDate() {
+      return this.formatDate(this.weekList[this.week - 1].startDate);
+    },
+    endDate() {
+      return this.formatDate(this.weekList[this.week - 1].endDate);
+    }
   },
   mounted() {
     this.initChart();
@@ -56,6 +68,11 @@ export default {
         checked: !!(index % 2)
       };
     });
+
+    const obj = TimeUtil.getWeeksAndDayInYear();
+    this.year = obj.year;
+    this.week = obj.index;
+    this.weekList = obj.list;
     this.getOptionIndex();
   },
   methods: {
@@ -65,12 +82,55 @@ export default {
       self.indexChart.setOption(self.setChartOption());
     },
     getOptionIndex() {
-      API.getOptionIndex("20190818", "20190820").then(
+      if (this.radio === "1") {
+        // 社区级
+        this.getCommunityOptionIndex();
+      } else {
+        // 网格级
+        this.getGridOptionIndex();
+      }
+    },
+    getGridOptionIndex() {
+      API.getGridOptionIndex(this.startDate, this.endDate).then(
         res => {
           console.log(res);
         },
         err => {}
       );
+    },
+    getCommunityOptionIndex() {
+      API.getCommunityOptionIndex(this.startDate, this.endDate).then(
+        res => {
+          console.log(res);
+        },
+        err => {}
+      );
+    },
+    preWeek() {
+      if (this.week === 1) {
+        this.year--;
+        const obj = TimeUtil.getWeeksAndDayInYear();
+        this.week = obj.list.length;
+        this.weekList = obj.list;
+      } else {
+        this.week--;
+      }
+      // this.getOptionIndex();
+    },
+    nextWeek() {
+      if (this.week === this.weekList.length) {
+        this.year++;
+        const obj = TimeUtil.getWeeksAndDayInYear();
+        this.week = 1;
+        this.weekList = obj.list;
+      } else {
+        this.week++;
+      }
+      // this.getOptionIndex();
+    },
+    // 格式化时间
+    formatDate(date) {
+      return TimeUtil.formatDate(date, "yyyyMMdd");
     },
     setChartOption() {
       return {
@@ -135,6 +195,13 @@ export default {
               }
             },
             {
+              name: "其它",
+              icon: "image://" + legend8,
+              textStyle: {
+                color: "#7f58c3"
+              }
+            },
+            {
               name: "弱电告警",
               icon: "image://" + legend6,
               textStyle: {
@@ -146,13 +213,6 @@ export default {
               icon: "image://" + legend7,
               textStyle: {
                 color: "#bdbdbd"
-              }
-            },
-            {
-              name: "其它",
-              icon: "image://" + legend8,
-              textStyle: {
-                color: "#7f58c3"
               }
             }
           ]
@@ -231,6 +291,14 @@ export default {
             data: [91, 25, 9, 95, 34]
           },
           {
+            name: "其它",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#8b531b" } },
+            data: [30, 30, 17, 3, 0]
+          },
+          {
             name: "弱电告警",
             type: "bar",
             barWidth: 25,
@@ -245,14 +313,6 @@ export default {
             stack: "总量",
             itemStyle: { normal: { color: "#9b40d8" } },
             data: [30, 30, 17, 3, 0]
-          },
-          {
-            name: "其它",
-            type: "bar",
-            barWidth: 25,
-            stack: "总量",
-            itemStyle: { normal: { color: "#8b531b" } },
-            data: [30, 30, 17, 3, 0]
           }
         ],
         animation: false
@@ -264,43 +324,46 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
-.chart-title {
-  display: flex;
-  padding: 0 20px;
-  height: 36px;
-  align-items: center;
-  justify-content: space-between;
-  .date {
-    color: #49a9ee;
-    span {
-      cursor: pointer;
-      margin: 0 5px;
+.panel-content {
+  z-index: 20;
+  .chart-title {
+    display: flex;
+    padding: 0 20px;
+    height: 36px;
+    align-items: center;
+    justify-content: space-between;
+    .date {
+      color: #49a9ee;
+      span {
+        cursor: pointer;
+        margin: 0 5px;
+      }
     }
   }
-}
-.chart-container {
-  display: flex;
-  padding-left: 10px;
-  .panel-content {
-    height: 230px;
-    ul li {
-      text-align: left;
-      padding-right: 7px;
-      color: #1ebdde;
-      margin: 2px;
-      span {
-        display: inline-block;
-        width: 6px;
-        height: 12px;
-        border-color: rgba(255, 255, 255, 0);
-        border-style: solid;
-        border-width: 0 3px 3px 0;
-        transform: rotate(45deg);
-        margin-right: 5px;
-        margin-left: 5px;
-      }
-      .checked {
-        border-color: rgba(117, 200, 43, 1);
+  .chart-container {
+    display: flex;
+    padding-left: 10px;
+    .chart-content {
+      height: 230px;
+      ul li {
+        text-align: left;
+        padding-right: 7px;
+        color: #1ebdde;
+        margin: 2px;
+        span {
+          display: inline-block;
+          width: 6px;
+          height: 12px;
+          border-color: rgba(255, 255, 255, 0);
+          border-style: solid;
+          border-width: 0 3px 3px 0;
+          transform: rotate(45deg);
+          margin-right: 5px;
+          margin-left: 5px;
+        }
+        .checked {
+          border-color: rgba(117, 200, 43, 1);
+        }
       }
     }
   }
