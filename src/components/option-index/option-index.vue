@@ -13,17 +13,27 @@
           <span @click="nextWeek">&gt;</span>
         </div>
       </div>
-      <div v-if="radio === '1'" class="chart-container">
+      <div v-show="radio === '1'" class="chart-container">
         <div id="indexbar" :style="{width: '340px', height: '230px'}"></div>
         <el-scrollbar class="chart-content">
           <ul>
-            <li v-for="item of list" class="over-hide" :key="item.id">
+            <li
+              v-for="item of communityList"
+              class="over-hide"
+              :key="item.id"
+              @click="changeItemStatus(item)"
+            >
               <span :class="{'checked': item.checked}"></span>
-              {{item.title}}
+              {{item.orgName}}
             </li>
           </ul>
         </el-scrollbar>
       </div>
+      <div v-show="radio === '2'" class="rank-container">
+        <div id="rankbar" :style="{width: '450px', height: '230px'}"></div>
+           <div style="display:flex;"><div>加油榜</div><div>表扬榜</div></div>
+      </div>
+   
     </div>
   </div>
 </template>
@@ -44,7 +54,11 @@ export default {
   data() {
     return {
       list: [],
+      communityList: [],
+      communityIds: null,
+      gridList: [],
       indexChart: null,
+      rankChart: null,
       radio: "1",
       year: null,
       week: null,
@@ -79,7 +93,9 @@ export default {
     initChart() {
       const self = this;
       self.indexChart = self.$echarts.init(document.getElementById("indexbar"));
-      self.indexChart.setOption(self.setChartOption());
+      self.rankChart = self.$echarts.init(document.getElementById("rankbar"));
+      self.indexChart.setOption(self.setIndexChartOption());
+      self.rankChart.setOption(self.setRankChartOption());
     },
     getOptionIndex() {
       if (this.radio === "1") {
@@ -91,7 +107,8 @@ export default {
       }
     },
     getGridOptionIndex() {
-      API.getGridOptionIndex(this.startDate, this.endDate).then(
+      const self = this;
+      API.getGridOptionIndex(self.startDate, self.endDate).then(
         res => {
           console.log(res);
         },
@@ -99,12 +116,59 @@ export default {
       );
     },
     getCommunityOptionIndex() {
-      API.getCommunityOptionIndex(this.startDate, this.endDate).then(
+      const self = this;
+      API.getCommunityOptionIndex(self.startDate, self.endDate).then(
         res => {
           console.log(res);
+          self.communityList = res.list;
+          self.filterCommunityList(true);
         },
         err => {}
       );
+    },
+    filterCommunityList(isRefresh = false) {
+      const self = this;
+      if (!self.communityIds) {
+        // 默认展示前五条
+        self.list = self.communityList.filter((item, index) => {
+          return index < 5;
+        });
+        self.communityIds = self.list.map(item => item.orgId);
+      } else {
+        self.list = self.communityList.filter((item, index) => {
+          return self.communityIds.includes(item.orgId);
+        });
+      }
+
+      if (isRefresh) {
+        self.communityList.forEach(item => {
+          if (self.communityIds.includes(item.orgId)) {
+            self.$set(item, 'checked', true);
+          }
+        });
+      }
+
+      self.showCommunityListChart();
+    },
+    showCommunityListChart() {
+      const self = this;
+      const xData = self.list.map(item => item.orgName);
+      const seriesData = new Array(8).fill({ data: [] });
+
+      seriesData.forEach((item, index) => {
+        item.data = self.list.map(_item => _item["items"][index]["score"]);
+      });
+      self.indexChart.setOption({
+        xAxis: { data: xData },
+        series: seriesData
+      });
+    },
+    changeItemStatus(item) {
+      this.$set(item, "checked", !item.checked);
+      this.communityIds = this.communityList
+        .filter(item => item.checked)
+        .map(item => item.orgId);
+      this.filterCommunityList();
     },
     preWeek() {
       if (this.week === 1) {
@@ -115,7 +179,7 @@ export default {
       } else {
         this.week--;
       }
-      // this.getOptionIndex();
+      this.getOptionIndex();
     },
     nextWeek() {
       if (this.week === this.weekList.length) {
@@ -126,13 +190,13 @@ export default {
       } else {
         this.week++;
       }
-      // this.getOptionIndex();
+      this.getOptionIndex();
     },
     // 格式化时间
     formatDate(date) {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
-    setChartOption() {
+    setIndexChartOption() {
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
@@ -195,7 +259,7 @@ export default {
               }
             },
             {
-              name: "其它",
+              name: "心理咨询",
               icon: "image://" + legend8,
               textStyle: {
                 color: "#7f58c3"
@@ -253,66 +317,400 @@ export default {
           {
             name: "隐患排查",
             type: "bar",
+            barMaxWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#28a1f7" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "治安事件",
+            type: "bar",
+            barMaxWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#7ac3ff" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "信访相关",
+            type: "bar",
+            barMaxWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#ffb966" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "爱心帮扶",
+            type: "bar",
+            barMaxWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#f14b30" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "矛盾纠纷",
+            type: "bar",
+            barMaxWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#6cb91e" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "心理咨询",
+            type: "bar",
+            barMaxWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#7f58c3" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "弱电告警",
+            type: "bar",
+            barMaxWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#25a59a" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "弱电故障",
+            type: "bar",
+            barMaxWidth:25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#bdbdbd" } },
+            data: [100, 100, 100, 100, 100]
+          }
+        ],
+        animation: false
+      };
+    },
+    setRankChartOption() {
+      return {
+        tooltip: {
+          showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+          },
+          trigger: "axis",
+          formatter: function(params, ticket, callback) {
+            console.log(params);
+            const obj = {};
+            params.forEach(item => {
+              if (!obj[item.axisIndex]) {
+                obj[item.axisIndex] = { name: item.axisValueLabel, data: [] };
+              }
+              obj[item.axisIndex]["data"].push({
+                seriesName: item.seriesName,
+                value: item.value,
+                marker: item.marker
+              });
+            });
+            let str = '<div style="display: flex;padding:5px;">';
+            Object.keys(obj).forEach(item => {
+              str += '<div style="margin:5px;">' + obj[item].name + '</br>';
+              obj[item].data.forEach(_item => {
+                str +=
+                  _item.marker + _item.seriesName + ':' + Math.abs(_item.value) + '</br>';
+              });
+              str += '</div>';
+            });
+            str += '</div>';
+            console.log(str);
+            return str;
+          }
+        },
+        textStyle: {
+          // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+          color: "rgba(255, 255, 255, 0.65)"
+        },
+        legend: {
+          orient: "vertical", //垂直显示
+          y: "center", //延Y轴居中
+          x: "left", //居右显示
+          padding: [15, 0, 0, 0],
+          itemGap: 5,
+          itemWidth: 15,
+          itemHeight: 15,
+          textStyle: {
+            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+            color: "rgba(255, 255, 255, 0.65)"
+          },
+          data: [
+            {
+              name: "隐患排查",
+              icon: "image://" + legend1,
+              textStyle: {
+                color: "#28a1f7"
+              }
+            },
+            {
+              name: "治安事件",
+              icon: "image://" + legend2,
+              textStyle: {
+                color: "#7ac3ff"
+              }
+            },
+            {
+              name: "信访相关",
+              icon: "image://" + legend3,
+              textStyle: {
+                color: "#ffb966"
+              }
+            },
+            {
+              name: "爱心帮扶",
+              icon: "image://" + legend4,
+              textStyle: {
+                color: "#f14b30"
+              }
+            },
+            {
+              name: "矛盾纠纷",
+              icon: "image://" + legend5,
+              textStyle: {
+                color: "#6cb91e"
+              }
+            },
+            {
+              name: "心理咨询",
+              icon: "image://" + legend8,
+              textStyle: {
+                color: "#7f58c3"
+              }
+            },
+            {
+              name: "弱电告警",
+              icon: "image://" + legend6,
+              textStyle: {
+                color: "#25a59a"
+              }
+            },
+            {
+              name: "弱电故障",
+              icon: "image://" + legend7,
+              textStyle: {
+                color: "#bdbdbd"
+              }
+            }
+          ]
+        },
+        calculable: true,
+        grid: {
+          left: "80px",
+          right: "2%",
+          bottom: "1%",
+          top: "10px",
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: "value",
+            axisLabel: { show: false }
+          }
+          //	  boundaryGap : [0, 0]
+        ],
+        yAxis: [
+          {
+            type: "category",
+
+            data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
+            axisLabel: {
+              interval: 0, //横轴信息全部显示
+              rotate: 20 //30度角倾斜显示
+            }
+          },
+          {
+            type: "category",
+            data: ["邬家山村", "大邱村", "湖口村", "汪田村", "九夫村"],
+            axisLabel: {
+              interval: 0, //横轴信息全部显示
+              rotate: -20 //30度角倾斜显示
+            }
+          }
+        ],
+        series: [
+          {
+            name: "隐患排查",
+            type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#cd0400" } },
-            data: [40, 15, 95, 75, 0]
+            itemStyle: { normal: { color: "#28a1f7" } },
+            data: [100, 100, 100, 100, 100]
           },
           {
             name: "治安事件",
             type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#f38f00" } },
-            data: [10, 20, 15, 10, 16]
+            itemStyle: { normal: { color: "#7ac3ff" } },
+            data: [100, 100, 100, 100, 100]
           },
           {
             name: "信访相关",
             type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#f1e000" } },
-            data: [96, 91, 98, 77, 0]
+            itemStyle: { normal: { color: "#ffb966" } },
+            data: [100, 100, 100, 100, 100]
           },
           {
             name: "爱心帮扶",
             type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#5dc800" } },
-            data: [96, 24, 14, 14, 0]
+            itemStyle: { normal: { color: "#f14b30" } },
+            data: [100, 100, 100, 100, 100]
           },
           {
             name: "矛盾纠纷",
             type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#4ce8de" } },
-            data: [91, 25, 9, 95, 34]
+            itemStyle: { normal: { color: "#6cb91e" } },
+            data: [100, 100, 100, 100, 100]
           },
           {
-            name: "其它",
+            name: "心理咨询",
             type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#8b531b" } },
-            data: [30, 30, 17, 3, 0]
+            itemStyle: { normal: { color: "#7f58c3" } },
+            data: [100, 100, 100, 100, 100]
           },
           {
             name: "弱电告警",
             type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#126ae4" } },
-            data: [30, 30, 17, 3, 0]
+            itemStyle: { normal: { color: "#25a59a" } },
+            data: [100, 100, 100, 100, 100]
           },
           {
             name: "弱电故障",
             type: "bar",
             barWidth: 25,
             stack: "总量",
-            itemStyle: { normal: { color: "#9b40d8" } },
-            data: [30, 30, 17, 3, 0]
+            itemStyle: { normal: { color: "#bdbdbd" } },
+            data: [100, 100, 100, 100, 100]
+          },
+          {
+            name: "隐患排查",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#28a1f7" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
+          },
+          {
+            name: "治安事件",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#7ac3ff" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
+          },
+          {
+            name: "信访相关",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#ffb966" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
+          },
+          {
+            name: "爱心帮扶",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#f14b30" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
+          },
+          {
+            name: "矛盾纠纷",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#6cb91e" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
+          },
+          {
+            name: "心理咨询",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#7f58c3" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
+          },
+          {
+            name: "弱电告警",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#25a59a" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
+          },
+          {
+            name: "弱电故障",
+            type: "bar",
+            barWidth: 25,
+            stack: "总量",
+            itemStyle: { normal: { color: "#bdbdbd" } },
+            yAxisIndex: "1",
+            label: {
+              normal: {
+                show: false,
+                position: "left"
+              }
+            },
+            data: [-100, -100, -100, -100, -100]
           }
         ],
         animation: false
@@ -350,6 +748,7 @@ export default {
         padding-right: 7px;
         color: #1ebdde;
         margin: 2px;
+        cursor: pointer;
         span {
           display: inline-block;
           width: 6px;
