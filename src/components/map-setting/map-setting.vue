@@ -112,12 +112,12 @@ export default {
     self.itemList = [
       { id: "latestNews", name: "最新资讯", checked: true },
       { id: "alarmOverview", name: "告警视图总览", checked: true },
+      { id: "alarmList", name: "告警信息", checked: true },
       { id: "generalPower", name: "综治力量", checked: true },
       { id: "optionIndex", name: "分项指数", checked: true },
-      { id: "houseElectricity", name: "房屋用电情况", checked: true },
+      { id: "specialPeople", name: "特殊人口", checked: true },
       { id: "peopleHouse", name: "人口与房屋", checked: true },
-      { id: "passRecords", name: "通行记录", checked: true },
-      { id: "peopleInfo", name: "人口信息", checked: true }
+      { id: "globalIndex", name: "全局指数", checked: true }
     ];
     const cacheStyle = localStorage.getItem("cacheStyle");
     if (cacheStyle) {
@@ -140,9 +140,7 @@ export default {
         imgUrl: theme.descImg
       };
     });
-    setTimeout(() => {
-      self.initTheme();
-    }, 0);
+    self.initTheme();
   },
   methods: {
     showMapSetting() {

@@ -50,8 +50,8 @@ ul {
 }
 li {
   font-size: 12px;
-  height: 25px;
-  line-height: 25px;
+  height: 30px;
+  line-height: 30px;
   padding-left: 20px;
   padding-right: 5px;
   position: relative;

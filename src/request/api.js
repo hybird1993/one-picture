@@ -27,6 +27,32 @@ const API = {
   }),
 
   /**
+   * 告警信息
+   * param {number} pageNum  页码
+   * param {number} pageSize  每页条数
+   */
+  getAlarmList: (pageNum = 1, pageSize = 25) => get('/pscm/m/alarm/info/list', {
+    pageNum,
+    pageSize,
+    alarmType: 'event,weak_elec',
+    statusPriority: 'yes',
+    bigScreen: 'yes'
+  }),
+
+  /**
+   * 特殊人群
+   * param {number} pageNum  页码
+   * param {number} pageSize  每页条数
+   */
+  getSpecialPeopleList: (pageNum = 1, pageSize = 25) => get('/pscm/m/alarm/info/list', {
+    pageNum,
+    pageSize,
+    alarmType: 'label_person',
+    statusPriority: 'yes',
+    bigScreen: 'yes'
+  }),
+
+  /**
    * 人口数据
    */
   getPeopleStatistics: () => get('/pscm/m/resident/statis/focal', {}),
@@ -67,6 +93,13 @@ const API = {
    * param {string} startDate  结束日期  eg:20190807
    */
   getCommunityOptionIndex: (startDate, endDate) => get('/pscm/m/eval/community', {startDate, endDate}),
+
+  /**
+   * 全局指数
+   * param {string} startDate  结束日期  eg:20190807
+   * param {number} amount 周数目 
+   */
+  getGlobalIndex: (endDate, amount = 12) => get('/pscm/m/eval/overallScore', {endDate, field: 'w', amount})
 }
 export {
   API

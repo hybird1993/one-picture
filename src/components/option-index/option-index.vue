@@ -4,8 +4,8 @@
     <div class="panel-content">
       <div class="chart-title">
         <div>
-          <el-radio v-model="radio" label="1">社区级</el-radio>
-          <el-radio v-model="radio" label="2">网格级</el-radio>
+          <el-radio v-model="radio" label="1" @change="getOptionIndex">社区级</el-radio>
+          <el-radio v-model="radio" label="2" @change="getOptionIndex">网格级</el-radio>
         </div>
         <div class="date">
           <span @click="preWeek">&lt;</span>
@@ -31,9 +31,11 @@
       </div>
       <div v-show="radio === '2'" class="rank-container">
         <div id="rankbar" :style="{width: '450px', height: '230px'}"></div>
-           <div style="display:flex;"><div>加油榜</div><div>表扬榜</div></div>
+        <div class="rank-label">
+          <div class="refueling-list">加油榜</div>
+          <div class="praise-list">表扬榜</div>
+        </div>
       </div>
-   
     </div>
   </div>
 </template>
@@ -111,6 +113,7 @@ export default {
       API.getGridOptionIndex(self.startDate, self.endDate).then(
         res => {
           console.log(res);
+          self.showRankListChart(res);
         },
         err => {}
       );
@@ -143,7 +146,7 @@ export default {
       if (isRefresh) {
         self.communityList.forEach(item => {
           if (self.communityIds.includes(item.orgId)) {
-            self.$set(item, 'checked', true);
+            self.$set(item, "checked", true);
           }
         });
       }
@@ -161,6 +164,26 @@ export default {
       self.indexChart.setOption({
         xAxis: { data: xData },
         series: seriesData
+      });
+    },
+    showRankListChart(data) {
+      const self = this;
+      const yData1 = data.top.map(item => item.orgName.split('-')[1]);
+      const yData2 = data.last.map(item => item.orgName.split('-')[1]);
+      const seriesData1 = new Array(8).fill({ data: [] });
+      const seriesData2 = new Array(8).fill({ data: [] });
+
+      seriesData1.forEach((item, index) => {
+        item.data = data.top.map(_item => _item["items"][index]["score"]);
+      });
+      seriesData2.forEach((item, index) => {
+        item.data = data.last.map(_item => {
+          return 0 - _item["items"][index]["score"];
+        });
+      });
+      self.rankChart.setOption({
+        yAxis: [{ data: yData1 }, { data: yData2 }],
+        series: seriesData1.concat(seriesData2)
       });
     },
     changeItemStatus(item) {
@@ -373,7 +396,7 @@ export default {
           {
             name: "弱电故障",
             type: "bar",
-            barMaxWidth:25,
+            barMaxWidth: 25,
             stack: "总量",
             itemStyle: { normal: { color: "#bdbdbd" } },
             data: [100, 100, 100, 100, 100]
@@ -406,14 +429,18 @@ export default {
             });
             let str = '<div style="display: flex;padding:5px;">';
             Object.keys(obj).forEach(item => {
-              str += '<div style="margin:5px;">' + obj[item].name + '</br>';
+              str += '<div style="margin:5px;">' + obj[item].name + "</br>";
               obj[item].data.forEach(_item => {
                 str +=
-                  _item.marker + _item.seriesName + ':' + Math.abs(_item.value) + '</br>';
+                  _item.marker +
+                  _item.seriesName +
+                  ":" +
+                  Math.abs(_item.value) +
+                  "</br>";
               });
-              str += '</div>';
+              str += "</div>";
             });
-            str += '</div>';
+            str += "</div>";
             console.log(str);
             return str;
           }
@@ -763,6 +790,23 @@ export default {
         .checked {
           border-color: rgba(117, 200, 43, 1);
         }
+      }
+    }
+  }
+  .rank-container {
+    padding-left: 10px;
+    .rank-label {
+      display:flex;
+      position: relative;
+      .refueling-list {
+    position: absolute;
+    left: 100px;
+    color: green;
+      }
+      .praise-list {
+    position: absolute;
+    right: 20px;
+    color: red;
       }
     }
   }

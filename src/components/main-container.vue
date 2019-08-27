@@ -32,7 +32,7 @@
     </div>
 
     <!-- 通行记录 -->
-    <div
+    <!-- <div
       v-if="isLogin"
       class="item-box"
       id="passRecords"
@@ -44,6 +44,21 @@
     >
       <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
       <PassRecords></PassRecords>
+    </div>-->
+
+    <!-- 告警信息 -->
+    <div
+      v-if="isLogin"
+      class="item-box"
+      id="alarmList"
+      :style="styleMap.alarmList"
+      draggable="true"
+      @drop="dropEvent($event, 'alarmList')"
+      @dragover.prevent
+      @dragstart="dragStartEvent($event, 'alarmList')"
+    >
+      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
+      <AlarmList></AlarmList>
     </div>
 
     <!-- 分项指数 -->
@@ -62,7 +77,7 @@
     </div>
 
     <!-- 人口信息 -->
-    <div
+    <!-- <div
       v-if="isLogin"
       class="item-box"
       id="peopleInfo"
@@ -74,6 +89,21 @@
     >
       <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
       <PeopleInfo></PeopleInfo>
+    </div>-->
+
+    <!-- 人口信息 -->
+    <div
+      v-if="isLogin"
+      class="item-box"
+      id="globalIndex"
+      :style="styleMap.globalIndex"
+      draggable="true"
+      @drop="dropEvent($event, 'globalIndex')"
+      @dragover.prevent
+      @dragstart="dragStartEvent($event, 'globalIndex')"
+    >
+      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
+      <GlobalIndex></GlobalIndex>
     </div>
 
     <!-- 人口与房屋 -->
@@ -92,7 +122,7 @@
     </div>
 
     <!-- 房屋用电情况 -->
-    <div
+    <!-- <div
       v-if="isLogin"
       class="item-box"
       id="houseElectricity"
@@ -104,6 +134,21 @@
     >
       <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
       <HouseElectricity></HouseElectricity>
+    </div>-->
+
+    <!-- 特殊人口 -->
+    <div
+      v-if="isLogin"
+      class="item-box"
+      id="specialPeople"
+      :style="styleMap.specialPeople"
+      draggable="true"
+      @drop="dropEvent($event, 'specialPeople')"
+      @dragover.prevent
+      @dragstart="dragStartEvent($event, 'specialPeople')"
+    >
+      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
+      <SpecialPeople></SpecialPeople>
     </div>
 
     <!-- 综治力量 -->
@@ -141,6 +186,9 @@ import PassRecords from "./pass-records";
 import PeopleInfo from "./people-info";
 import OnePicture from "./one-picture";
 import MapSetting from "./map-setting";
+import AlarmList from "./alarm-list";
+import SpecialPeople from "./special-people";
+import GlobalIndex from "./global-index";
 import { API } from "../request/api";
 export default {
   name: "main-container",
@@ -152,10 +200,10 @@ export default {
         alarmOverview: {},
         generalPower: {},
         optionIndex: {},
-        houseElectricity: {},
+        specialPeople: {},
         peopleHouse: {},
-        passRecords: {},
-        peopleInfo: {},
+        alarmList: {},
+        globalIndex: {},
         MapSetting: {}
       },
       itemMap: new Map(),
@@ -249,8 +297,8 @@ export default {
         top: `${(itemHeight + parseInt(self.borderWidthRow, 10)) * 2}px`,
         borderRight: `${self.borderWidthCol} solid ${self.borderColor}`
       };
-      self.styleMap.passRecords = item3;
-      self.itemMap.set("passRecords", item3);
+      self.styleMap.alarmList = item3;
+      self.itemMap.set("alarmList", item3);
 
       const item4 = {
         display: "block",
@@ -273,8 +321,8 @@ export default {
         borderRight: `${self.borderWidthCol} solid ${self.borderColor}`,
         borderTop: `${self.borderWidthRow} solid ${self.borderColor}`
       };
-      self.styleMap.peopleInfo = item5;
-      self.itemMap.set("peopleInfo", item5);
+      self.styleMap.globalIndex = item5;
+      self.itemMap.set("globalIndex", item5);
 
       const item6 = {
         display: "block",
@@ -295,8 +343,8 @@ export default {
         borderBottom: `${self.borderWidthRow} solid ${self.borderColor}`,
         borderLeft: `${self.borderWidthCol} solid ${self.borderColor}`
       };
-      self.styleMap.houseElectricity = item7;
-      self.itemMap.set("houseElectricity", item7);
+      self.styleMap.specialPeople = item7;
+      self.itemMap.set("specialPeople", item7);
 
       const item8 = {
         display: "block",
@@ -366,7 +414,10 @@ export default {
     PeopleHouse,
     PeopleInfo,
     OnePicture,
-    MapSetting
+    MapSetting,
+    AlarmList,
+    SpecialPeople,
+    GlobalIndex
   }
 };
 </script>
