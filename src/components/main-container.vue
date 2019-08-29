@@ -1,37 +1,74 @@
 <template>
   <div class="main-container" ref="mainContainer">
     <div id="themeContainer" style="width: 100%;height: 100%;"></div>
-    <!-- 最新资讯 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="latestNews"
-      :style="styleMap.latestNews"
-      draggable="true"
-      @drop="dropEvent($event, 'latestNews')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'latestNews')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <LatestNews></LatestNews>
+    <div v-for="item of defalutItemList" :key="item">
+      <div
+        v-if="styleMap[item].isShow || isDrag"
+        class="item-box"
+        :style="styleMap[item].style"
+        :class="{'drag-outline': isDrag, 'dragover-oulline': dragOverItem === item}"
+        draggable="true"
+        @drop="dropEvent($event, item)"
+        @dragover.prevent="dragOverEvent($event, item)"
+        @dragstart="dragStartEvent($event, item)"
+      >
+        <div v-if="isLogin && styleMap[item].isShow" :style="styleMap[item].style">
+          <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
+          <!-- 最新资讯 -->
+          <template v-if="item === 'latestNews'">
+            <LatestNews @showNewsDetail="showNewsDetail"></LatestNews>
+          </template>
+          <!-- 告警视图总览 -->
+          <template v-else-if="item === 'alarmOverview'">
+            <AlarmOverview></AlarmOverview>
+          </template>
+          <!-- 告警信息 -->
+          <template v-else-if="item === 'alarmList'">
+            <AlarmList @showAlarmDetail="showAlarmDetail"></AlarmList>
+          </template>
+          <!-- 分项指数 -->
+          <template v-else-if="item === 'optionIndex'">
+            <OptionIndex></OptionIndex>
+          </template>
+          <!-- 全局指数 -->
+          <template v-else-if="item === 'globalIndex'">
+            <GlobalIndex></GlobalIndex>
+          </template>
+          <!-- 人口与房屋 -->
+          <template v-else-if="item === 'peopleHouse'">
+            <PeopleHouse></PeopleHouse>
+          </template>
+          <!-- 特殊人口 -->
+          <template v-else-if="item === 'specialPeople'">
+            <SpecialPeople></SpecialPeople>
+          </template>
+          <!-- 综治力量 -->
+          <template v-else-if="item === 'generalPower'">
+            <GeneralPower></GeneralPower>
+          </template>
+        </div>
+      </div>
     </div>
 
-    <!-- 告警视图总览 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="alarmOverview"
-      :style="styleMap.alarmOverview"
-      draggable="true"
-      @drop="dropEvent($event, 'alarmOverview')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'alarmOverview')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <AlarmOverview></AlarmOverview>
+    <!-- 新闻详情 -->
+    <div v-if="isShowNewsDetail" class="item-box-header high-index" :style="styleMap.centerItem">
+      <img class="item-box-bg" src="../assets/image/icon-box-center.png" />
+      <NewsDetail :detail="newsDetail" @closeNewsDetail="closeNewsDetail"></NewsDetail>
     </div>
 
-    <!-- 通行记录 -->
+    <!-- 告警详情 -->
+    <div v-if="isShowAlarmDetail" class="item-box-header high-index" :style="styleMap.alarmDetail">
+      <img class="item-box-bg" src="../assets/image/icon-box.png" />
+      <AlarmDetail :id="alarmId" @closeAlarmDetail="closeAlarmDetail"></AlarmDetail>
+    </div>
+
+    <!-- 地图设置 -->
+    <div class="item-box-header" :style="styleMap.MapSetting">
+      <img class="item-box-bg" src="../assets/image/icon-box-header.png" />
+      <MapSetting item-map="itemMap" @changeItemStatus="changeItemStatus"></MapSetting>
+    </div>
+
+   <!-- 通行记录 -->
     <!-- <div
       v-if="isLogin"
       class="item-box"
@@ -45,36 +82,6 @@
       <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
       <PassRecords></PassRecords>
     </div>-->
-
-    <!-- 告警信息 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="alarmList"
-      :style="styleMap.alarmList"
-      draggable="true"
-      @drop="dropEvent($event, 'alarmList')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'alarmList')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <AlarmList></AlarmList>
-    </div>
-
-    <!-- 分项指数 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="optionIndex"
-      :style="styleMap.optionIndex"
-      draggable="true"
-      @drop="dropEvent($event, 'optionIndex')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'optionIndex')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <OptionIndex></OptionIndex>
-    </div>
 
     <!-- 人口信息 -->
     <!-- <div
@@ -91,36 +98,6 @@
       <PeopleInfo></PeopleInfo>
     </div>-->
 
-    <!-- 人口信息 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="globalIndex"
-      :style="styleMap.globalIndex"
-      draggable="true"
-      @drop="dropEvent($event, 'globalIndex')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'globalIndex')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <GlobalIndex></GlobalIndex>
-    </div>
-
-    <!-- 人口与房屋 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="peopleHouse"
-      :style="styleMap.peopleHouse"
-      draggable="true"
-      @drop="dropEvent($event, 'peopleHouse')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'peopleHouse')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <PeopleHouse></PeopleHouse>
-    </div>
-
     <!-- 房屋用电情况 -->
     <!-- <div
       v-if="isLogin"
@@ -136,41 +113,6 @@
       <HouseElectricity></HouseElectricity>
     </div>-->
 
-    <!-- 特殊人口 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="specialPeople"
-      :style="styleMap.specialPeople"
-      draggable="true"
-      @drop="dropEvent($event, 'specialPeople')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'specialPeople')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <SpecialPeople></SpecialPeople>
-    </div>
-
-    <!-- 综治力量 -->
-    <div
-      v-if="isLogin"
-      class="item-box"
-      id="generalPower"
-      :style="styleMap.generalPower"
-      draggable="true"
-      @drop="dropEvent($event, 'generalPower')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'generalPower')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <GeneralPower></GeneralPower>
-    </div>
-
-    <!-- 地图设置 -->
-    <div class="item-box-header" id="map-setting" :style="styleMap.MapSetting">
-      <img class="item-box-bg" src="../assets/image/icon-box-header.png" />
-      <MapSetting item-map="itemMap" @changeItemStatus="changeItemStatus"></MapSetting>
-    </div>
     <OnePicture></OnePicture>
   </div>
 </template>
@@ -189,30 +131,75 @@ import MapSetting from "./map-setting";
 import AlarmList from "./alarm-list";
 import SpecialPeople from "./special-people";
 import GlobalIndex from "./global-index";
+import NewsDetail from "./news-detail";
+import AlarmDetail from "./alarm-detail";
 import { API } from "../request/api";
 export default {
   name: "main-container",
   data() {
     return {
+      defalutItemList: [
+        "latestNews",
+        "alarmOverview",
+        "alarmList",
+        "optionIndex",
+        "globalIndex",
+        "peopleHouse",
+        "specialPeople",
+        "generalPower"
+      ],
       styleMap: {
-        // 各个组件的定位信息
-        latestNews: {},
-        alarmOverview: {},
-        generalPower: {},
-        optionIndex: {},
-        specialPeople: {},
-        peopleHouse: {},
-        alarmList: {},
-        globalIndex: {},
-        MapSetting: {}
+        // 各个组件的位置信息及显示与否
+        latestNews: {
+          style: {},
+          isShow: false
+        },
+        alarmOverview: {
+          style: {},
+          isShow: false
+        },
+        generalPower: {
+          style: {},
+          isShow: false
+        },
+        optionIndex: {
+          style: {},
+          isShow: false
+        },
+        specialPeople: {
+          style: {},
+          isShow: false
+        },
+        peopleHouse: {
+          style: {},
+          isShow: false
+        },
+        alarmList: {
+          style: {},
+          isShow: false
+        },
+        globalIndex: {
+          style: {},
+          isShow: false
+        },
+        MapSetting: {},
+        centerItem: {},
+        alarmDetail: {}
       },
-      itemMap: new Map(),
-      borderWidthRow: "10px", // 行之间border宽度
-      borderWidthCol: "10px", // 列之间border宽度
-      itemMinWidth: 468,
-      itemMinHeight: 316,
+      cacheStyle: {}, // 缓存的位置信息
+      itemMap: new Map(), // 小模块位置
+      itemMarginRow: "10px", // 行之间间距
+      itemMarginCol: "10px", // 列之间间距
+      itemMinWidth: 468, // item最小宽度
+      itemMinHeight: 316, // item最小高度
       borderColor: "rgba(0, 0, 0, 0)",
-      isLogin: false // 是否登录
+      isLogin: false, // 是否登录
+      isDrag: false, // 是否在拖拽
+      dragOverItem: "", // 正拖拽经过的item
+      isShowNewsDetail: false, // 是否显示新闻详情
+      newsDetail: null, // 新闻详情
+       isShowAlarmDetail: false, // 是否显示告警详情
+      alarmId: null,  // 告警详情
     };
   },
   mounted() {
@@ -237,139 +224,120 @@ export default {
   methods: {
     init() {
       const self = this;
-      const cacheStyle = localStorage.getItem("cacheStyle");
-      if (cacheStyle) {
-        self.itemMap = new Map(JSON.parse(cacheStyle));
-        for (const [key, value] of self.itemMap) {
-          self.styleMap[key] = value;
-        }
-      } else {
-        const mainContainer = this.$refs.mainContainer;
-        const width = mainContainer.offsetWidth;
-        const height = mainContainer.offsetHeight;
-        let itemWidth =
-          (parseInt(width, 10) - parseInt(self.borderWidthCol, 10) * 3) / 4;
-        itemWidth =
-          Math.floor(itemWidth) > self.itemMinWidth
-            ? Math.floor(itemWidth)
-            : self.itemMinWidth;
-        let itemHeight =
-          (parseInt(height, 10) - parseInt(self.borderWidthRow, 10) * 2) / 3;
-        itemHeight =
-          Math.floor(itemHeight) > self.itemMinHeight
-            ? Math.floor(itemHeight)
-            : self.itemMinHeight;
+      const mainContainer = this.$refs.mainContainer;
+      const width = mainContainer.offsetWidth;
+      const height = mainContainer.offsetHeight;
+      let itemWidth =
+        (parseInt(width, 10) - parseInt(self.itemMarginCol, 10) * 3) / 4;
+      itemWidth =
+        Math.floor(itemWidth) > self.itemMinWidth
+          ? Math.floor(itemWidth)
+          : self.itemMinWidth;
+      let itemHeight =
+        (parseInt(height, 10) - parseInt(self.itemMarginRow, 10) * 2) / 3;
+      itemHeight =
+        Math.floor(itemHeight) > self.itemMinHeight
+          ? Math.floor(itemHeight)
+          : self.itemMinHeight;
 
-        self.setItemPosition(itemWidth, itemHeight);
-      }
+      self.setItemPosition(itemWidth, itemHeight);
+      self.showItems();
     },
     setItemPosition(itemWidth, itemHeight) {
       // 计算每个小模块的位置
+      //    item1    item9     item8
+      //    item2              item7
+      //    item3  item4 item5 item6
       const self = this;
-      const item1 = {
-        display: "block",
-        width: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        height: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        left: 0,
-        top: 0,
-        borderBottom: `${self.borderWidthRow} solid ${self.borderColor}`,
-        borderRight: `${self.borderWidthCol} solid ${self.borderColor}`
-      };
-      self.styleMap.latestNews = item1;
-      self.itemMap.set("latestNews", item1);
-      const item2 = {
-        display: "block",
-        width: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        height: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        left: 0,
-        top: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        borderBottom: `${self.borderWidthRow} solid ${self.borderColor}`,
-        borderRight: `${self.borderWidthCol} solid ${self.borderColor}`
-      };
-      self.styleMap.alarmOverview = item2;
-      self.itemMap.set("alarmOverview", item2);
-
-      const item3 = {
-        display: "block",
-        width: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        height: `${itemHeight}px`,
-        left: 0,
-        top: `${(itemHeight + parseInt(self.borderWidthRow, 10)) * 2}px`,
-        borderRight: `${self.borderWidthCol} solid ${self.borderColor}`
-      };
-      self.styleMap.alarmList = item3;
-      self.itemMap.set("alarmList", item3);
-
-      const item4 = {
-        display: "block",
-        width: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        height: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        left: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        top: `${itemHeight * 2 + parseInt(self.borderWidthRow, 10)}px`,
-        borderRight: `${self.borderWidthCol} solid ${self.borderColor}`,
-        borderTop: `${self.borderWidthRow} solid ${self.borderColor}`
-      };
-      self.styleMap.optionIndex = item4;
-      self.itemMap.set("optionIndex", item4);
-
-      const item5 = {
-        display: "block",
-        width: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        height: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        left: `${(itemWidth + parseInt(self.borderWidthCol, 10)) * 2}px`,
-        top: `${itemHeight * 2 + parseInt(self.borderWidthRow, 10)}px`,
-        borderRight: `${self.borderWidthCol} solid ${self.borderColor}`,
-        borderTop: `${self.borderWidthRow} solid ${self.borderColor}`
-      };
-      self.styleMap.globalIndex = item5;
-      self.itemMap.set("globalIndex", item5);
-
-      const item6 = {
-        display: "block",
+      self.itemMap.set(1, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
-        left: `${(itemWidth + parseInt(self.borderWidthCol, 10)) * 3}px`,
-        top: `${(itemHeight + parseInt(self.borderWidthRow, 10)) * 2}px`
-      };
-      self.styleMap.peopleHouse = item6;
-      self.itemMap.set("peopleHouse", item6);
-
-      const item7 = {
-        display: "block",
-        width: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        height: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        left: `${itemWidth * 3 + parseInt(self.borderWidthCol, 10) * 2}px`,
-        top: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        borderBottom: `${self.borderWidthRow} solid ${self.borderColor}`,
-        borderLeft: `${self.borderWidthCol} solid ${self.borderColor}`
-      };
-      self.styleMap.specialPeople = item7;
-      self.itemMap.set("specialPeople", item7);
-
-      const item8 = {
-        display: "block",
-        width: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
-        height: `${itemHeight + parseInt(self.borderWidthRow, 10)}px`,
-        left: `${itemWidth * 3 + parseInt(self.borderWidthCol, 10) * 2}px`,
-        top: 0,
-        borderBottom: `${self.borderWidthRow} solid ${self.borderColor}`,
-        borderLeft: `${self.borderWidthCol} solid ${self.borderColor}`
-      };
-      self.styleMap.generalPower = item8;
-      self.itemMap.set("generalPower", item8);
-
-      const item9 = {
-        width: `${itemWidth * 2 + parseInt(self.borderWidthCol, 10)}px`,
+        left: 0,
+        top: 0
+      });
+      self.itemMap.set(2, {
+        width: `${itemWidth}px`,
+        height: `${itemHeight}px`,
+        left: 0,
+        top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
+      });
+      self.itemMap.set(3, {
+        width: `${itemWidth}px`,
+        height: `${itemHeight}px`,
+        left: 0,
+        top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
+      });
+      self.itemMap.set(4, {
+        width: `${itemWidth}px`,
+        height: `${itemHeight}px`,
+        left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
+        top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
+      });
+      self.itemMap.set(5, {
+        width: `${itemWidth}px`,
+        height: `${itemHeight}px`,
+        left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 2}px`,
+        top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
+      });
+      self.itemMap.set(6, {
+        width: `${itemWidth}px`,
+        height: `${itemHeight}px`,
+        left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 3}px`,
+        top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
+      });
+      self.itemMap.set(7, {
+        width: `${itemWidth}px`,
+        height: `${itemHeight}px`,
+        left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
+        top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
+      });
+      self.itemMap.set(8, {
+        width: `${itemWidth}px`,
+        height: `${itemHeight}px`,
+        left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
+        top: 0
+      });
+      self.itemMap.set(9, {
+        width: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
+        height: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10)}px`,
+        left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
+        top: 0
+      });
+      self.styleMap.MapSetting = {
+        width: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
         height: `40px`,
-        left: `${itemWidth + parseInt(self.borderWidthCol, 10)}px`,
+        left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
         top: 0
       };
-      self.styleMap.MapSetting = item9;
-      self.itemMap.set("MapSetting", item9);
-      localStorage.setItem(
-        "cacheStyle",
-        JSON.stringify(Array.from(self.itemMap.entries()))
-      );
+      self.styleMap.centerItem = self.itemMap.get(9);
+      self.cacheItems();
+    },
+    cacheItems() {
+      const self = this;
+      const _cacheStyle = localStorage.getItem("cacheStyle");
+      if (_cacheStyle) {
+        self.cacheStyle = JSON.parse(_cacheStyle);
+      } else {
+        self.cacheStyle = {};
+        self.defalutItemList.forEach((item, index) => {
+          self.cacheStyle[item] = {
+            position: index + 1,
+            isShow: true
+          };
+        });
+      }
+      localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
+    },
+    showItems() {
+      const self = this;
+      for (const key in self.cacheStyle) {
+        if (self.cacheStyle.hasOwnProperty(key)) {
+          self.styleMap[key]["style"] = self.itemMap.get(
+            self.cacheStyle[key]["position"]
+          );
+          self.styleMap[key]["isShow"] = self.cacheStyle[key]["isShow"];
+        }
+      }
     },
     dropEvent(event, id) {
       // 防止或火狐中拖拽打开新页面
@@ -377,31 +345,48 @@ export default {
       event.stopPropagation(); // 阻止默认行为
       const self = this;
       const _id = event.dataTransfer.getData("id");
-      const _style = self.itemMap.get(_id);
-      const style = self.itemMap.get(id);
+      const _style = self.cacheStyle[_id]["position"];
+      const style = self.cacheStyle[id]["position"];
       // 交换拖动源和目标的位置并存储
-      self.styleMap[_id] = style;
-      self.itemMap.set(_id, style);
-      self.styleMap[id] = _style;
-      self.itemMap.set(id, _style);
-      localStorage.setItem(
-        "cacheStyle",
-        JSON.stringify(Array.from(self.itemMap.entries()))
-      );
+      self.cacheStyle[_id]["position"] = style;
+      self.cacheStyle[id]["position"] = _style;
+      self.styleMap[_id]["style"] = self.itemMap.get(style);
+      self.styleMap[id]["style"] = self.itemMap.get(_style);
+      localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
+      self.dragOverItem = "";
+      self.isDrag = false;
     },
     dragStartEvent(event, id) {
       event.dataTransfer.setData("id", id);
+      this.isDrag = true;
+    },
+    dragOverEvent(event, id) {
+      this.dragOverItem = id;
     },
     changeItemStatus(event) {
       const self = this;
       event.forEach(item => {
-        self.styleMap[item.id]["display"] = item.checked ? "block" : "none";
-        self.itemMap.set(item.id, self.styleMap[item.id]);
+        self.styleMap[item.id]["isShow"] = item.checked;
+        self.cacheStyle[item.id]["isShow"] = item.checked;
       });
-      localStorage.setItem(
-        "cacheStyle",
-        JSON.stringify(Array.from(self.itemMap.entries()))
-      );
+      localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
+    },
+    showNewsDetail(event) {
+      this.newsDetail = event;
+      this.isShowNewsDetail = true;
+    },
+    closeNewsDetail() {
+      this.isShowNewsDetail = false;
+    },
+    showAlarmDetail(event) {
+      const index = parseInt(this.cacheStyle['alarmList']["position"], 10) + 1;
+      const style =index > 9 ? 1 : index;
+      this.styleMap.alarmDetail = this.itemMap.get(style);
+      this.alarmId = event.id;
+      this.isShowAlarmDetail = true;
+    },
+    closeAlarmDetail() {
+      this.isShowAlarmDetail = false;
     }
   },
   components: {
@@ -417,7 +402,9 @@ export default {
     MapSetting,
     AlarmList,
     SpecialPeople,
-    GlobalIndex
+    GlobalIndex,
+    NewsDetail,
+    AlarmDetail,
   }
 };
 </script>
@@ -431,7 +418,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url("../assets/image/icon-bg.jpg");
+  background: url("../../public/img/icon-bg.jpg");
   background-attachment: fixed;
   .item-box {
     position: absolute;
@@ -456,6 +443,33 @@ export default {
       height: 100%;
       left: 0;
       top: 0;
+    }
+  }
+  .drag-outline {
+    position: absolute;
+    z-index: 100;
+    display: block !important;
+    border: 2px dotted white !important;
+  }
+
+  .dragover-oulline {
+    animation: glow 800ms ease-out infinite alternate;
+  }
+
+  .high-index {
+    z-index: 200;
+  }
+
+  @keyframes glow {
+    0% {
+      border-color: #393;
+      box-shadow: 0 0 5px rgba(0, 255, 0, 0.2),
+        inset 0 0 5px rgba(0, 255, 0, 0.1), 0 1px 0 #393;
+    }
+    100% {
+      border-color: #6f6;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.6),
+        inset 0 0 10px rgba(0, 255, 0, 0.4), 0 1px 0 #6f6;
     }
   }
 }

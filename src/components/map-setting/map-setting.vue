@@ -121,9 +121,9 @@ export default {
     ];
     const cacheStyle = localStorage.getItem("cacheStyle");
     if (cacheStyle) {
-      const itemMap = new Map(JSON.parse(cacheStyle));
+      const itemMap =JSON.parse(cacheStyle);
       self.itemList.forEach(item => {
-        item.checked = itemMap.get(item.id).display === "block";
+        item.checked = itemMap[item.id].isShow;
       });
     }
     self.themeList = [

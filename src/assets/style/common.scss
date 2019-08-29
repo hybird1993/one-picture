@@ -44,3 +44,21 @@
 .chart-title /deep/ .el-radio__label {
   color: #fff;
 }
+
+.close-item {
+  z-index: 300;
+  width: 30px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  img {
+    visibility: hidden;
+  }
+  &:hover {
+    img {
+      visibility: visible;
+    }
+  }
+}

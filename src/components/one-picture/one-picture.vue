@@ -31,6 +31,7 @@ export default {
         }
       )
       .addTo(map);
+      console.log(bussLayer);
   }
 };
 </script>

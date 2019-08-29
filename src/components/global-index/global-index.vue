@@ -45,6 +45,7 @@ export default {
       communityIds: null,
       gridList: [],
       lineChart: null,
+      xData: [],
       year: null,
       week: null,
       weekList: [],
@@ -82,8 +83,10 @@ export default {
       API.getGlobalIndex(self.endDate).then(
         res => {
           console.log(res);
-          self.communityList = res.list;
-          // self.filterCommunityList(true);
+          self.xData = res.date;
+          self.communityList = res.data;
+          self.avgCount = res.avgScore.toString();
+          self.filterCommunityList(true);
         },
         err => {}
       );
@@ -114,16 +117,19 @@ export default {
     },
     showGlobalIndexChart() {
       const self = this;
-      const xData = self.list.map(item => item.orgName);
-      const seriesData = new Array(8).fill({ data: [] });
-
-      seriesData.forEach((item, index) => {
-        item.data = self.list.map(_item => _item["items"][index]["score"]);
+      const seriesData = self.list.map(item => {
+        return {
+          name: item.orgName,
+          data: item.scores,
+          type: "line",
+          areaStyle: {},
+          smooth: true
+        };
       });
-      self.indexChart.setOption({
-        xAxis: { data: xData },
-        series: seriesData
-      });
+      console.log(self.xData);
+   
+      self.lineChart.setOption(self.setIndexChartOption(self.xData, seriesData), true)
+      
     },
     changeItemStatus(item) {
       this.$set(item, "checked", !item.checked);
@@ -141,7 +147,7 @@ export default {
       } else {
         this.week--;
       }
-      this.getOptionIndex();
+      this.getGlobalIndex();
     },
     nextWeek() {
       if (this.week === this.weekList.length) {
@@ -152,13 +158,24 @@ export default {
       } else {
         this.week++;
       }
-      this.getOptionIndex();
+      this.getGlobalIndex();
     },
     // 格式化时间
     formatDate(date) {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
-    setIndexChartOption() {
+    setIndexChartOption(
+      xData = [],
+      seriesData = [
+        {
+          name: "",
+          type: "line",
+          areaStyle: {},
+          data: [],
+          smooth: true
+        }
+      ]
+    ) {
       return {
         tooltip: {
           trigger: "axis",
@@ -169,7 +186,13 @@ export default {
             }
           }
         },
+        textStyle: {
+          // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+          color: "rgba(255, 255, 255, 0.65)"
+        },
+        color: ['#28a1f7', '#7ac3ff', '#ffb966', '#f14b30', '#6cb91e', '#7f58c3', '#25a59a', '#bdbdbd'],
         grid: {
+          top: "10px",
           left: "3%",
           right: "4%",
           bottom: "3%",
@@ -179,7 +202,7 @@ export default {
           {
             type: "category",
             boundaryGap: false,
-            data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+            data: xData
           }
         ],
         yAxis: [
@@ -187,50 +210,7 @@ export default {
             type: "value"
           }
         ],
-        series: [
-          {
-            name: "邮件营销",
-            type: "line",
-
-            areaStyle: {},
-            data: [120, 132, 101, 134, 90, 230, 210],
-            smooth: true
-          },
-          {
-            name: "联盟广告",
-            type: "line",
-            areaStyle: {},
-            data: [220, 182, 191, 234, 290, 330, 310],
-            smooth: true
-          },
-          {
-            name: "视频广告",
-            type: "line",
-            areaStyle: {},
-            data: [150, 232, 201, 154, 190, 330, 410],
-            smooth: true
-          },
-          {
-            name: "直接访问",
-            type: "line",
-            areaStyle: { normal: {} },
-            data: [320, 332, 301, 334, 390, 330, 320],
-            smooth: true
-          },
-          {
-            name: "搜索引擎",
-            type: "line",
-            label: {
-              normal: {
-                show: true,
-                position: "top"
-              }
-            },
-            areaStyle: { normal: {} },
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            smooth: true
-          }
-        ]
+        series: seriesData
       };
     }
   }
@@ -243,8 +223,8 @@ export default {
   z-index: 20;
   .chart-title {
     display: flex;
-    padding: 0 20px;
-    height: 36px;
+    padding: 10px 20px;
+    height: 40px;
     align-items: center;
     justify-content: space-between;
     .avg-count {

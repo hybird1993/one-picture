@@ -40,6 +40,13 @@ const API = {
   }),
 
   /**
+   * 告警详情
+   * param {number} id  告警id
+   */
+  getAlarmDetail: (id) => get(`/pscm/m/alarm/info/content/${id}`, {  
+  }),
+
+  /**
    * 特殊人群
    * param {number} pageNum  页码
    * param {number} pageSize  每页条数

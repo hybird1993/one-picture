@@ -3,7 +3,7 @@
     <div class="panel-title">告警信息</div>
     <el-scrollbar class="panel-content">
       <ul>
-        <li v-for="(item, index) of list" :key="item.id">
+        <li v-for="(item, index) of list" :key="item.id"  @click="showDetail(item)">
           <span class="alarm-index">{{index + 1}}</span>
           <span class="alarm-title">{{item.headline}}</span>
           <span class="alarm-status">{{item.status}}</span>
@@ -35,6 +35,9 @@ export default {
         },
         err => {}
       );
+    },
+    showDetail(item) {
+      this.$emit('showAlarmDetail', item);
     }
   }
 };
@@ -75,21 +78,6 @@ export default {
         background-color: red;
       }
     }
-    // li:before {
-    //   content: "";
-    //   position: absolute;
-    //   top: 50%;
-    //   margin-top: -3px;
-    //   height: 6px;
-    //   width: 6px;
-    //   margin-left: -15px;
-    //   display: block;
-    //   border-radius: 50%;
-    //   background: #01a5db;
-    // }
-    // li:nth-child(odd) {
-    //   background-color: rgba(256, 256, 256, 0.1);
-    // }
   }
 }
 </style>

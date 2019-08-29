@@ -33,7 +33,9 @@ export default {
           const data = res.map(item => {
             return {
               name: item.groupName,
-              value: item.onlineStat["编制"]
+              value: item.onlineStat["编制"],
+              onLine: item.onlineStat["在线"],
+              users: item.users
             };
           });
           const total = data.reduce((pre, next) => {
@@ -57,7 +59,15 @@ export default {
         },
         tooltip: {
           trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
+          // formatter: "{a} <br/>{b} : {c} ({d}%)"
+          formatter: function(params, ticket, callback) {
+            console.log(params);
+            let str = ''
+            str += params.data.name + '(' + params.percent + '%)' + '</br>';
+            str += '编制：' + params.data.value + '</br>';
+            str += '在线：' + params.data.onLine;
+            return str;
+          }
         },
         textStyle: {
           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
