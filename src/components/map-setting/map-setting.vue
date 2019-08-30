@@ -293,6 +293,7 @@ export default {
     background: #495077;
     margin-top: 5px;
     li {
+      cursor: pointer;
       a {
         display: block;
         list-style: none;

@@ -1,42 +1,22 @@
 <template>
   <div class="panel-container">
-    <div class="panel-title">告警详情</div>
-    <el-scrollbar class="panel-content">
-      <ul>
-        <li>
-          <span class="item-title">发生时间：</span>
-          <span class="item-content">{{detail.alarmTime}}</span>
-        </li>
-        <li>
-          <span class="item-title">发生位置：</span>
-          <span class="item-content">{{detail.alarmLocation}}</span>
-        </li>
-        <li>
-          <span class="item-title">摄像头编号：</span>
-          <span class="item-content">{{detail.deviceId}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警状态：</span>
-          <span class="item-content" style="color:red;">{{detail.status}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警分类：</span>
-          <span class="item-content">{{detail.alarmType}}</span>
-        </li>
-        <li>
-          <span class="item-title">二级分类：</span>
-          <span class="item-content">{{detail.alarmDesc}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警内容：</span>
-          <span class="item-content">{{detail.content}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警人员：</span>
-          <span class="item-content">{{detail.relationPerson}}</span>
-        </li>
-      </ul>
-    </el-scrollbar>
+    <div class="panel-title">人员详情</div>
+    <div class="panel-content">
+      <div>
+        <el-radio v-model="radio" label="1" @change="getInfo">个人信息</el-radio>
+        <el-radio v-model="radio" label="2" @change="getInfo">家庭信息</el-radio>
+        <el-radio v-model="radio" label="3" @change="getInfo">车辆信息</el-radio>
+      </div>
+      <el-scrollbar>
+        <!-- <ul>
+          <li>
+            <span class="item-title">发生时间：</span>
+            <span class="item.content">{{detail.alarmTime}}</span>
+          </li>
+        </ul> -->
+      </el-scrollbar>
+    </div>
+
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
@@ -45,42 +25,59 @@
 <script>
 import { API } from "../../request/api";
 export default {
-  name: "alarm-detail",
+  name: "people-detail",
   props: {
     id: {
-      type: Number,
-    },
-    type: {
-      type: String
+      type: [Number, String]
     }
   },
   data() {
     return {
-      detail: {}
+      radio: "1",
+      detail: {},
     };
   },
   mounted() {
     const self = this;
-    this.getAlarmDetail();
+    this.getInfo();
   },
   methods: {
     close() {
-      this.$emit("closeAlarmDetail"); 
+      this.$emit("closePeopleDetail");
     },
-    getAlarmDetail() {
+    getInfo() {
+      if (this.radio === "1") {
+        this.getPeopleDetail();
+      } else if (this.radio === "2") {
+        this.getFamilyInfo();
+      } else if (this.radio === "3") {
+        this.getCarInfo();
+      } else {
+      }
+    },
+    getPeopleDetail() {
       const self = this;
-      API.getAlarmDetail(this.id).then(
+      API.getPeopleDetail(this.id).then(
         res => {
           self.detail = res;
         },
         err => {}
       );
+    },
+    getFamilyInfo() {
+      const self = this;
+      API.getRelationlist(6312).then(res => {}, err => {});
+    },
+    getCarInfo() {
+      const self = this;
+      API.getCarInfo(this.id).then(res => {}, err => {});
     }
   },
   watch: {
     id: function(val, oldVal) {
       console.log("new: %s, old: %s", val, oldVal);
-      this.getAlarmDetail();
+      this.radio = '1';
+      this.getInfo();
     }
   }
 };

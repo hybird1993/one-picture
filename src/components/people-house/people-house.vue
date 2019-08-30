@@ -52,7 +52,7 @@ export default {
       personCount: "",
       keyPersonCount: "",
       color1: ["#fac007", "#6560c1", "#3793d9", "#20eeac"],
-      color2: ["#f0a724", "#5551a8", "#256ca7", "#16a98a"],
+      color2: ["#f0a724", "#5551a8", "#256ca7", "#16a98a"]
     };
   },
   mounted() {
@@ -69,6 +69,10 @@ export default {
       self.peopleChart = self.$echarts.init(
         document.getElementById("peoplepie")
       );
+      self.peopleChart.on("click", function(params) {
+        console.log(params);
+        self.$emit("showPeopleList", params.name);
+      });
       self.houseChart = self.$echarts.init(document.getElementById("housepie"));
     },
     getPeopleStatistics() {
@@ -81,11 +85,12 @@ export default {
             color1.push(self.color1[index]);
             return {
               value: res.detail[item]["total"],
-              name: item,
+              name: item
             };
           });
-          console.log(data1)
-          const data2 = [], color2 = [];
+          console.log(data1);
+          const data2 = [],
+            color2 = [];
           data1.forEach((_item, index) => {
             const _arr = Object.keys(res.detail[_item["name"]])
               .filter(item => item !== "total")
@@ -93,7 +98,7 @@ export default {
                 color2.push(self.color2[index]);
                 return {
                   value: res.detail[_item["name"]][item],
-                  name: item,
+                  name: item
                 };
               });
             data2.push(..._arr);
@@ -101,7 +106,9 @@ export default {
           console.log(data2);
           self.keyPersonCount = res.focal;
           self.personCount = res.total;
-          self.peopleChart.setOption(self.getPeopleChartOption(data1, data2, color1, color2));
+          self.peopleChart.setOption(
+            self.getPeopleChartOption(data1, data2, color1, color2)
+          );
         },
         err => {}
       );
@@ -213,7 +220,7 @@ export default {
         calculable: true,
         series: [
           {
-            name: "访问来源",
+            name: "人口分布",
             type: "pie",
             center: ["50%", "50%"],
             startAngle: 135,
@@ -237,7 +244,7 @@ export default {
             data: data1
           },
           {
-            name: "访问来源",
+            name: "人口分布",
             type: "pie",
             center: ["50%", "50%"],
             startAngle: 135,

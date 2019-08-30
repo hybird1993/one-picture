@@ -36,15 +36,15 @@
           </template>
           <!-- 人口与房屋 -->
           <template v-else-if="item === 'peopleHouse'">
-            <PeopleHouse></PeopleHouse>
+            <PeopleHouse @showPeopleList="showPeopleList"></PeopleHouse>
           </template>
           <!-- 特殊人口 -->
           <template v-else-if="item === 'specialPeople'">
-            <SpecialPeople></SpecialPeople>
+            <SpecialPeople @showSpecialPeople="showSpecialPeople"></SpecialPeople>
           </template>
           <!-- 综治力量 -->
           <template v-else-if="item === 'generalPower'">
-            <GeneralPower></GeneralPower>
+            <GeneralPower @showPeopleList="showGeneralPowerList"></GeneralPower>
           </template>
         </div>
       </div>
@@ -62,13 +62,47 @@
       <AlarmDetail :id="alarmId" @closeAlarmDetail="closeAlarmDetail"></AlarmDetail>
     </div>
 
+    <!-- 特殊人口告警详情 -->
+    <div v-if="isShowPeopleAlarmDetail" class="item-box-header high-index" :style="styleMap.peopleAlarmDetail">
+      <img class="item-box-bg" src="../assets/image/icon-box.png" />
+      <AlarmDetail :id="peopleAlarmId" @closeAlarmDetail="closePeopleAlarmDetail"></AlarmDetail>
+    </div>
+
+    <!-- 人员详情 -->
+    <div
+      v-if="isShowPeopleDetail" class="item-box-header high-index" :style="styleMap.peopleDetail">
+      <img class="item-box-bg" src="../assets/image/icon-box.png" />
+      <PeopleDetail :id="idNo" @closePeopleDetail="closePeopleDetail"></PeopleDetail>
+    </div>
+
+    <!-- 人员列表 -->
+    <div
+      v-if="isShowPeopleList" class="item-box-header high-index" :style="styleMap.peopleList">
+      <img class="item-box-bg" src="../assets/image/icon-box.png" />
+      <PeopleList :people-type="peopleType" from-item="people" @closePeopleList="closePeopleList"></PeopleList>
+    </div>
+
+    <!-- 综治力量人员列表 -->
+    <div
+      v-if="isShowGeneralPowerList" class="item-box-header high-index" :style="styleMap.generalPowerList">
+      <img class="item-box-bg" src="../assets/image/icon-box.png" />
+      <PeopleList :people-type="generalPowerType" :people-list="generalPowerList" from-item="generalPower" @closePeopleList="closeGeneralPowerList"></PeopleList>
+    </div>
+
+    <!-- 人员行踪 -->
+    <div
+      v-if="isShowRecentTrace" class="item-box-header high-index" :style="styleMap.recentTrace">
+      <img class="item-box-bg" src="../assets/image/icon-box.png" />
+      <RecentTrace :id="peopleId" @closeRecentTrace="closeRecentTrace"></RecentTrace>
+    </div>
+
     <!-- 地图设置 -->
     <div class="item-box-header" :style="styleMap.MapSetting">
       <img class="item-box-bg" src="../assets/image/icon-box-header.png" />
       <MapSetting item-map="itemMap" @changeItemStatus="changeItemStatus"></MapSetting>
     </div>
 
-   <!-- 通行记录 -->
+    <!-- 通行记录 -->
     <!-- <div
       v-if="isLogin"
       class="item-box"
@@ -133,6 +167,9 @@ import SpecialPeople from "./special-people";
 import GlobalIndex from "./global-index";
 import NewsDetail from "./news-detail";
 import AlarmDetail from "./alarm-detail";
+import PeopleDetail from "./people-detail";
+import PeopleList from "./people-list";
+import RecentTrace from "./recent-trace";
 import { API } from "../request/api";
 export default {
   name: "main-container",
@@ -184,7 +221,13 @@ export default {
         },
         MapSetting: {},
         centerItem: {},
-        alarmDetail: {}
+        alarmDetail: {},
+        peopleDetail: {},
+        peopleList: {},
+        generalPowerList: {},
+        recentTrace: {},
+        peopleAlarmDetail: {},
+        video: {}
       },
       cacheStyle: {}, // 缓存的位置信息
       itemMap: new Map(), // 小模块位置
@@ -198,8 +241,19 @@ export default {
       dragOverItem: "", // 正拖拽经过的item
       isShowNewsDetail: false, // 是否显示新闻详情
       newsDetail: null, // 新闻详情
-       isShowAlarmDetail: false, // 是否显示告警详情
-      alarmId: null,  // 告警详情
+      isShowAlarmDetail: false, // 是否显示告警详情
+      alarmId: null, // 告警id
+      isShowPeopleDetail: false,   // 是否显示人员详情
+      idNo: null,   // 身份证id
+      isShowPeopleList: false,   // 是否显示人员列表
+      peopleType: null,  // 人员类型
+      isShowGeneralPowerList: false,   // 是否显示综治力量的人员列表
+      generalPowerType: null,  // 人员类型
+      generalPowerList: [],    // 人员列表
+      isShowRecentTrace: false,   // 是否显示综治力量的人员列表
+      peopleId: null,  // 人员id
+      isShowPeopleAlarmDetail: false,   // 是否显示人员告警详情
+      peopleAlarmId: null,  // 人员告警详情
     };
   },
   mounted() {
@@ -379,15 +433,66 @@ export default {
       this.isShowNewsDetail = false;
     },
     showAlarmDetail(event) {
-      const index = parseInt(this.cacheStyle['alarmList']["position"], 10) + 1;
-      const style =index > 9 ? 1 : index;
-      this.styleMap.alarmDetail = this.itemMap.get(style);
+      let index = parseInt(this.cacheStyle["alarmList"]["position"], 10) + 1;
+      let style1 = index > 8 ? 1 : index;
+      this.styleMap.alarmDetail = this.itemMap.get(style1);
       this.alarmId = event.id;
       this.isShowAlarmDetail = true;
+      if (event.identityCard) {
+        this.idNo = event.identityCard;
+        style1++;
+        const style2 = style1 > 8 ? 1 : style1;
+        this.styleMap.peopleDetail = this.itemMap.get(style2);
+        this.isShowPeopleDetail = true;
+      }
     },
     closeAlarmDetail() {
       this.isShowAlarmDetail = false;
-    }
+    },
+    closePeopleDetail() {
+      this.isShowPeopleDetail = false;
+    },
+    showPeopleList(event) {
+      this.peopleType = event;
+      let index = parseInt(this.cacheStyle["peopleHouse"]["position"], 10) + 1;
+      const style = index > 8 ? 1 : index;
+      this.styleMap.peopleList = this.itemMap.get(style);
+      this.isShowPeopleList = true;
+    },
+    closePeopleList() {
+      this.isShowPeopleList = false;
+    },
+    showGeneralPowerList(event) {
+      this.generalPowerType = event.type;
+      this.generalPowerList = event.list;
+      let index = parseInt(this.cacheStyle["generalPower"]["position"], 10) + 1;
+      const style = index > 8 ? 1 : index;
+      this.styleMap.generalPowerList = this.itemMap.get(style);
+      this.isShowGeneralPowerList = true;
+    },
+    closeGeneralPowerList() {
+      this.isShowGeneralPowerList = false;
+    },
+    showSpecialPeople(event) {
+      let index = parseInt(this.cacheStyle["specialPeople"]["position"], 10) + 1;
+      let style1 = index > 8 ? 1 : index;
+      this.styleMap.peopleAlarmDetail = this.itemMap.get(style1);
+      this.peopleAlarmId = event.id;
+      this.isShowPeopleAlarmDetail = true;
+      if (event.identityCard) {
+        this.peopleId = event.identityCard;
+        style1++;
+        const style2 = style1 > 8 ? 1 : style1;
+        this.styleMap.recentTrace = this.itemMap.get(style2);
+        this.isShowRecentTrace = true;
+      }
+    },
+    closeRecentTrace() {
+      this.isShowRecentTrace = false;
+    },
+    closePeopleAlarmDetail() {
+      this.isShowPeopleAlarmDetail = false;
+    },
   },
   components: {
     LatestNews,
@@ -405,6 +510,9 @@ export default {
     GlobalIndex,
     NewsDetail,
     AlarmDetail,
+    PeopleDetail,
+    PeopleList,
+    RecentTrace,
   }
 };
 </script>
@@ -436,7 +544,6 @@ export default {
     position: absolute;
     z-index: 20;
     user-select: none;
-    cursor: pointer;
     .item-box-bg {
       position: absolute;
       width: 100%;

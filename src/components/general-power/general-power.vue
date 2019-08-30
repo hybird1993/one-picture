@@ -25,6 +25,10 @@ export default {
       const self = this;
       // 绘制图表
       self.powerChart = self.$echarts.init(document.getElementById("pieChart"));
+      self.powerChart.on("click", function(params) {
+        console.log(params);
+        self.$emit("showPeopleList",{type: params.data.name, list: params.data.users});
+      });
     },
     getPowerStatistics() {
       const self = this;
@@ -61,7 +65,6 @@ export default {
           trigger: "item",
           // formatter: "{a} <br/>{b} : {c} ({d}%)"
           formatter: function(params, ticket, callback) {
-            console.log(params);
             let str = ''
             str += params.data.name + '(' + params.percent + '%)' + '</br>';
             str += '编制：' + params.data.value + '</br>';

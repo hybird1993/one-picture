@@ -3,7 +3,7 @@
     <div class="panel-title">特殊人群</div>
     <el-scrollbar class="panel-content">
       <ul>
-        <li v-for="(item, index) of list" :key="item.id">
+        <li v-for="(item, index) of list" :key="item.id" @click="showDetail(item)">
           <span class="alarm-index">{{index + 1}}</span>
           <span class="alarm-title">{{item.headline}}</span>
           <span class="alarm-status">{{item.status}}</span>
@@ -35,6 +35,9 @@ export default {
         },
         err => {}
       );
+    },
+    showDetail(item) {
+      this.$emit('showSpecialPeople', item);
     }
   }
 };

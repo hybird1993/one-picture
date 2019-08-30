@@ -14,14 +14,19 @@
       </div>
     </el-scrollbar>
     <div class="close-item">
-      <img @click="close" src="../../assets/image/icon-close.png"/>
+      <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
   </div>
 </template>
 <script>
 export default {
   name: "news-detail",
-  props: ["detail"],
+  props: {
+    detail: {
+      type: Object,
+      default: {}
+    }
+  },
   data() {
     return {};
   },
@@ -31,7 +36,7 @@ export default {
   },
   methods: {
     close() {
-      this.$emit('closeNewsDetail');
+      this.$emit("closeNewsDetail");
     }
   }
 };
