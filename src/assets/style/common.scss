@@ -3,12 +3,12 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-bottom: 10px;
+  padding-bottom: 0.8rem;
   .panel-title {
-    height: 36px;
-    line-height: 36px;
+    height: 3rem;
+    line-height: 3rem;
     z-index: 15;
-    font-size: 16px;
+    font-size: 1.4rem;
   }
 
   .panel-content {
@@ -36,9 +36,9 @@
 }
 
 .btn-small {
-  width: 90px;
-  height: 30px;
-  line-height: 30px;
+  width: 7.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
 }
 
 .chart-title /deep/ .el-radio__label {
@@ -47,19 +47,36 @@
 
 .close-item {
   z-index: 300;
-  width: 30px;
-  height: 30px;
+  width: 2.5rem;
+  height: 2.5rem;
   display: block;
   position: absolute;
-  right: 15px;
-  top: 15px;
+  right: 1.25rem;
+  top: 1.25rem;
   cursor: pointer;
   img {
     visibility: hidden;
+    width: 100%;
+    height: 100%;
   }
   &:hover {
     img {
       visibility: visible;
     }
+  }
+}
+
+.li-dot {
+  &:before {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    margin-top: -0.25rem;
+    height: 0.5rem;
+    width: 0.5rem;
+    margin-left: -1.25rem;
+    display: block;
+    border-radius: 50%;
+    background: #01a5db;
   }
 }

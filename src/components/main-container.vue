@@ -63,37 +63,50 @@
     </div>
 
     <!-- 特殊人口告警详情 -->
-    <div v-if="isShowPeopleAlarmDetail" class="item-box-header high-index" :style="styleMap.peopleAlarmDetail">
+    <div
+      v-if="isShowPeopleAlarmDetail"
+      class="item-box-header high-index"
+      :style="styleMap.peopleAlarmDetail"
+    >
       <img class="item-box-bg" src="../assets/image/icon-box.png" />
       <AlarmDetail :id="peopleAlarmId" @closeAlarmDetail="closePeopleAlarmDetail"></AlarmDetail>
     </div>
 
     <!-- 人员详情 -->
     <div
-      v-if="isShowPeopleDetail" class="item-box-header high-index" :style="styleMap.peopleDetail">
+      v-if="isShowPeopleDetail"
+      class="item-box-header high-index"
+      :style="styleMap.peopleDetail"
+    >
       <img class="item-box-bg" src="../assets/image/icon-box.png" />
       <PeopleDetail :id="idNo" @closePeopleDetail="closePeopleDetail"></PeopleDetail>
     </div>
 
     <!-- 人员列表 -->
-    <div
-      v-if="isShowPeopleList" class="item-box-header high-index" :style="styleMap.peopleList">
+    <div v-if="isShowPeopleList" class="item-box-header high-index" :style="styleMap.peopleList">
       <img class="item-box-bg" src="../assets/image/icon-box.png" />
       <PeopleList :people-type="peopleType" from-item="people" @closePeopleList="closePeopleList"></PeopleList>
     </div>
 
     <!-- 综治力量人员列表 -->
     <div
-      v-if="isShowGeneralPowerList" class="item-box-header high-index" :style="styleMap.generalPowerList">
+      v-if="isShowGeneralPowerList"
+      class="item-box-header high-index"
+      :style="styleMap.generalPowerList"
+    >
       <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <PeopleList :people-type="generalPowerType" :people-list="generalPowerList" from-item="generalPower" @closePeopleList="closeGeneralPowerList"></PeopleList>
+      <PeopleList
+        :people-type="generalPowerType"
+        :people-list="generalPowerList"
+        from-item="generalPower"
+        @closePeopleList="closeGeneralPowerList"
+      ></PeopleList>
     </div>
 
     <!-- 人员行踪 -->
-    <div
-      v-if="isShowRecentTrace" class="item-box-header high-index" :style="styleMap.recentTrace">
+    <div v-if="isShowRecentTrace" class="item-box-header high-index" :style="styleMap.recentTrace">
       <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <RecentTrace :id="peopleId" @closeRecentTrace="closeRecentTrace"></RecentTrace>
+      <RecentTrace :id="peopleId" :people-name="peopleName" @closeRecentTrace="closeRecentTrace"></RecentTrace>
     </div>
 
     <!-- 地图设置 -->
@@ -229,6 +242,7 @@ export default {
         peopleAlarmDetail: {},
         video: {}
       },
+      dict: {},
       cacheStyle: {}, // 缓存的位置信息
       itemMap: new Map(), // 小模块位置
       itemMarginRow: "10px", // 行之间间距
@@ -243,17 +257,18 @@ export default {
       newsDetail: null, // 新闻详情
       isShowAlarmDetail: false, // 是否显示告警详情
       alarmId: null, // 告警id
-      isShowPeopleDetail: false,   // 是否显示人员详情
-      idNo: null,   // 身份证id
-      isShowPeopleList: false,   // 是否显示人员列表
-      peopleType: null,  // 人员类型
-      isShowGeneralPowerList: false,   // 是否显示综治力量的人员列表
-      generalPowerType: null,  // 人员类型
-      generalPowerList: [],    // 人员列表
-      isShowRecentTrace: false,   // 是否显示综治力量的人员列表
-      peopleId: null,  // 人员id
-      isShowPeopleAlarmDetail: false,   // 是否显示人员告警详情
-      peopleAlarmId: null,  // 人员告警详情
+      isShowPeopleDetail: false, // 是否显示人员详情
+      idNo: null, // 身份证id
+      isShowPeopleList: false, // 是否显示人员列表
+      peopleType: null, // 人员类型
+      isShowGeneralPowerList: false, // 是否显示综治力量的人员列表
+      generalPowerType: null, // 人员类型
+      generalPowerList: [], // 人员列表
+      isShowRecentTrace: false, // 是否显示综治力量的人员列表
+      peopleId: null, // 人员id
+      isShowPeopleAlarmDetail: false, // 是否显示人员告警详情
+      peopleAlarmId: null, // 人员告警详情
+      peopleName: "" // 人员名称
     };
   },
   mounted() {
@@ -274,12 +289,16 @@ export default {
         }
       );
     }
+    self.getDict();
   },
   methods: {
     init() {
       const self = this;
       const mainContainer = this.$refs.mainContainer;
       const width = mainContainer.offsetWidth;
+      if (width >= 1920) {
+        document.getElementsByTagName('html')[0].style.fontSize = Math.round(12 * (width / 1920)) + 'px';
+      }
       const height = mainContainer.offsetHeight;
       let itemWidth =
         (parseInt(width, 10) - parseInt(self.itemMarginCol, 10) * 3) / 4;
@@ -359,7 +378,7 @@ export default {
       });
       self.styleMap.MapSetting = {
         width: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
-        height: `40px`,
+        height: `3.5rem`,
         left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
         top: 0
       };
@@ -425,6 +444,15 @@ export default {
       });
       localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
     },
+    getDict() {
+      const self = this;
+      API.getDict().then(
+        res => {
+          self.dict = res;
+        },
+        err => {}
+      );
+    },
     showNewsDetail(event) {
       this.newsDetail = event;
       this.isShowNewsDetail = true;
@@ -474,10 +502,12 @@ export default {
       this.isShowGeneralPowerList = false;
     },
     showSpecialPeople(event) {
-      let index = parseInt(this.cacheStyle["specialPeople"]["position"], 10) + 1;
+      let index =
+        parseInt(this.cacheStyle["specialPeople"]["position"], 10) + 1;
       let style1 = index > 8 ? 1 : index;
       this.styleMap.peopleAlarmDetail = this.itemMap.get(style1);
       this.peopleAlarmId = event.id;
+      this.peopleName = event.relationPerson;
       this.isShowPeopleAlarmDetail = true;
       if (event.identityCard) {
         this.peopleId = event.identityCard;
@@ -492,7 +522,7 @@ export default {
     },
     closePeopleAlarmDetail() {
       this.isShowPeopleAlarmDetail = false;
-    },
+    }
   },
   components: {
     LatestNews,
@@ -512,7 +542,7 @@ export default {
     AlarmDetail,
     PeopleDetail,
     PeopleList,
-    RecentTrace,
+    RecentTrace
   }
 };
 </script>
@@ -556,7 +586,7 @@ export default {
     position: absolute;
     z-index: 100;
     display: block !important;
-    border: 2px dotted white !important;
+    border: .25rem dotted white !important;
   }
 
   .dragover-oulline {
@@ -570,13 +600,13 @@ export default {
   @keyframes glow {
     0% {
       border-color: #393;
-      box-shadow: 0 0 5px rgba(0, 255, 0, 0.2),
-        inset 0 0 5px rgba(0, 255, 0, 0.1), 0 1px 0 #393;
+      box-shadow: 0 0 .5rem rgba(0, 255, 0, 0.2),
+        inset 0 0 .5rem rgba(0, 255, 0, 0.1), 0 .2rem 0 #393;
     }
     100% {
       border-color: #6f6;
-      box-shadow: 0 0 20px rgba(0, 255, 0, 0.6),
-        inset 0 0 10px rgba(0, 255, 0, 0.4), 0 1px 0 #6f6;
+      box-shadow: 0 0 2rem rgba(0, 255, 0, 0.6),
+        inset 0 0 1rem rgba(0, 255, 0, 0.4), 0 .2rem 0 #6f6;
     }
   }
 }

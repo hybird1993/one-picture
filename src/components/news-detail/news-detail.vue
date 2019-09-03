@@ -14,7 +14,7 @@
       </div>
     </el-scrollbar>
     <div class="close-item">
-      <img @click="close" src="../../assets/image/icon-close.png" />
+      <img @click="close" src="../../assets/image/icon-close.png"/>
     </div>
   </div>
 </template>
@@ -50,16 +50,16 @@ export default {
   .panel-content {
     z-index: 1;
 
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
     h2 {
-      margin: 5px 0 10px 0;
+      margin: .5rem 0 10px 0;
     }
     span {
-      padding: 5px 20px;
+      padding: .5rem 2rem;
     }
     .news-content {
-      margin: 20px;
+      margin: 2rem;
     }
   }
 }

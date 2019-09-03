@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="chart-container">
-        <div id="indexline" :style="{width: '340px', height: '230px'}"></div>
+        <div id="indexline"></div>
         <el-scrollbar class="chart-content">
           <ul>
             <li
@@ -127,9 +127,11 @@ export default {
         };
       });
       console.log(self.xData);
-   
-      self.lineChart.setOption(self.setIndexChartOption(self.xData, seriesData), true)
-      
+
+      self.lineChart.setOption(
+        self.setIndexChartOption(self.xData, seriesData),
+        true
+      );
     },
     changeItemStatus(item) {
       this.$set(item, "checked", !item.checked);
@@ -176,6 +178,8 @@ export default {
         }
       ]
     ) {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         tooltip: {
           trigger: "axis",
@@ -184,15 +188,24 @@ export default {
             label: {
               backgroundColor: "#6a7985"
             }
+          },
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
           }
         },
-        textStyle: {
-          // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-          color: "rgba(255, 255, 255, 0.65)"
-        },
-        color: ['#28a1f7', '#7ac3ff', '#ffb966', '#f14b30', '#6cb91e', '#7f58c3', '#25a59a', '#bdbdbd'],
+        color: [
+          "#28a1f7",
+          "#7ac3ff",
+          "#ffb966",
+          "#f14b30",
+          "#6cb91e",
+          "#7f58c3",
+          "#25a59a",
+          "#bdbdbd"
+        ],
         grid: {
-          top: "10px",
+          top:  Math.round(12 * times),
           left: "3%",
           right: "4%",
           bottom: "3%",
@@ -202,12 +215,20 @@ export default {
           {
             type: "category",
             boundaryGap: false,
-            data: xData
+            data: xData,
+            axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times)
+            }
           }
         ],
         yAxis: [
           {
-            type: "value"
+            type: "value",
+            axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times)
+            }
           }
         ],
         series: seriesData
@@ -223,13 +244,13 @@ export default {
   z-index: 20;
   .chart-title {
     display: flex;
-    padding: 10px 20px;
-    height: 40px;
+    padding: 1rem 2rem;
+    height: 3.5rem;
     align-items: center;
     justify-content: space-between;
     .avg-count {
       text-align: left;
-      margin: 10px;
+      margin: 1rem;
       span {
         display: inline-block;
       }
@@ -237,13 +258,13 @@ export default {
         color: #49a9ee;
       }
       .avg-count-num {
-        width: 20px;
-        height: 20px;
+        width: 2rem;
+        height: 2rem;
         background-color: rgba(230, 230, 230, 0.3);
         text-align: center;
-        line-height: 20px;
-        border-radius: 4px;
-        margin: 2px;
+        line-height: 2rem;
+        border-radius: 0.5rem;
+        margin: 0.2rem;
         &:last-child {
           background-color: #ff2400;
         }
@@ -253,31 +274,35 @@ export default {
       color: #49a9ee;
       span {
         cursor: pointer;
-        margin: 0 5px;
+        margin: 0 0.5rem;
       }
     }
   }
   .chart-container {
     display: flex;
-    padding-left: 10px;
+    padding-left: 1rem;
+    #indexline {
+      width: 29rem;
+      height: 20rem;
+    }
     .chart-content {
-      height: 230px;
+      height: 20rem;
       ul li {
         text-align: left;
-        padding-right: 7px;
+        padding-right: 0.5rem;
         color: #1ebdde;
-        margin: 2px;
+        margin: 0.2rem;
         cursor: pointer;
         span {
           display: inline-block;
-          width: 6px;
-          height: 12px;
+          width: 0.5rem;
+          height: 1rem;
           border-color: rgba(255, 255, 255, 0);
           border-style: solid;
-          border-width: 0 3px 3px 0;
+          border-width: 0 0.25rem 0.25rem 0;
           transform: rotate(45deg);
-          margin-right: 5px;
-          margin-left: 5px;
+          margin-right: 0.5rem;
+          margin-left: 0.5rem;
         }
         .checked {
           border-color: rgba(117, 200, 43, 1);
@@ -292,12 +317,12 @@ export default {
       position: relative;
       .refueling-list {
         position: absolute;
-        left: 100px;
+        left: 8rem;
         color: green;
       }
       .praise-list {
         position: absolute;
-        right: 20px;
+        right: 2rem;
         color: red;
       }
     }

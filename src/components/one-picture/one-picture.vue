@@ -3,6 +3,7 @@
     <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
       <div id="mapContainer" class="map"></div>
+      <!-- <iframe src="http://172.29.1.20/s/map/OneMap/index.html" class="map"></iframe> -->
     </div>
   </div>
 </template>

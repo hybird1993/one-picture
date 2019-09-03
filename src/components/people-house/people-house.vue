@@ -4,7 +4,7 @@
     <div class="panel-content">
       <div class="chart-container">
         <div class="chart-item">
-          <div id="peoplepie" :style="{width: '200px', height: '200px'}"></div>
+          <div id="peoplepie"></div>
           <div class="statistics-container">
             <div class="statistics-text">
               <img class="statistics-bg" src="../../assets/image/icon-text-bg.png" />
@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="chart-item">
-          <div id="housepie" :style="{width: '200px', height: '200px'}"></div>
+          <div id="housepie"></div>
           <div class="statistics-container">
             <div class="statistics-text">
               <img class="statistics-bg" src="../../assets/image/icon-text-bg.png" />
@@ -132,6 +132,8 @@ export default {
       );
     },
     getHouseChartOption(data = []) {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         // title: {
         //   text: "34.6%",
@@ -146,7 +148,11 @@ export default {
         // },
         tooltip: {
           show: true,
-          formatter: "{b} : {c} ({d}%)"
+          formatter: "{b} : {c} ({d}%)",
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          }
         },
         legend: {
           show: false
@@ -167,7 +173,7 @@ export default {
             startAngle: 135,
             minAngle: 20,
             center: ["50%", "50%"],
-            radius: [50, 80],
+            radius: ["50%", "80%"],
             //标签
             label: {
               normal: {
@@ -178,7 +184,6 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontSize: 8,
                   fontWeight: "bolder"
                 }
               }
@@ -199,6 +204,8 @@ export default {
       };
     },
     getPeopleChartOption(data1 = [], data2 = [], color1 = [], color2 = []) {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         title: {
           text: "人口分布",
@@ -207,12 +214,16 @@ export default {
           textStyle: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
             color: "rgba(255, 255, 255)",
-            fontSize: 14
+            fontSize: Math.round(14 * times)
           }
         },
         tooltip: {
           show: true,
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
+          formatter: "{a} <br/>{b} : {c} ({d}%)",
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          }
         },
         legend: {
           show: false
@@ -224,7 +235,7 @@ export default {
             type: "pie",
             center: ["50%", "50%"],
             startAngle: 135,
-            radius: [30, 70],
+            radius: ["30%", "70%"],
             color: color1,
             //标签
             label: {
@@ -236,7 +247,6 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontSize: 8,
                   fontWeight: "bolder"
                 }
               }
@@ -248,7 +258,7 @@ export default {
             type: "pie",
             center: ["50%", "50%"],
             startAngle: 135,
-            radius: [70, 100],
+            radius: ["70%", "100%"],
             color: color2,
             //标签
             label: {
@@ -260,7 +270,6 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontSize: 8,
                   fontWeight: "bolder"
                 }
               }
@@ -279,17 +288,29 @@ export default {
 @import "../../assets/style/common.scss";
 .chart-container {
   display: flex;
-  margin: 10px 40px;
+  padding-left: 1rem;
   .chart-item {
+    margin-top: .5rem;
+    #peoplepie {
+      margin-left: 1.5rem;
+      width: 16rem;
+      height: 16rem;
+    }
+    #housepie {
+      width: 16rem;
+      height: 16rem;
+    }
     .statistics-container {
       display: flex;
       justify-content: center;
       .statistics-text {
         position: relative;
-        width: 110px;
-        height: 55px;
-        padding: 5px 10px;
-        margin: 5px;
+        width: 9.5rem;
+        height: 5rem;
+        padding: 0.5rem 1rem;
+        margin-left: 1rem;
+        margin-bottom: .5rem;
+        margin-top: .5rem;
         text-align: left;
         color: #49a9ee;
         .statistics-bg {
@@ -305,10 +326,10 @@ export default {
           span {
             display: inline-block;
             color: #ffffff;
-            font-size: 24px;
-            min-width: 60px;
+            font-size: 2rem;
+            min-width: 5rem;
             text-align: right;
-            padding-right: 5px;
+            padding-right: 0.5rem;
           }
         }
       }

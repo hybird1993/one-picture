@@ -17,7 +17,7 @@
         </li>
         <li>
           <span class="item-title">告警状态：</span>
-          <span class="item-content" style="color:red;">{{detail.status}}</span>
+          <span class="item-content alarm-status" @click="dealAlarm">{{detail.status}}</span>
         </li>
         <li>
           <span class="item-title">告警分类：</span>
@@ -44,15 +44,13 @@
 </template>
 <script>
 import { API } from "../../request/api";
+import axios from 'axios';
 export default {
   name: "alarm-detail",
   props: {
     id: {
       type: Number,
     },
-    type: {
-      type: String
-    }
   },
   data() {
     return {
@@ -75,7 +73,11 @@ export default {
         },
         err => {}
       );
-    }
+    },
+    dealAlarm() {
+      // auth-token实际也可不传
+      window.open(`${axios.defaults.baseURL}/s/routine/workPc.html?alertId=${this.id}`, '_blank');   
+    },
   },
   watch: {
     id: function(val, oldVal) {
@@ -93,39 +95,30 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     ul {
-      margin: 0 15px;
+      margin: 0 1.25rem;
       li {
         display: flex;
-        font-size: 12px;
-        line-height: 30px;
-        padding-left: 20px;
-        padding-right: 5px;
+        line-height: 2.5rem;
+        padding-left: 2rem;
+        padding-right: .5rem;
         position: relative;
         text-align: left;
         // cursor: pointer;
         .item-title {
           display: inline-block;
-          min-width: 90px;
+          min-width: 7.5rem;
           text-align: left;
         }
         .item-content {
           word-break: break-all;
         }
-      }
-      li:before {
-        content: "";
-        position: absolute;
-        top: 15px;
-        margin-top: -3px;
-        height: 6px;
-        width: 6px;
-        margin-left: -15px;
-        display: block;
-        border-radius: 50%;
-        background: #01a5db;
+        .alarm-status {
+          color:red;
+          cursor: pointer;
+        }
       }
       li:nth-child(odd) {
         background-color: rgba(256, 256, 256, 0.1);

@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+  font-size: 12px;
+}
+
 *:before,
 *:after {
     -webkit-box-sizing: border-box;
@@ -44,14 +48,7 @@ td {
 body {
     background: #fff;
     color: #555;
-    font-size: 14px;
     font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
-}
-
-td,
-th,
-caption {
-    font-size: 14px;
 }
 
 address,
@@ -145,4 +142,12 @@ html {
 button {
   cursor: pointer;
   outline: none;
+}
+
+.el-radio__inner {
+  width: 1rem!important;
+  height: 1rem!important;
+}
+.el-radio__label {
+  font-size: 1rem!important;
 }

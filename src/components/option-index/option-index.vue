@@ -14,7 +14,7 @@
         </div>
       </div>
       <div v-show="radio === '1'" class="chart-container">
-        <div id="indexbar" :style="{width: '340px', height: '230px'}"></div>
+        <div id="indexbar"></div>
         <el-scrollbar class="chart-content">
           <ul>
             <li
@@ -30,7 +30,7 @@
         </el-scrollbar>
       </div>
       <div v-show="radio === '2'" class="rank-container">
-        <div id="rankbar" :style="{width: '450px', height: '230px'}"></div>
+        <div id="rankbar"></div>
         <div class="rank-label">
           <div class="refueling-list">加油榜</div>
           <div class="praise-list">表扬榜</div>
@@ -168,8 +168,8 @@ export default {
     },
     showRankListChart(data) {
       const self = this;
-      const yData1 = data.top.map(item => item.orgName.split('-')[1]);
-      const yData2 = data.last.map(item => item.orgName.split('-')[1]);
+      const yData1 = data.top.map(item => item.orgName.split("-")[1]);
+      const yData2 = data.last.map(item => item.orgName.split("-")[1]);
       const seriesData1 = new Array(8).fill({ data: [] });
       const seriesData2 = new Array(8).fill({ data: [] });
 
@@ -220,6 +220,8 @@ export default {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
     setIndexChartOption() {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
@@ -227,89 +229,93 @@ export default {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
-          trigger: "axis"
-        },
-        textStyle: {
-          // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-          color: "rgba(255, 255, 255, 0.65)"
+          trigger: "axis",
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          }
         },
         legend: {
           orient: "vertical", //垂直显示
           y: "center", //延Y轴居中
           x: "left", //居右显示
-          padding: [15, 0, 0, 0],
-          itemGap: 5,
-          itemWidth: 15,
-          itemHeight: 15,
-          textStyle: {
-            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            color: "rgba(255, 255, 255, 0.65)"
-          },
+          padding: [Math.round(15 * times), 0, 0, 0],
+          itemGap: Math.round(5 * times),
+          itemWidth: Math.round(15 * times),
+          itemHeight: Math.round(15 * times),
           data: [
             {
               name: "隐患排查",
               icon: "image://" + legend1,
               textStyle: {
-                color: "#28a1f7"
+                color: "#28a1f7",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "治安事件",
               icon: "image://" + legend2,
               textStyle: {
-                color: "#7ac3ff"
+                color: "#7ac3ff",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "信访相关",
               icon: "image://" + legend3,
               textStyle: {
-                color: "#ffb966"
+                color: "#ffb966",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "爱心帮扶",
               icon: "image://" + legend4,
               textStyle: {
-                color: "#f14b30"
+                color: "#f14b30",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "矛盾纠纷",
               icon: "image://" + legend5,
               textStyle: {
-                color: "#6cb91e"
+                color: "#6cb91e",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "心理咨询",
               icon: "image://" + legend8,
               textStyle: {
-                color: "#7f58c3"
+                color: "#7f58c3",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "弱电告警",
               icon: "image://" + legend6,
               textStyle: {
-                color: "#25a59a"
+                color: "#25a59a",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "弱电故障",
               icon: "image://" + legend7,
               textStyle: {
-                color: "#bdbdbd"
+                color: "#bdbdbd",
+                fontSize: Math.round(12 * times)
               }
             }
           ]
         },
         calculable: true,
         grid: {
-          left: "80px",
+          left: Math.round(80 * times),
           right: "2%",
           bottom: "1%",
-          top: "10px",
+          top: Math.round(10 * times),
           containLabel: true
         },
         xAxis: [
@@ -319,7 +325,11 @@ export default {
               interval: 0, //横轴信息全部显示
               rotate: 20 //30度角倾斜显示
             },
-            data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"]
+            data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
+            axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times)
+            }
           }
           //	  boundaryGap : [0, 0]
         ],
@@ -330,9 +340,13 @@ export default {
               show: true,
               lineStyle: {
                 color: ["rgba(255,255,255,0.2)"],
-                width: 0.5,
+                width: Math.round(0.5 * times),
                 type: "solid"
               }
+            },
+            axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times)
             }
           }
         ],
@@ -340,7 +354,7 @@ export default {
           {
             name: "隐患排查",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#28a1f7" } },
             data: [100, 100, 100, 100, 100]
@@ -348,7 +362,7 @@ export default {
           {
             name: "治安事件",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#7ac3ff" } },
             data: [100, 100, 100, 100, 100]
@@ -356,7 +370,7 @@ export default {
           {
             name: "信访相关",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#ffb966" } },
             data: [100, 100, 100, 100, 100]
@@ -364,7 +378,7 @@ export default {
           {
             name: "爱心帮扶",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#f14b30" } },
             data: [100, 100, 100, 100, 100]
@@ -372,7 +386,7 @@ export default {
           {
             name: "矛盾纠纷",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#6cb91e" } },
             data: [100, 100, 100, 100, 100]
@@ -380,7 +394,7 @@ export default {
           {
             name: "心理咨询",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#7f58c3" } },
             data: [100, 100, 100, 100, 100]
@@ -388,7 +402,7 @@ export default {
           {
             name: "弱电告警",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#25a59a" } },
             data: [100, 100, 100, 100, 100]
@@ -396,7 +410,7 @@ export default {
           {
             name: "弱电故障",
             type: "bar",
-            barMaxWidth: 25,
+            barMaxWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#bdbdbd" } },
             data: [100, 100, 100, 100, 100]
@@ -406,6 +420,8 @@ export default {
       };
     },
     setRankChartOption() {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
@@ -414,6 +430,10 @@ export default {
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
           trigger: "axis",
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          },
           formatter: function(params, ticket, callback) {
             console.log(params);
             const obj = {};
@@ -453,10 +473,10 @@ export default {
           orient: "vertical", //垂直显示
           y: "center", //延Y轴居中
           x: "left", //居右显示
-          padding: [15, 0, 0, 0],
-          itemGap: 5,
-          itemWidth: 15,
-          itemHeight: 15,
+          padding: [Math.round(15 * times), 0, 0, 0],
+          itemGap: Math.round(5 * times),
+          itemWidth: Math.round(15 * times),
+          itemHeight: Math.round(15 * times),
           textStyle: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
             color: "rgba(255, 255, 255, 0.65)"
@@ -466,66 +486,74 @@ export default {
               name: "隐患排查",
               icon: "image://" + legend1,
               textStyle: {
-                color: "#28a1f7"
+                color: "#28a1f7",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "治安事件",
               icon: "image://" + legend2,
               textStyle: {
-                color: "#7ac3ff"
+                color: "#7ac3ff",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "信访相关",
               icon: "image://" + legend3,
               textStyle: {
-                color: "#ffb966"
+                color: "#ffb966",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "爱心帮扶",
               icon: "image://" + legend4,
               textStyle: {
-                color: "#f14b30"
+                color: "#f14b30",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "矛盾纠纷",
               icon: "image://" + legend5,
               textStyle: {
-                color: "#6cb91e"
+                color: "#6cb91e",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "心理咨询",
               icon: "image://" + legend8,
               textStyle: {
-                color: "#7f58c3"
+                color: "#7f58c3",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "弱电告警",
               icon: "image://" + legend6,
               textStyle: {
-                color: "#25a59a"
+                color: "#25a59a",
+                fontSize: Math.round(12 * times)
               }
             },
             {
               name: "弱电故障",
               icon: "image://" + legend7,
               textStyle: {
-                color: "#bdbdbd"
+                color: "#bdbdbd",
+                fontSize: Math.round(12 * times)
               }
             }
           ]
         },
         calculable: true,
         grid: {
-          left: "80px",
+          left: Math.round(80 * times),
           right: "2%",
           bottom: "1%",
-          top: "10px",
+          top: Math.round(10 * times),
           containLabel: true
         },
         xAxis: [
@@ -541,14 +569,18 @@ export default {
 
             data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
             axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times),
               interval: 0, //横轴信息全部显示
-              rotate: 20 //30度角倾斜显示
+              rotate: 20 //30度角倾斜显示,
             }
           },
           {
             type: "category",
             data: ["邬家山村", "大邱村", "湖口村", "汪田村", "九夫村"],
             axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times),
               interval: 0, //横轴信息全部显示
               rotate: -20 //30度角倾斜显示
             }
@@ -558,7 +590,7 @@ export default {
           {
             name: "隐患排查",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#28a1f7" } },
             data: [100, 100, 100, 100, 100]
@@ -566,7 +598,7 @@ export default {
           {
             name: "治安事件",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#7ac3ff" } },
             data: [100, 100, 100, 100, 100]
@@ -574,7 +606,7 @@ export default {
           {
             name: "信访相关",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#ffb966" } },
             data: [100, 100, 100, 100, 100]
@@ -582,7 +614,7 @@ export default {
           {
             name: "爱心帮扶",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#f14b30" } },
             data: [100, 100, 100, 100, 100]
@@ -590,7 +622,7 @@ export default {
           {
             name: "矛盾纠纷",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#6cb91e" } },
             data: [100, 100, 100, 100, 100]
@@ -598,7 +630,7 @@ export default {
           {
             name: "心理咨询",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#7f58c3" } },
             data: [100, 100, 100, 100, 100]
@@ -606,7 +638,7 @@ export default {
           {
             name: "弱电告警",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#25a59a" } },
             data: [100, 100, 100, 100, 100]
@@ -614,7 +646,7 @@ export default {
           {
             name: "弱电故障",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#bdbdbd" } },
             data: [100, 100, 100, 100, 100]
@@ -622,7 +654,7 @@ export default {
           {
             name: "隐患排查",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#28a1f7" } },
             yAxisIndex: "1",
@@ -637,7 +669,7 @@ export default {
           {
             name: "治安事件",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#7ac3ff" } },
             yAxisIndex: "1",
@@ -652,7 +684,7 @@ export default {
           {
             name: "信访相关",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#ffb966" } },
             yAxisIndex: "1",
@@ -667,7 +699,7 @@ export default {
           {
             name: "爱心帮扶",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#f14b30" } },
             yAxisIndex: "1",
@@ -682,7 +714,7 @@ export default {
           {
             name: "矛盾纠纷",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#6cb91e" } },
             yAxisIndex: "1",
@@ -697,7 +729,7 @@ export default {
           {
             name: "心理咨询",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#7f58c3" } },
             yAxisIndex: "1",
@@ -712,7 +744,7 @@ export default {
           {
             name: "弱电告警",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#25a59a" } },
             yAxisIndex: "1",
@@ -727,7 +759,7 @@ export default {
           {
             name: "弱电故障",
             type: "bar",
-            barWidth: 25,
+            barWidth: Math.round(25 * times),
             stack: "总量",
             itemStyle: { normal: { color: "#bdbdbd" } },
             yAxisIndex: "1",
@@ -753,39 +785,43 @@ export default {
   z-index: 20;
   .chart-title {
     display: flex;
-    padding: 0 20px;
-    height: 36px;
+    padding: 0 2rem;
+    height: 3rem;
     align-items: center;
     justify-content: space-between;
     .date {
       color: #49a9ee;
       span {
         cursor: pointer;
-        margin: 0 5px;
+        margin: 0 0.5rem;
       }
     }
   }
   .chart-container {
     display: flex;
-    padding-left: 10px;
+    padding-left: 1rem;
+    #indexbar {
+      width: 29rem;
+      height: 20rem;
+    }
     .chart-content {
-      height: 230px;
+      height: 20rem;
       ul li {
         text-align: left;
-        padding-right: 7px;
+        padding-right: 0.5rem;
         color: #1ebdde;
-        margin: 2px;
+        margin: 0.2rem;
         cursor: pointer;
         span {
           display: inline-block;
-          width: 6px;
-          height: 12px;
+          width: 0.5rem;
+          height: 1rem;
           border-color: rgba(255, 255, 255, 0);
           border-style: solid;
-          border-width: 0 3px 3px 0;
+          border-width: 0 0.25rem 0.25rem 0;
           transform: rotate(45deg);
-          margin-right: 5px;
-          margin-left: 5px;
+          margin-right: 0.5rem;
+          margin-left: 0.5rem;
         }
         .checked {
           border-color: rgba(117, 200, 43, 1);
@@ -794,19 +830,25 @@ export default {
     }
   }
   .rank-container {
-    padding-left: 10px;
+    padding-left: 1rem;
+    #rankbar {
+      width: 36rem;
+      height: 18rem;
+    }
     .rank-label {
-      display:flex;
+      display: flex;
       position: relative;
       .refueling-list {
-    position: absolute;
-    left: 100px;
-    color: green;
+        position: absolute;
+        left: 9.5rem;
+        margin-top: 0.5rem;
+        color: green;
       }
       .praise-list {
-    position: absolute;
-    right: 20px;
-    color: red;
+        position: absolute;
+        right: 4.5rem;
+        margin-top: 0.5rem;
+        color: red;
       }
     }
   }

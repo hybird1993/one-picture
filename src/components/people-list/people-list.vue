@@ -131,16 +131,15 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     ul {
-      margin: 0 15px;
+      margin: 0 1.25rem;
       li {
         display: flex;
-        font-size: 12px;
-        line-height: 30px;
-        padding-left: 20px;
-        padding-right: 5px;
+        line-height: 2.5rem;
+        padding-left: 2rem;
+        padding-right: .5rem;
         position: relative;
         text-align: left;
         // cursor: pointer;
@@ -158,20 +157,6 @@ export default {
         }
         .item-phone {
           width: 25%;
-        }
-      }
-      .li-dot {
-        &:before {
-          content: "";
-          position: absolute;
-          top: 15px;
-          margin-top: -3px;
-          height: 6px;
-          width: 6px;
-          margin-left: -15px;
-          display: block;
-          border-radius: 50%;
-          background: #01a5db;
         }
       }
       .li-online {

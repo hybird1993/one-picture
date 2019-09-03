@@ -48,15 +48,14 @@ export default {
 @import "../../assets/style/common.scss";
 
 .panel-content {
-  margin: 5px 0;
+  margin: .5rem 0;
   ul {
-    margin: 0 15px;
+    margin: 0 1.25rem;
     li {
-      font-size: 12px;
-      height: 30px;
-      line-height: 30px;
-      padding-left: 20px;
-      padding-right: 5px;
+      height: 2.5rem;
+      line-height: 2.5rem;
+      padding-left: 1.75rem;
+      padding-right: .5rem;
       position: relative;
       text-align: left;
       cursor: pointer;
@@ -65,10 +64,10 @@ export default {
       content: "";
       position: absolute;
       top: 50%;
-      margin-top: -3px;
-      height: 6px;
-      width: 6px;
-      margin-left: -15px;
+      margin-top: -.25rem;
+      height: .5rem;
+      width: .5rem;
+      margin-left: -1.25rem;
       display: block;
       border-radius: 50%;
       background: #01a5db;

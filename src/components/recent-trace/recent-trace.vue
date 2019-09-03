@@ -1,18 +1,30 @@
 <template>
   <div class="panel-container">
     <div class="panel-title">近期行踪</div>
-    <el-scrollbar class="panel-content">
-      <ul>
-        <li>
-          <span class="item-number">流水号</span>
-          <span class="item-trace">踪迹</span>
-        </li>
-        <li v-for="(item, index) of list" :key="index">
-          <span class="item-number">{{item.alarmTime}}</span>
-          <span class="item-trace">{{item.alarmLocation}}</span>
-        </li>
-      </ul>
-    </el-scrollbar>
+    <div class="panel-content">
+      <div class="trace-title">
+        <div class="people-name">{{peopleName}}</div>
+        <div class="date">
+          <span @click="preDay">&lt;</span>
+          {{showDate}}
+          <span @click="nextDay">&gt;</span>
+        </div>
+        <button>显示轨迹</button>
+        <button>隐藏轨迹</button>
+      </div>
+      <el-scrollbar class="trace-content">
+        <ul>
+          <li>
+            <span class="item-number">流水号</span>
+            <span class="item-trace">踪迹</span>
+          </li>
+          <li v-for="(item, index) of list" :key="index">
+            <span class="item-number">{{item.alarmTime}}</span>
+            <span class="item-trace">{{item.alarmLocation}}</span>
+          </li>
+        </ul>
+      </el-scrollbar>
+    </div>
 
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
@@ -21,19 +33,35 @@
 </template>
 <script>
 import { API } from "../../request/api";
+import { TimeUtil } from "../../utils/time-util";
 export default {
   name: "recent-trace",
   props: {
     id: {
       type: String
+    },
+    peopleName: {
+      type: String
     }
   },
   data() {
     return {
+      date: null,
       list: []
     };
   },
+  computed: {
+    showDate: function() {
+      return this.date ? TimeUtil.formatDate(this.date, "yyyy-MM-dd") : "";
+    }
+  },
   mounted() {
+    const nowDate = new Date();
+    this.date = new Date(
+      nowDate.getFullYear(),
+      nowDate.getUTCMonth(),
+      nowDate.getDate()
+    );
     this.getRencentTrace();
   },
   methods: {
@@ -42,13 +70,27 @@ export default {
     },
     getRencentTrace() {
       const self = this;
-      API.getRencentTrace(self.id).then(
+      if (!self.date) {
+        return;
+      }
+      const date = TimeUtil.formatDate(self.date, "yyyy-MM-dd hh:mm:ss");
+      API.getRencentTrace(self.id, date).then(
         res => {
           self.list = res;
           console.log(self.list);
         },
         err => {}
       );
+    },
+    preDay() {
+      const timestamp = this.date.getTime() - 24 * 60 * 60 * 1000;
+      this.date = new Date(timestamp);
+      this.getRencentTrace();
+    },
+    nextDay() {
+      const timestamp = this.date.getTime() + 24 * 60 * 60 * 1000;
+      this.date = new Date(timestamp);
+      this.getRencentTrace();
     }
   },
   watch: {
@@ -67,29 +109,55 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    ul {
-      margin: 0 15px;
-      li {
-        display: flex;
-        font-size: 12px;
-        line-height: 30px;
-        padding-left: 20px;
-        padding-right: 5px;
-        position: relative;
+    padding-top: .5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .trace-title {
+      display: flex;
+      padding: 0 2rem;
+      height: 3rem;
+      align-items: center;
+      .people-name {
+        flex: 1;
         text-align: left;
-        // cursor: pointer;
-        .item-number {
-          width: 30%;
-        }
-        .item-trace {
-          width: 70%;
+      }
+      .date {
+        color: #49a9ee;
+        margin-left: 1rem;
+        margin-right: 2rem;
+        span {
+          cursor: pointer;
+          margin: 0 .5rem;
         }
       }
-
-      li:nth-child(odd) {
-        background-color: rgba(256, 256, 256, 0.1);
+      button {
+        margin-left: 1rem;
+        padding: .1rem .5rem;
+      }
+    }
+    .trace-content {
+      flex: 1;
+      ul {
+        margin: 0 1.25rem;
+        li {
+          display: flex;
+          line-height: 2.5rem;
+          padding-left: 2rem;
+          padding-right: .5rem;
+          position: relative;
+          text-align: left;
+          // cursor: pointer;
+          .item-number {
+            width: 30%;
+          }
+          .item-trace {
+            width: 70%;
+          }
+        }
+        li:nth-child(odd) {
+          background-color: rgba(256, 256, 256, 0.1);
+        }
       }
     }
   }

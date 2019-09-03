@@ -257,7 +257,7 @@ export default {
   cursor: pointer;
 }
 .panel-content {
-  width: 300px;
+  width: 25rem;
   margin-left: 50%;
   transform: translateX(-50%);
 
@@ -265,20 +265,19 @@ export default {
     display: flex;
     justify-content: center;
     background-color: rgba(30, 31, 42, 0.9);
-    box-shadow: 0px 16px 10px 0px rgba(0, 0, 0, 0.33);
-    border-bottom: #327db3 1.5px solid;
+    box-shadow: 0px 1.5rem 1rem 0px rgba(0, 0, 0, 0.33);
+    border-bottom: #327db3 .1rem solid;
     .setting-item {
-      width: 80px;
-      height: 60px;
-      font-size: 12px;
-      margin: 10px 20px;
+      width: 7.5rem;
+      height: 5rem;
+      margin: 1rem 2rem;
       background: url("../../assets/image/bg-dark.png") no-repeat;
-      background-size: 80px 60px;
+      background-size: 7.5rem 5rem;
       cursor: pointer;
       img {
-        width: 30px;
-        height: 28px;
-        margin: 5px;
+        width: 1.5rem;
+        height: 2,5rem;
+        margin: .5rem;
       }
     }
     .setting-item-light {
@@ -287,32 +286,31 @@ export default {
   }
   ul {
     color: #fff;
-    width: 200px;
-    border-radius: 10px;
+    width: 17rem;
+    border-radius: 1rem;
     margin-left: 50%;
     background: #495077;
-    margin-top: 5px;
+    margin-top: .5rem;
     li {
       cursor: pointer;
       a {
         display: block;
         list-style: none;
-        width: 200px;
-        height: 35px;
-        padding-left: 50px;
+        width: 17rem;
+        height: 3rem;
+        padding-left: 4rem;
         color: #fff;
-        line-height: 35px;
-        border-bottom: solid 0.5px rgba(255, 255, 255, 0.5);
+        line-height: 3rem;
+        border-bottom: solid .1rem rgba(255, 255, 255, 0.5);
         text-align: left;
         text-decoration: none;
-        font-size: 13px;
         background: url("../../assets/image/icon-unchecked.png") no-repeat;
-        background-size: 15px 15px;
+        background-size: 1.25rem 1.25rem;
         background-position: 10% 50%;
       }
       .icon-checked {
         background: url("../../assets/image/icon-checked.png") no-repeat !important;
-        background-size: 15px 15px !important;
+        background-size: 1.25rem 1.25rem !important;
         background-position: 10% 50% !important;
       }
     }
@@ -320,102 +318,103 @@ export default {
 
   .theme-container {
     position: absolute;
-    padding: 20px;
+    padding: 2rem;
     text-align: left;
     color: #fff;
-    border-radius: 10px;
+    border-radius: 1rem;
     background-color: #1e1f2a;
-    left: 150px;
+    left: 12.5rem;
     transform: translate(-50%);
     .theme-list {
       display: flex;
       .theme-item {
-        margin: 5px;
+        margin: .5rem;
         position: relative;
         .actived-theme {
           position: absolute;
           top: 0;
           left: 0;
           display: block;
-          border: solid 3px #01a5db;
-          height: 80px;
+          border: solid .25rem #01a5db;
+          height: 7rem;
           width: 100%;
           img {
-            width: 40px;
-            height: 30px;
-            margin-left: -1px;
-            margin-top: -1px;
+            width: 3.5rem;
+            height: 3rem;
+            margin-left: -.1rem;
+            margin-top: -.1rem;
           }
         }
         img {
-          width: 145px;
-          height: 80px;
+          width: 12rem;
+          height: 7rem;
         }
         .theme-name {
-          padding: 10px;
+          padding: 1rem;
           text-align: center;
         }
       }
     }
     .theme-params {
       p {
-        height: 30px;
-        line-height: 30px;
+        height: 3rem;
+        line-height: 3rem;
         margin: 0;
         span {
           display: inline-block;
-          padding: 0 15px;
+          padding: 0 1.25rem;
           background: rgba(38, 41, 59, 0.5);
         }
       }
       .param-list {
         .param-item {
           display: flex;
-          padding: 10px 15px;
+          padding: 1rem 1.25rem;
           align-items: center;
           background: rgba(38, 41, 59, 0.5);
           .param-name {
-            width: 100px;
+            width: 9rem;
           }
           .slider {
             flex: 1;
           }
           .range-value {
             display: inline-block;
-            height: 30px;
-            line-height: 30px;
-            width: 50px;
+            height: 3rem;
+            line-height: 3rem;
+            width: 4rem;
             background-color: #323b4b;
             text-align: center;
-            border-radius: 20px;
-            margin-left: 20px;
+            border-radius: 2rem;
+            margin-left: 2rem;
           }
           .color-list {
             display: flex;
             .bg-item {
-              width: 40px;
-              height: 40px;
+              width: 3.5rem;
+              height: 3.5rem;
               border-radius: 50%;
-              margin-right: 10px;
+              margin-right: 1rem;
             }
             .used-bg {
-              border: solid 1px #01a5db;
+              border: solid .1rem #01a5db;
             }
           }
         }
       }
     }
     .btn-container {
-      margin-top: 15px;
+      margin-top: 1.25rem;
       display: flex;
       button {
-        width: 120px;
+        width: 10rem;
         color: white;
-        height: 40px;
+        height: 3.5rem;
         border: none;
-        border-radius: 50px;
+        border-radius: 4rem;
         background: #2d334b;
-        margin-right: 20px;
+        margin-right: 2rem;
+        font-size: 1rem;
       }
       .private {
         background: #01a5db;

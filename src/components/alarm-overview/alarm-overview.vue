@@ -1,7 +1,7 @@
 <template>
   <div class="panel-container">
     <div class="panel-title">告警视图总览</div>
-    <div id="alarmbar" :style="{width: '440px', height: '270px'}"></div>
+    <div id="alarmbar" :style="{width: '100%', height: '100%'}"></div>
   </div>
 </template>
 
@@ -21,7 +21,6 @@ export default {
   methods: {
     initChart(isanimation) {
       this.indexChart = this.$echarts.init(document.getElementById("alarmbar"));
-    
     },
     getAlarmStatistics() {
       const self = this;
@@ -29,26 +28,31 @@ export default {
         res => {
           const name = Object.keys(res);
           const value = name.map(item => res[item]);
-            this.indexChart.setOption(this.setChartOption(name, value));
+          this.indexChart.setOption(this.setChartOption(name, value));
         },
         err => {}
       );
     },
     setChartOption(name = [], value = []) {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         title: {
           text: ""
         },
         textStyle: {
-          // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-          color: "rgba(255, 255, 255, 0.65)",
-          fontSize: 8
+          color: "#fff",
+          fontSize: Math.round(12 * times)
         },
         tooltip: {
           trigger: "axis",
           axisPointer: {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+          },
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
           }
         },
 
@@ -56,7 +60,7 @@ export default {
 
         grid: {
           left: "3%",
-          right: "5%",
+          right: "7%",
           bottom: "8%",
           containLabel: true
         },
@@ -71,9 +75,13 @@ export default {
               show: true,
               lineStyle: {
                 color: ["rgba(255,255,255,0.2)"],
-                width: 0.5,
+                width: Math.round(1 * times),
                 type: "solid"
               }
+            },
+            axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times)
             }
             //	  boundaryGap : [0, 0]
           }
@@ -85,9 +93,13 @@ export default {
               show: true,
               lineStyle: {
                 color: ["rgba(255,255,255,0.2)"],
-                width: 0.5,
+                width: Math.round(1 * times),
                 type: "solid"
               }
+            },
+            axisLabel: {
+              color: "#fff",
+              fontSize: Math.round(12 * times)
             },
             data: name
           }
@@ -95,12 +107,16 @@ export default {
         series: [
           {
             type: "bar",
-            barWidth: 10,
+            barWidth: Math.round(12 * times),
             data: value,
             itemStyle: {
               normal: {
                 color: "#fac007"
               }
+            },
+            textStyle: {
+              color: "#fff",
+              fontSize: Math.round(12 * times)
             }
           }
         ],

@@ -37,7 +37,7 @@ export default {
       );
     },
     showDetail(item) {
-      this.$emit('showSpecialPeople', item);
+      this.$emit("showSpecialPeople", item);
     }
   }
 };
@@ -46,53 +46,39 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  margin: 5px 0;
+  margin: 0.5rem 0;
   ul {
-    margin: 0 15px;
+    margin: 0 1.25rem;
     li {
       display: flex;
-      font-size: 12px;
-      padding: 5px;
+      font-size: 1rem;
+      padding: 0.5rem;
       position: relative;
       text-align: left;
       cursor: pointer;
-      min-height: 48px;
-      border-bottom: 1px solid rgba(50, 50, 50, 0.7);
+      min-height: 4rem;
+      border-bottom: 0.1rem solid rgba(50, 50, 50, 0.7);
       .alarm-index {
         display: inline-block;
-        width: 20px;
-        margin-right: 10px;
+        width: 1.75rem;
+        margin-right: 1rem;
+        padding-top: 0.5rem;
       }
       .alarm-title {
         flex: 1;
-            line-height: 20px;
+        line-height: 1.75rem;
       }
       .alarm-status {
         display: inline-block;
-        width: 48px;
-        margin-left: 10px;
-        height: 24px;
-        line-height: 24px;
+        width: 4rem;
+        margin-left: 1rem;
+        height: 2rem;
+        line-height: 2rem;
         text-align: center;
-        border-radius: 5px;
+        border-radius: 0.5rem;
         background-color: red;
       }
     }
-    // li:before {
-    //   content: "";
-    //   position: absolute;
-    //   top: 50%;
-    //   margin-top: -3px;
-    //   height: 6px;
-    //   width: 6px;
-    //   margin-left: -15px;
-    //   display: block;
-    //   border-radius: 50%;
-    //   background: #01a5db;
-    // }
-    // li:nth-child(odd) {
-    //   background-color: rgba(256, 256, 256, 0.1);
-    // }
   }
 }
 </style>

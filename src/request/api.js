@@ -17,6 +17,12 @@ const API = {
   }),
 
   /**
+   * 获取字典
+   */
+  getDict: () => get('/pscm/m/dict/get/RESIDENT', {
+  }),
+
+  /**
    * 最新资讯
    * param {number} pn  页码
    * param {number} pageSize  每页条数
@@ -116,7 +122,7 @@ const API = {
    * 人员家庭关系
    * param {number} pid 人员id
    */
-  getRelationlist: (pid) => get(`/pscm/m/resident/relationlist/${pid}`, {
+  getRelationlists: (pid) => get(`/pscm/m/resident/relationlists/${pid}`, {
   }),
 
   /**
@@ -132,7 +138,7 @@ const API = {
    * param {string | number} idno 身份证号
    * param {string} startTime 开始时间
    */
-  getRencentTrace: (idno, startTime = '2019-08-10 00:00:00') => get('/pscm/m/alarm/info/personal/trace', {
+  getRencentTrace: (idno, startTime) => get('/pscm/m/alarm/info/personal/trace', {
     idno,
     startTime
   }),

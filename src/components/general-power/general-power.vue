@@ -2,7 +2,7 @@
   <div class="panel-container">
     <div class="panel-title">综治力量</div>
     <div class="panel-content">
-      <div id="pieChart" :style="{width: '440px', height: '250px'}"></div>
+      <div id="pieChart" :style="{width: '100%', height: '100%'}"></div>
     </div>
   </div>
 </template>
@@ -27,7 +27,10 @@ export default {
       self.powerChart = self.$echarts.init(document.getElementById("pieChart"));
       self.powerChart.on("click", function(params) {
         console.log(params);
-        self.$emit("showPeopleList",{type: params.data.name, list: params.data.users});
+        self.$emit("showPeopleList", {
+          type: params.data.name,
+          list: params.data.users
+        });
       });
     },
     getPowerStatistics() {
@@ -51,6 +54,8 @@ export default {
       );
     },
     setChartOption(data = [], total) {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         title: {
           text: total,
@@ -58,38 +63,27 @@ export default {
           y: "center",
           textStyle: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            color: "rgba(255, 255, 255)"
+            color: "rgba(255, 255, 255)",
+                fontSize: Math.round(24 * times),
           }
         },
         tooltip: {
           trigger: "item",
           // formatter: "{a} <br/>{b} : {c} ({d}%)"
           formatter: function(params, ticket, callback) {
-            let str = ''
-            str += params.data.name + '(' + params.percent + '%)' + '</br>';
-            str += '编制：' + params.data.value + '</br>';
-            str += '在线：' + params.data.onLine;
+            let str = "";
+            str += params.data.name + "(" + params.percent + "%)" + "</br>";
+            str += "编制：" + params.data.value + "</br>";
+            str += "在线：" + params.data.onLine;
             return str;
+          },
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
           }
-        },
-        textStyle: {
-          // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-          color: "rgba(255, 255, 255, 0.65)"
         },
         legend: {
           show: false
-          // orient: "vertical",
-          // x: "left",
-          // y: "center",
-          // padding: [55, 0, 0, 0],
-          // itemGap: 10,
-          // itemWidth: 15,
-          // itemHeight: 4,
-          // textStyle: {
-          //   // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-          //   color: "rgba(255, 255, 255, 0.65)"
-          // },
-          // data: ["保安", "协警", "警察", "网格员", "自愿者"]
         },
         calculable: true,
         series: [
@@ -111,7 +105,7 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontSize: 11,
+                 fontSize: Math.round(12 * times),
                   fontWeight: "bolder"
                 }
               }
