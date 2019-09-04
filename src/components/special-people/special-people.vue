@@ -2,13 +2,18 @@
   <div class="panel-container">
     <div class="panel-title">特殊人群</div>
     <el-scrollbar class="panel-content">
-      <ul>
+      <transition-group
+        name="flip-list"
+        tag="ul"
+        @mousemove.native="mouseOverEvent"
+        @mouseout.native="mouseOutEvent"
+      >
         <li v-for="(item, index) of list" :key="item.id" @click="showDetail(item)">
           <span class="alarm-index">{{index + 1}}</span>
           <span class="alarm-title">{{item.headline}}</span>
           <span class="alarm-status">{{item.status}}</span>
         </li>
-      </ul>
+      </transition-group>
     </el-scrollbar>
   </div>
 </template>
@@ -19,11 +24,19 @@ export default {
   name: "special-people",
   data() {
     return {
-      list: []
+      list: [],
+      timer: null,
+      time: 2000
     };
   },
   mounted() {
     this.getSpecialPeopleList();
+  },
+  destroyed() {
+    const self = this;
+    if (self.timer) {
+      clearInterval(self.timer);
+    }
   },
   methods: {
     getSpecialPeopleList() {
@@ -32,12 +45,35 @@ export default {
         res => {
           console.log(res);
           self.list = res.data;
+          self.timer = setInterval(() => {
+            self.loop();
+          }, self.time);
         },
         err => {}
       );
     },
     showDetail(item) {
       this.$emit("showSpecialPeople", item);
+    },
+    loop() {
+      const item = this.list.shift();
+      this.list.push(item);
+    },
+    mouseOverEvent() {
+      const self = this;
+      if (self.timer) {
+        clearInterval(self.timer);
+      }
+      console.log(self.timer);
+    },
+    mouseOutEvent() {
+      const self = this;
+      if (self.timer) {
+        clearInterval(self.timer);
+      }
+      self.timer = setInterval(() => {
+        self.loop();
+      }, self.time);
     }
   }
 };

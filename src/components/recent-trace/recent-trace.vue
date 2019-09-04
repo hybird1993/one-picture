@@ -132,6 +132,7 @@ export default {
         }
       }
       button {
+        font-size: 1rem;
         margin-left: 1rem;
         padding: .1rem .5rem;
       }

@@ -2,13 +2,14 @@
   <div class="panel-container">
     <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
-      <div id="mapContainer" class="map"></div>
-      <!-- <iframe src="http://172.29.1.20/s/map/OneMap/index.html" class="map"></iframe> -->
+      <!-- <div id="mapContainer" class="map"></div> -->
+      <iframe src="./map.html" class="map" id="map"></iframe>
     </div>
   </div>
 </template>
 
 <script>
+import { setTimeout } from "timers";
 export default {
   name: "one-picture",
   data() {
@@ -16,23 +17,40 @@ export default {
   },
   mounted() {
     // 初始化地图容器
-    const map = L.map("mapContainer", {
-      // center: [30.430076485018596, 114.41137433052064], // 公司
-      center: [30.44326443351204, 114.43944445432024], // 佛祖岭
-      zoom: 18
-    });
-    const bussLayer = L.supermap
-      .tiledMapLayer(
-        "http://172.29.1.151:8090/iserver/services/map-OneMap2/rest/maps/一张图",
-        {
-          zIndex: 2,
-          transparent: true,
-          maxZoom: 24,
-          minZoom: 13
-        }
-      )
-      .addTo(map);
+    // this.inir();
+    this.clearMap();
+    window.addEventListener("message", this.handleMessage);
+  },
+  methods: {
+    clearMap() {
+      let map = document.getElementById("map").contentWindow;
+      console.log(map);
+      setTimeout(() => {
+        map.postMessage({ method: "aaa", params: { a: 1, b: 2 } }, "*");
+      }, 1000);
+    },
+    handleMessage(data) {
+      console.log(data.method);
+    },
+    init() {
+      const map = L.map("mapContainer", {
+        // center: [30.430076485018596, 114.41137433052064], // 公司
+        center: [30.44326443351204, 114.43944445432024], // 佛祖岭
+        zoom: 18
+      });
+      const bussLayer = L.supermap
+        .tiledMapLayer(
+          "http://172.29.1.151:8090/iserver/services/map-OneMap2/rest/maps/一张图",
+          {
+            zIndex: 2,
+            transparent: true,
+            maxZoom: 24,
+            minZoom: 13
+          }
+        )
+        .addTo(map);
       console.log(bussLayer);
+    }
   }
 };
 </script>

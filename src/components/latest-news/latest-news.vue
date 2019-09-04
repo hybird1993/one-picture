@@ -2,29 +2,43 @@
   <div class="panel-container">
     <div class="panel-title">最新资讯</div>
     <el-scrollbar class="panel-content">
-      <ul>
+      <transition-group
+        name="flip-list"
+        tag="ul"
+        @mousemove.native="mouseOverEvent"
+        @mouseout.native="mouseOutEvent"
+      >
         <li
           v-for="item of list"
           class="over-hide"
           :key="item.newsId"
           @click="showDetail(item)"
         >{{item.title}}</li>
-      </ul>
+      </transition-group>
     </el-scrollbar>
   </div>
 </template>
 
 <script>
 import { API } from "../../request/api";
+import { setInterval, clearInterval } from "timers";
 export default {
   name: "latest-news",
   data() {
     return {
-      list: []
+      list: [],
+      timer: null,
+      time: 2000
     };
   },
   mounted() {
     this.getLatestNews();
+  },
+  destroyed() {
+    const self = this;
+    if (self.timer) {
+      clearInterval(self.timer);
+    }
   },
   methods: {
     getLatestNews() {
@@ -33,12 +47,35 @@ export default {
         res => {
           console.log(res);
           self.list = res.list;
+          self.timer = setInterval(() => {
+            self.loop();
+          }, self.time);
         },
         err => {}
       );
     },
     showDetail(item) {
       this.$emit("showNewsDetail", item);
+    },
+    loop() {
+      const item = this.list.shift();
+      this.list.push(item);
+    },
+    mouseOverEvent() {
+      const self = this;
+      if (self.timer) {
+        clearInterval(self.timer);
+      }
+      console.log(self.timer);
+    },
+    mouseOutEvent() {
+      const self = this;
+      if (self.timer) {
+        clearInterval(self.timer);
+      }
+      self.timer = setInterval(() => {
+        self.loop();
+      }, self.time);
     }
   }
 };
@@ -46,16 +83,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
-
 .panel-content {
-  margin: .5rem 0;
+  margin: 0.5rem 0;
   ul {
     margin: 0 1.25rem;
+    transition: 1s all;
     li {
       height: 2.5rem;
       line-height: 2.5rem;
       padding-left: 1.75rem;
-      padding-right: .5rem;
+      padding-right: 0.5rem;
       position: relative;
       text-align: left;
       cursor: pointer;
@@ -64,9 +101,9 @@ export default {
       content: "";
       position: absolute;
       top: 50%;
-      margin-top: -.25rem;
-      height: .5rem;
-      width: .5rem;
+      margin-top: -0.25rem;
+      height: 0.5rem;
+      width: 0.5rem;
       margin-left: -1.25rem;
       display: block;
       border-radius: 50%;

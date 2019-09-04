@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>one-picture</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #main-container {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .text-block {
+      width: 200px;
+      height: 200px;
+      background-color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but one-picture doesn't work properly without
+      JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <div id="main-container">
+    <div class="text-block">1111</div>
+  </div>
+</body>
+<script>
+  window.onload = function () {
+    window.addEventListener('message', function (evt) {
+      if (evt.data.method === 'aaa') {
+        console.log(JSON.stringify(evt.data.params))
+        setTimeout(() => {
+          window.parent.postMessage({
+            method: 'getIframeMessage',
+            params: {
+              success: true,
+            }
+          }, '*');
+
+        }, 1000);
+      }
+      //event.data获取传过来的数据
+    });
+  }
+</script>
+
+</html>

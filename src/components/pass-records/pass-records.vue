@@ -72,42 +72,41 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  padding: 5px 0;
+  padding: .5rem 0;
 }
 .box-title {
-  border-bottom: 1px solid rgba(30, 189, 222, 0.5);
+  border-bottom: .1rem solid rgba(30, 189, 222, 0.5);
   text-align: left;
   .text {
     display: inline-block;
     height: 100%;
-    padding: 0px 15px 0 20px;
+    padding: 0px 1.25rem 0 1.75rem;
     background-color: rgba(30, 189, 222, 0.5);
     position: relative;
-    height: 24px;
-    line-height: 24px;
+    height: 2rem;
+    line-height: 2rem;
     &:after {
       content: "";
       position: absolute;
-      right: -24px;
+      right: -2rem;
       top: 0;
       width: 0;
-      border-right: 24px solid transparent;
-      border-bottom: 24px solid rgba(30, 189, 222, 0.5);
+      border-right: 2rem solid transparent;
+      border-bottom: 2rem solid rgba(30, 189, 222, 0.5);
     }
   }
 }
 .box-content {
-  padding: 5px;
+  padding: .5rem;
   .item-person {
     display: flex;
-    font-size: 12px;
-    margin: 15px 0;
+    margin: 1.25rem 0;
     .item-person-left {
-      margin-left: 10px;
-      margin-right: 20px;
+      margin-left: 1rem;
+      margin-right: 1.75rem;
       img {
-        width: 60px;
-        height: 60px;
+        width: 5rem;
+        height: 5rem;
       }
     }
     .item-person-center {
@@ -122,15 +121,15 @@ export default {
         text-align: left;
         span {
           background-color: red;
-          padding: 1px;
+          padding: .1rem;
           display: inline-block;
-          margin: 0 5px;
+          margin: 0 .5rem;
         }
       }
     }
     .item-person-right {
       display: flex;
-      margin-right: 5px;
+      margin-right: .5rem;
       flex-direction: column;
       justify-content: space-around;
     }
@@ -139,12 +138,12 @@ export default {
 
 .box-content-top {
   overflow: hidden;
-  height: 115px;
-  margin: 5px;
+  height: 10rem;
+  margin: .5rem;
   .item-person-pic {
-    width: 80px;
-    height: 105px;
-    margin: 5px;
+    width: 7rem;
+    height: 9rem;
+    margin: .5rem;
     float: left;
     img {
       width: 100%;

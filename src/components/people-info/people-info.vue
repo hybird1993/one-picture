@@ -61,17 +61,16 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  margin: 10px;
+  margin: 1rem;
   .item-person {
     display: flex;
-    font-size: 12px;
-    margin: 15px 0;
+    margin: 1.25rem 0;
     .item-person-left {
-      margin-left: 10px;
-      margin-right: 20px;
+      margin-left: 1rem;
+      margin-right: 1.75rem;
       img {
-        width: 60px;
-        height: 60px;
+        width: 5rem;
+        height: 5rem;
         border-radius: 50%;
       }
     }
@@ -87,15 +86,15 @@ export default {
         text-align: left;
         span {
           background-color: red;
-          padding: 1px;
+          padding: .1rem;
           display: inline-block;
-          margin: 0 5px;
+          margin: 0 .5rem;
         }
       }
     }
     .item-person-right {
       display: flex;
-      margin-right: 5px;
+      margin-right: .5rem;
       flex-direction: column;
       justify-content: space-around;
     }
