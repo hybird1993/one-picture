@@ -3,17 +3,8 @@
  */
 import axios from 'axios';
 import qs from 'qs';
-console.log(process.env.NODE_ENV);
-// 环境的切换
-if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'http://172.29.1.18:84';
-} else if (process.env.NODE_ENV == 'debug') {
-  axios.defaults.baseURL = 'http://172.29.1.18:84';
-} else if (process.env.NODE_ENV == 'production') {
-  axios.defaults.baseURL = 'http://10.0.151.254:80';
-} else {
-  axios.defaults.baseURL = 'http://172.29.1.18:84';
-}
+
+axios.defaults.baseURL = process.env.VUE_APP_API;
 
 // 请求超时时间
 axios.defaults.timeout = 10000;
@@ -23,13 +14,26 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 axios.defaults.withCredentials = true;    // 请求带上cookie
 
+// axios.defaults.headers.Cookie = `auth-token=${GetRequest().token}`;    // 请求带上cookie
+
+// document.cookie = `auth-token=${GetRequest().token}`;
+
 // 请求拦截器
 // axios.interceptors.request.use( 
 //  config => {
 //   // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
 //   // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
-//   const token = store.state.token;  
-//   token && (config.headers.Authorization = token);  
+//   // eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjgyNjgxNzMsInN1YiI6IjIzIiwiaXNzIjoid2ViIiwiZXhwIjoxNTY4MjY5OTczfQ.ARMkZFPL7KPr9dADE8brzoOqcu6LDuk-z8OnLbP7hAw
+//   const token = GetRequest().token;  
+//   // if (token) {
+//   //   // config.xsrfCookieName = 'Cookie';
+//   //   config.headers.Cookie = `auth-token=${token}`
+//   // }
+//   // config.headers.token = `12345`
+//   config.xsrfCookieName = `auth-token`;
+//   config.xsrfHeaderName = `Cookie`;
+//   config.headers.Cookie = `auth-token=${token}`;
+//   console.log(config)
 //   return config; 
 //  }, 
 //  error => {  
@@ -59,10 +63,14 @@ axios.interceptors.response.use(
  */
 export function get(url, params) {
   return new Promise((resolve, reject) => {
+    // document.cookie = `auth-token=${GetRequest().token}`;
     axios.get(url, {
-        params: params
+        params: params,
       })
       .then(res => {
+        console.log(res.headers);
+        console.log(document.cookie);
+        console.log(res.headers["set-cookie"]);
         // console.log(res);
         resolve(res.data);
       })
@@ -80,11 +88,24 @@ export function post(url, params) {
   return new Promise((resolve, reject) => {
     axios.post(url, qs.stringify(params))    // 参数序列化
       .then(res => {
-        console.log(res);
+        // console.log(res);
         resolve(res.data);
       })
       .catch(err => {
         reject(err.data)
       })
   });
+}
+
+function GetRequest() {
+  const url = location.search; //获取url中"?"符后的字串
+  const theRequest = new Object();
+  if (url.indexOf("?") != -1) {
+    const str = url.substr(1);
+      const strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+      }
+  }
+  return theRequest;
 }

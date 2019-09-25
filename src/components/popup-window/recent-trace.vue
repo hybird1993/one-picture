@@ -3,7 +3,7 @@
     <div class="panel-title">近期行踪</div>
     <div class="panel-content">
       <div class="trace-title">
-        <div class="people-name">{{peopleName}}</div>
+        <div class="people-name">{{prop.name}}</div>
         <div class="date">
           <span @click="preDay">&lt;</span>
           {{showDate}}
@@ -37,10 +37,17 @@ import { TimeUtil } from "../../utils/time-util";
 export default {
   name: "recent-trace",
   props: {
-    id: {
-      type: String
+    prop: {
+      type: Object,
+      default: {
+        id: null,
+        name: ''
+      }
     },
     peopleName: {
+      type: String
+    },
+    componentId: {
       type: String
     }
   },
@@ -66,7 +73,10 @@ export default {
   },
   methods: {
     close() {
-      this.$emit("closeRecentTrace");
+      this.$parent.eventListener({
+        type: "close",
+        id: this.componentId
+      });
     },
     getRencentTrace() {
       const self = this;
@@ -74,10 +84,10 @@ export default {
         return;
       }
       const date = TimeUtil.formatDate(self.date, "yyyy-MM-dd hh:mm:ss");
-      API.getRencentTrace(self.id, date).then(
+      API.getRencentTrace(self.prop.id, date).then(
         res => {
           self.list = res;
-          console.log(self.list);
+          // console.log(self.list);
         },
         err => {}
       );
@@ -94,8 +104,8 @@ export default {
     }
   },
   watch: {
-    id: function(val, oldVal) {
-      console.log("new: %s, old: %s", val, oldVal);
+    prop: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
       this.getRencentTrace();
     }
   }
@@ -109,7 +119,7 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: .5rem;
+    padding-top: 0.5rem;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -128,13 +138,13 @@ export default {
         margin-right: 2rem;
         span {
           cursor: pointer;
-          margin: 0 .5rem;
+          margin: 0 0.5rem;
         }
       }
       button {
         font-size: 1rem;
         margin-left: 1rem;
-        padding: .1rem .5rem;
+        padding: 0.1rem 0.5rem;
       }
     }
     .trace-content {
@@ -145,7 +155,7 @@ export default {
           display: flex;
           line-height: 2.5rem;
           padding-left: 2rem;
-          padding-right: .5rem;
+          padding-right: 0.5rem;
           position: relative;
           text-align: left;
           // cursor: pointer;

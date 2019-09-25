@@ -82,7 +82,6 @@ export default {
       const self = this;
       API.getGlobalIndex(self.endDate).then(
         res => {
-          console.log(res);
           self.xData = res.date;
           self.communityList = res.data;
           self.avgCount = res.avgScore.toString();
@@ -126,8 +125,6 @@ export default {
           smooth: true
         };
       });
-      console.log(self.xData);
-
       self.lineChart.setOption(
         self.setIndexChartOption(self.xData, seriesData),
         true

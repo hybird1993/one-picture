@@ -26,7 +26,6 @@ export default {
       // 绘制图表
       self.powerChart = self.$echarts.init(document.getElementById("pieChart"));
       self.powerChart.on("click", function(params) {
-        console.log(params);
         self.$emit("showPeopleList", {
           type: params.data.name,
           list: params.data.users

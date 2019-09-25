@@ -24,13 +24,12 @@ export default {
   methods: {
     clearMap() {
       let map = document.getElementById("map").contentWindow;
-      console.log(map);
       setTimeout(() => {
         map.postMessage({ method: "aaa", params: { a: 1, b: 2 } }, "*");
       }, 1000);
     },
     handleMessage(data) {
-      console.log(data.method);
+      // console.log(data.method);
     },
     init() {
       const map = L.map("mapContainer", {
@@ -49,7 +48,7 @@ export default {
           }
         )
         .addTo(map);
-      console.log(bussLayer);
+      // console.log(bussLayer);
     }
   }
 };

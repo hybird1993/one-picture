@@ -1,8 +1,8 @@
 <template>
   <div class="panel-container">
-    <div class="panel-title">{{peopleType}}</div>
+    <div class="panel-title">{{prop.peopleType}}</div>
     <el-scrollbar class="panel-content">
-      <ul v-if="fromItem === 'people'">
+      <ul v-if="prop.fromItem === 'people'" class="people-list">
         <li>
           <span class="item-name">姓名</span>
           <span class="item-address">现住址</span>
@@ -16,15 +16,15 @@
           <span class="item-phone">{{item.contact}}</span>
         </li>
       </ul>
-      <ul v-if="fromItem === 'generalPower'">
+      <ul v-if="prop.fromItem === 'power'" class="power-people-list">
         <li>
           <span class="item-name">姓名</span>
-          <span class="item-grid-large">责任网格</span>
+          <span class="item-grid">责任网格</span>
           <span class="item-phone">电话</span>
         </li>
         <li v-for="(item, index) of list" :key="index" :class="{'li-online': !item.onLineState}">
           <span class="item-name">{{item.realName}}</span>
-          <span class="item-grid-large">{{item.gridNames}}</span>
+          <span class="item-grid">{{item.gridNames}}</span>
           <span class="item-phone">{{item.mobilephone}}</span>
         </li>
       </ul>
@@ -40,14 +40,16 @@ import { API } from "../../request/api";
 export default {
   name: "people-list",
   props: {
-    peopleType: {
-      type: String
+    prop: {
+      type: Object,
+      default: {
+        peopleType: "",
+        peopleList: [],
+        fromItem: ""
+      }
     },
-    fromItem: {
+    componentId: {
       type: String
-    },
-    peopleList: {
-      type: Array
     }
   },
   data() {
@@ -56,19 +58,18 @@ export default {
     };
   },
   mounted() {
-    if (this.fromItem === "people") {
-      this.getPeopleList();
-    } else {
-      this.getGeneralPowerList();
-    }
+    this.getData();
   },
   methods: {
     close() {
-      this.$emit("closePeopleList");
+      this.$parent.eventListener({
+        type: "close",
+        id: this.componentId
+      });
     },
     getPeopleList() {
       const self = this;
-      API.getPeopleList(self.peopleType).then(
+      API.getPeopleList(self.prop.peopleType).then(
         res => {
           self.list = res.forEach(item => {
             item.address =
@@ -102,23 +103,28 @@ export default {
             }
           });
           self.list = _list;
-          console.log(self.list);
+          // console.log(self.list);
         },
         err => {}
       );
     },
     getGeneralPowerList() {
-      this.list = this.peopleList;
+      this.list = this.prop.peopleList;
+      // console.log(this.list);
+    },
+    getData() {
+      if (this.prop.fromItem === "people") {
+        this.getPeopleList();
+      } else if (this.prop.fromItem === "power") {
+        this.getGeneralPowerList();
+      } else {
+      }
     }
   },
   watch: {
-    peopleType: function(val, oldVal) {
-      console.log("new: %s, old: %s", val, oldVal);
-      if (this.fromItem === "people") {
-        this.getPeopleList();
-      } else {
-        this.getGeneralPowerList();
-      }
+    prop: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
+      this.getData();
     }
   }
 };
@@ -139,31 +145,40 @@ export default {
         display: flex;
         line-height: 2.5rem;
         padding-left: 2rem;
-        padding-right: .5rem;
+        padding-right: 0.5rem;
         position: relative;
         text-align: left;
-        // cursor: pointer;
-        .item-name {
-          width: 15%;
-        }
-        .item-address {
-          width: 30%;
-        }
-        .item-grid {
-          width: 30%;
-        }
-        .item-grid-large {
-          width: 60%;
-        }
-        .item-phone {
-          width: 25%;
-        }
       }
       .li-online {
         background-color: rgba(102, 179, 218, 0.6);
       }
       li:nth-child(odd) {
         background-color: rgba(256, 256, 256, 0.1);
+      }
+    }
+    .people-list {
+      .item-name {
+        width: 15%;
+      }
+      .item-address {
+        width: 30%;
+      }
+      .item-grid {
+        width: 30%;
+      }
+      .item-phone {
+        width: 25%;
+      }
+    }
+    .power-people-list {
+      .item-name {
+        width: 25%;
+      }
+      .item-grid {
+        width: 50%;
+      }
+      .item-phone {
+        width: 25%;
       }
     }
   }

@@ -2,19 +2,19 @@
   <div class="panel-container">
     <div class="panel-title">资讯详情</div>
     <el-scrollbar class="panel-content">
-      <h2>{{detail.title}}</h2>
+      <h2>{{prop.title}}</h2>
       <div>
-        <span>时间：{{detail.publishTime}}</span>
-        <span>点击量：{{detail.clicks}}</span>
-        <span>作者：{{detail.author}}</span>
-        <span>来源：{{detail.source}}</span>
+        <span>时间：{{prop.publishTime}}</span>
+        <span>点击量：{{prop.clicks}}</span>
+        <span>作者：{{prop.author}}</span>
+        <span>来源：{{prop.source}}</span>
       </div>
       <div class="news-content">
-        <div v-html="detail.content"></div>
+        <div v-html="prop.content"></div>
       </div>
     </el-scrollbar>
     <div class="close-item">
-      <img @click="close" src="../../assets/image/icon-close.png"/>
+      <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
   </div>
 </template>
@@ -22,21 +22,25 @@
 export default {
   name: "news-detail",
   props: {
-    detail: {
+    prop: {
       type: Object,
       default: {}
-    }
+    },
+    componentId: {
+      type: String
+    },
   },
   data() {
     return {};
   },
   mounted() {
-    const self = this;
-    console.log(self.detail);
   },
   methods: {
     close() {
-      this.$emit("closeNewsDetail");
+       this.$parent.eventListener({
+        type: 'close',
+        id: this.componentId
+      });
     }
   }
 };
@@ -53,10 +57,10 @@ export default {
     padding-top: 2rem;
     padding-bottom: 2rem;
     h2 {
-      margin: .5rem 0 10px 0;
+      margin: 0.5rem 0 10px 0;
     }
     span {
-      padding: .5rem 2rem;
+      padding: 0.5rem 2rem;
     }
     .news-content {
       margin: 2rem;

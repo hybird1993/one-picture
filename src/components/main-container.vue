@@ -7,7 +7,7 @@
         class="item-box"
         :style="styleMap[item].style"
         :class="{'drag-outline': isDrag, 'dragover-oulline': dragOverItem === item}"
-        draggable="true"
+        :draggable="isAbleDrag"
         @drop="dropEvent($event, item)"
         @dragover.prevent="dragOverEvent($event, item)"
         @dragstart="dragStartEvent($event, item)"
@@ -24,7 +24,7 @@
           </template>
           <!-- 告警信息 -->
           <template v-else-if="item === 'alarmList'">
-            <AlarmList @showAlarmDetail="showAlarmDetail"></AlarmList>
+            <AlarmList @showAlarmDetail="showAlarmDetail" :update-time="updateTime"></AlarmList>
           </template>
           <!-- 分项指数 -->
           <template v-else-if="item === 'optionIndex'">
@@ -50,115 +50,28 @@
       </div>
     </div>
 
-    <!-- 新闻详情 -->
-    <div v-if="isShowNewsDetail" class="item-box-header high-index" :style="styleMap.centerItem">
-      <img class="item-box-bg" src="../assets/image/icon-box-center.png" />
-      <NewsDetail :detail="newsDetail" @closeNewsDetail="closeNewsDetail"></NewsDetail>
-    </div>
-
-    <!-- 告警详情 -->
-    <div v-if="isShowAlarmDetail" class="item-box-header high-index" :style="styleMap.alarmDetail">
-      <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <AlarmDetail :id="alarmId" @closeAlarmDetail="closeAlarmDetail"></AlarmDetail>
-    </div>
-
-    <!-- 特殊人口告警详情 -->
-    <div
-      v-if="isShowPeopleAlarmDetail"
-      class="item-box-header high-index"
-      :style="styleMap.peopleAlarmDetail"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <AlarmDetail :id="peopleAlarmId" @closeAlarmDetail="closePeopleAlarmDetail"></AlarmDetail>
-    </div>
-
-    <!-- 人员详情 -->
-    <div
-      v-if="isShowPeopleDetail"
-      class="item-box-header high-index"
-      :style="styleMap.peopleDetail"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <PeopleDetail :id="idNo" @closePeopleDetail="closePeopleDetail"></PeopleDetail>
-    </div>
-
-    <!-- 人员列表 -->
-    <div v-if="isShowPeopleList" class="item-box-header high-index" :style="styleMap.peopleList">
-      <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <PeopleList :people-type="peopleType" from-item="people" @closePeopleList="closePeopleList"></PeopleList>
-    </div>
-
-    <!-- 综治力量人员列表 -->
-    <div
-      v-if="isShowGeneralPowerList"
-      class="item-box-header high-index"
-      :style="styleMap.generalPowerList"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <PeopleList
-        :people-type="generalPowerType"
-        :people-list="generalPowerList"
-        from-item="generalPower"
-        @closePeopleList="closeGeneralPowerList"
-      ></PeopleList>
-    </div>
-
-    <!-- 人员行踪 -->
-    <div v-if="isShowRecentTrace" class="item-box-header high-index" :style="styleMap.recentTrace">
-      <img class="item-box-bg" src="../assets/image/icon-box.png" />
-      <RecentTrace :id="peopleId" :people-name="peopleName" @closeRecentTrace="closeRecentTrace"></RecentTrace>
-    </div>
-
     <!-- 地图设置 -->
     <div class="item-box-header" :style="styleMap.MapSetting">
       <img class="item-box-bg" src="../assets/image/icon-box-header.png" />
-      <MapSetting item-map="itemMap" @changeItemStatus="changeItemStatus"></MapSetting>
+      <MapSetting :item-map="itemMap" @changeItemStatus="changeItemStatus"></MapSetting>
     </div>
 
-    <!-- 通行记录 -->
-    <!-- <div
-      v-if="isLogin"
-      class="item-box"
-      id="passRecords"
-      :style="styleMap.passRecords"
-      draggable="true"
-      @drop="dropEvent($event, 'passRecords')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'passRecords')"
+    <div
+      v-for="window of windowList"
+      class="item-box-header high-index"
+      :style="window.style"
+      :key="window.id"
+      :id="window.id"
     >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <PassRecords></PassRecords>
-    </div>-->
-
-    <!-- 人口信息 -->
-    <!-- <div
-      v-if="isLogin"
-      class="item-box"
-      id="peopleInfo"
-      :style="styleMap.peopleInfo"
-      draggable="true"
-      @drop="dropEvent($event, 'peopleInfo')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'peopleInfo')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <PeopleInfo></PeopleInfo>
-    </div>-->
-
-    <!-- 房屋用电情况 -->
-    <!-- <div
-      v-if="isLogin"
-      class="item-box"
-      id="houseElectricity"
-      :style="styleMap.houseElectricity"
-      draggable="true"
-      @drop="dropEvent($event, 'houseElectricity')"
-      @dragover.prevent
-      @dragstart="dragStartEvent($event, 'houseElectricity')"
-    >
-      <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
-      <HouseElectricity></HouseElectricity>
-    </div>-->
+      <img v-if="!window.isTopCenter" class="item-box-bg" src="../assets/image/icon-box.png" />
+      <img v-else class="item-box-bg" src="../assets/image/icon-box-center.png" />
+      <PopupWindow
+        :component="window.component"
+        :prop="window.data"
+        :component-id="window.id"
+        @eventListener="eventListener"
+      ></PopupWindow>
+    </div>
 
     <OnePicture></OnePicture>
   </div>
@@ -169,20 +82,13 @@ import LatestNews from "./latest-news";
 import AlarmOverview from "./alarm-overview";
 import GeneralPower from "./general-power";
 import OptionIndex from "./option-index";
-import HouseElectricity from "./house-electricity";
 import PeopleHouse from "./people-house";
-import PassRecords from "./pass-records";
-import PeopleInfo from "./people-info";
 import OnePicture from "./one-picture";
 import MapSetting from "./map-setting";
 import AlarmList from "./alarm-list";
 import SpecialPeople from "./special-people";
 import GlobalIndex from "./global-index";
-import NewsDetail from "./news-detail";
-import AlarmDetail from "./alarm-detail";
-import PeopleDetail from "./people-detail";
-import PeopleList from "./people-list";
-import RecentTrace from "./recent-trace";
+import PopupWindow from "./popup-window";
 import { API } from "../request/api";
 export default {
   name: "main-container",
@@ -232,15 +138,7 @@ export default {
           style: {},
           isShow: false
         },
-        MapSetting: {},
-        centerItem: {},
-        alarmDetail: {},
-        peopleDetail: {},
-        peopleList: {},
-        generalPowerList: {},
-        recentTrace: {},
-        peopleAlarmDetail: {},
-        video: {}
+        MapSetting: {}
       },
       dict: {},
       cacheStyle: {}, // 缓存的位置信息
@@ -253,23 +151,23 @@ export default {
       isLogin: false, // 是否登录
       isDrag: false, // 是否在拖拽
       dragOverItem: "", // 正拖拽经过的item
-      isShowNewsDetail: false, // 是否显示新闻详情
-      newsDetail: null, // 新闻详情
-      isShowAlarmDetail: false, // 是否显示告警详情
-      alarmId: null, // 告警id
-      isShowPeopleDetail: false, // 是否显示人员详情
-      idNo: null, // 身份证id
-      isShowPeopleList: false, // 是否显示人员列表
-      peopleType: null, // 人员类型
-      isShowGeneralPowerList: false, // 是否显示综治力量的人员列表
-      generalPowerType: null, // 人员类型
-      generalPowerList: [], // 人员列表
-      isShowRecentTrace: false, // 是否显示综治力量的人员列表
-      peopleId: null, // 人员id
-      isShowPeopleAlarmDetail: false, // 是否显示人员告警详情
-      peopleAlarmId: null, // 人员告警详情
-      peopleName: "" // 人员名称
+      updateTime: null,  // 告警推送更新时间
+
+      windowList: [],
+      connection: null,
+      streamId: null,
+      userId: null,
+      connectionState: ["正在连接..", "连接已建立", "正在关闭..", "已经关闭"],
+      connectState: false,
+      authState: false,
+      bindState: false,
+      presenceState: false,
     };
+  },
+  computed: {
+    isAbleDrag: function() {
+      return this.windowList.length === 0;
+    }
   },
   mounted() {
     const self = this;
@@ -279,17 +177,20 @@ export default {
     } else {
       API.login("_ONSCREEN", "AF21B8C562854").then(
         res => {
-          console.log(res);
+          self.getDict();
           self.init();
           self.isLogin = true;
+          self.userId = res.userInfo.userId;
+          self.initWebSocket();
         },
         err => {
-          self.init();
-          self.isLogin = true;
+          // self.init();
+          // self.isLogin = true;
         }
       );
+      //  self.init();
+      //  self.isLogin = true;
     }
-    self.getDict();
   },
   methods: {
     init() {
@@ -297,7 +198,8 @@ export default {
       const mainContainer = this.$refs.mainContainer;
       const width = mainContainer.offsetWidth;
       if (width >= 1920) {
-        document.getElementsByTagName('html')[0].style.fontSize = Math.round(12 * (width / 1920)) + 'px';
+        document.getElementsByTagName("html")[0].style.fontSize =
+          Math.round(12 * (width / 1920)) + "px";
       }
       const height = mainContainer.offsetHeight;
       let itemWidth =
@@ -316,6 +218,7 @@ export default {
       self.setItemPosition(itemWidth, itemHeight);
       self.showItems();
     },
+
     setItemPosition(itemWidth, itemHeight) {
       // 计算每个小模块的位置
       //    item1    item9     item8
@@ -382,9 +285,9 @@ export default {
         left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
         top: 0
       };
-      self.styleMap.centerItem = self.itemMap.get(9);
       self.cacheItems();
     },
+
     cacheItems() {
       const self = this;
       const _cacheStyle = localStorage.getItem("cacheStyle");
@@ -401,6 +304,7 @@ export default {
       }
       localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
     },
+
     showItems() {
       const self = this;
       for (const key in self.cacheStyle) {
@@ -412,6 +316,7 @@ export default {
         }
       }
     },
+
     dropEvent(event, id) {
       // 防止或火狐中拖拽打开新页面
       event.preventDefault(); // 阻止冒泡
@@ -429,13 +334,16 @@ export default {
       self.dragOverItem = "";
       self.isDrag = false;
     },
+
     dragStartEvent(event, id) {
       event.dataTransfer.setData("id", id);
       this.isDrag = true;
     },
+
     dragOverEvent(event, id) {
       this.dragOverItem = id;
     },
+
     changeItemStatus(event) {
       const self = this;
       event.forEach(item => {
@@ -444,6 +352,7 @@ export default {
       });
       localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
     },
+
     getDict() {
       const self = this;
       API.getDict().then(
@@ -453,75 +362,275 @@ export default {
         err => {}
       );
     },
-    showNewsDetail(event) {
-      this.newsDetail = event;
-      this.isShowNewsDetail = true;
-    },
-    closeNewsDetail() {
-      this.isShowNewsDetail = false;
-    },
-    showAlarmDetail(event) {
-      let index = parseInt(this.cacheStyle["alarmList"]["position"], 10) + 1;
-      let style1 = index > 8 ? 1 : index;
-      this.styleMap.alarmDetail = this.itemMap.get(style1);
-      this.alarmId = event.id;
-      this.isShowAlarmDetail = true;
-      if (event.identityCard) {
-        this.idNo = event.identityCard;
-        style1++;
-        const style2 = style1 > 8 ? 1 : style1;
-        this.styleMap.peopleDetail = this.itemMap.get(style2);
-        this.isShowPeopleDetail = true;
+
+    eventListener(event) {
+      const self = this;
+      if (event.type === "close") {
+        const index = self.windowList.findIndex(item => item.id === event.id);
+        self.windowList.splice(index, 1);
+      } else if (event.type === "alarmDeal") {
+        self.openPopupWindow(event, "work-order", "alarmDeal");
+      } else if (event.type === "house") {
+        if (event.data) {
+          let index = parseInt(this.cacheStyle["alarmList"]["position"], 10);
+          self.openPopupWindow(
+            event.data.houseId,
+            "house-electricity",
+            "houseElectricity",
+            index
+          );
+        } else {
+        }
+      } else {
       }
     },
-    closeAlarmDetail() {
-      this.isShowAlarmDetail = false;
+
+    getUnusedItemIndex(index) {
+      const usedIndexArr = this.windowList.map(item => item.positionNum);
+      usedIndexArr.push(index);
+      const avalibaledIndexArr = [8, 7, 6, 5, 4, 3, 2, 1];
+      let _index;
+      avalibaledIndexArr.forEach(item => {
+        if (usedIndexArr.indexOf(item) === -1) {
+          _index = item;
+        }
+      });
+      if (!_index) {
+        _index = index + 1 > 8 ? 1 : index + 1;
+      }
+      return _index;
     },
-    closePeopleDetail() {
-      this.isShowPeopleDetail = false;
+
+    openPopupWindow(event, component, type, itemIndex = -1) {
+      const index = this.windowList.findIndex(item => item.type === type);
+      if (index > -1) {
+        this.windowList[index]["data"] = event;
+      } else {
+        const id = this.createId(type);
+        const isTopCenter = ["news", "alarmDeal"].includes(type);
+        let style, positionNum;
+        if (isTopCenter) {
+          style = this.itemMap.get(9);
+          positionNum = 9;
+        } else {
+          const styleIndex = this.getUnusedItemIndex(itemIndex);
+          style = this.itemMap.get(styleIndex);
+          positionNum = styleIndex;
+        }
+        this.windowList.push({
+          id,
+          type,
+          isTopCenter,
+          component,
+          data: event,
+          style,
+          positionNum
+        });
+      }
     },
+
+    createId(name) {
+      return name.toLowerCase() + new Date().getTime();
+    },
+
+    showNewsDetail(event) {
+      this.openPopupWindow(event, "news-detail", "news");
+    },
+
+    showAlarmDetail(event) {
+      let index = parseInt(this.cacheStyle["alarmList"]["position"], 10);
+      this.openPopupWindow(event.id, "alarm-detail", "alarmDetail", index);
+      if (event.identityCard) {
+        this.openPopupWindow(
+          event.identityCard,
+          "people-detail",
+          "peopleDetail",
+          index
+        );
+      }
+      if (event.captureImageUri) {
+        this.openPopupWindow(event, "pass-records", "passRecords", index);
+      }
+    },
+
     showPeopleList(event) {
-      this.peopleType = event;
-      let index = parseInt(this.cacheStyle["peopleHouse"]["position"], 10) + 1;
-      const style = index > 8 ? 1 : index;
-      this.styleMap.peopleList = this.itemMap.get(style);
-      this.isShowPeopleList = true;
+      const index = parseInt(this.cacheStyle["peopleHouse"]["position"], 10);
+      this.openPopupWindow(
+        { peopleType: event, peopleList: [], fromItem: "people" },
+        "people-list",
+        "peopleList",
+        index
+      );
     },
-    closePeopleList() {
-      this.isShowPeopleList = false;
-    },
+
     showGeneralPowerList(event) {
       this.generalPowerType = event.type;
       this.generalPowerList = event.list;
-      let index = parseInt(this.cacheStyle["generalPower"]["position"], 10) + 1;
-      const style = index > 8 ? 1 : index;
-      this.styleMap.generalPowerList = this.itemMap.get(style);
-      this.isShowGeneralPowerList = true;
+      const index = parseInt(this.cacheStyle["generalPower"]["position"], 10);
+      this.openPopupWindow(
+        { peopleType: event.type, peopleList: event.list, fromItem: "power" },
+        "people-list",
+        "powerPeopleList",
+        index
+      );
     },
-    closeGeneralPowerList() {
-      this.isShowGeneralPowerList = false;
-    },
+
     showSpecialPeople(event) {
-      let index =
-        parseInt(this.cacheStyle["specialPeople"]["position"], 10) + 1;
-      let style1 = index > 8 ? 1 : index;
-      this.styleMap.peopleAlarmDetail = this.itemMap.get(style1);
-      this.peopleAlarmId = event.id;
-      this.peopleName = event.relationPerson;
-      this.isShowPeopleAlarmDetail = true;
+      let index = parseInt(this.cacheStyle["specialPeople"]["position"], 10);
+      this.openPopupWindow(event.id, "alarm-detail", "peopleAlarm", index);
       if (event.identityCard) {
-        this.peopleId = event.identityCard;
-        style1++;
-        const style2 = style1 > 8 ? 1 : style1;
-        this.styleMap.recentTrace = this.itemMap.get(style2);
-        this.isShowRecentTrace = true;
+        const peopleIndex = index > 8 ? 1 : index;
+        this.openPopupWindow(
+          { id: event.identityCard, name: event.relationPerson },
+          "recent-trace",
+          "recentTrace",
+          index
+        );
       }
     },
-    closeRecentTrace() {
-      this.isShowRecentTrace = false;
+
+    initWebSocket() {
+      console.log(document.cookie);
+      // 初始化weosocket
+      // const wsuri = process.env.WS_API + "/websocket/threadsocket";//ws地址
+      console.log(process.env.VUE_APP_WEBSOCKET_API);
+      const wsuri = process.env.VUE_APP_WEBSOCKET_API; //ws地址
+      this.connection = new WebSocket(wsuri, "xmpp");
+      this.connection.onopen = this.websocketonopen;
+      this.connection.onerror = this.websocketonerror;
+      this.connection.onmessage = this.websocketonmessage;
+      this.connection.onclose = this.websocketclose;
     },
-    closePeopleAlarmDetail() {
-      this.isShowPeopleAlarmDetail = false;
+
+    websocketonopen() {
+      console.log("WebSocket连接成功");
+      //打印链接状态
+      console.log(this.connectionState[this.connection.readyState]);
+      //发送建立流请求
+      var stream =
+        "<open from='hxct@unicorn' to='unicorn' xmlns='urn:ietf:params:xml:ns:xmpp-framing' xml:lang='en' version='1.0'/>";
+      console.log("Client: " + stream);
+      this.connection.send(stream);
+      API.getUserInfo().then(
+        res => {
+          console.log(res);
+        },
+        err => {}
+      );
+    },
+
+    websocketonerror(event) {
+      //错误
+      console.log("WebSocket连接发生错误");
+    },
+
+    websocketonmessage(event) {
+      const self = this;
+      console.log("Server: " + event.data);
+      const jsonStr = this.$x2js.xml2js(event.data);
+      console.log(jsonStr);
+
+      if (jsonStr.open) {
+        self.streamId = jsonStr.open._id;
+      }
+
+      if (self.connectionState && jsonStr.features) {
+        const data = jsonStr.features;
+        if (data.mechanisms) {
+          const mechanism = data.mechanisms.mechanism[0];
+          if (mechanism) {
+            console.log("验证客户端身份！");
+            let password =
+              "auth-token=eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1Njk0MDAwNDQsInN1YiI6IjIzIiwiaXNzIjoid2ViIiwiZXhwIjoxNTY5NDAxODQ0fQ.KZhlL2oTaKhN0agynqGWMLuCvYhofOQ4V-q6Qc3lD6I";
+            password = password.split("=")[1];
+            const username = "0#" + self.userId;
+            //Base64编码
+            var encodeToken = window.btoa(username + "\0" + password);
+            var message =
+              "<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='" +
+              mechanism +
+              "'>" +
+              encodeToken +
+              "</auth>";
+            console.log("Client: " + message);
+            this.connection.send(message);
+          }
+        }
+      }
+
+      if (jsonStr.success) {
+        console.log("用户账号验证成功！");
+        const message =
+          "<iq id='" +
+          self.streamId +
+          "' type='set'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><resource></resource></bind></iq>";
+        console.log("Client: " + message);
+        self.authState = true;
+        self.connection.send(message);
+      }
+
+      if (self.authState && jsonStr.iq) {
+        if (jsonStr.iq.error) {
+          if (jsonStr.iq.error.conflict) {
+            console.log( "用户session绑定资源名冲突，请修改资源名或者注销账号！");
+            return;
+          }
+        } else {
+          console.log("用户session绑定成功！");
+          self.bindState = true;
+          var message = "<presence id='" + self.streamId + "'><status>Online</status><priority>0</priority></presence>";
+          console.log("Client: " + message);
+          self.connection.send(message);
+          self.presenceState = true;
+        }
+      }
+
+      if (self.presenceState && jsonStr.message) {
+        if (jsonStr.message.body === 'add') {
+          const id = jsonStr.message.subject.split("#")[1];
+          API.getAlarmDetail(id).then(res => {
+            self.showAlarmDetail(res);
+            self.updateTime = new Date().getTime();
+          }, err => {
+          })
+        }
+      }
+
+      if (self.connectionState && jsonStr.close) {
+        console.log("用户退出openfire服务！");
+        self.connectState = false;
+        self.authState = false;
+        self.bindState = false;
+        self.presenceState = false;
+        self.connection.close();
+        console.log(self.connectionState[self.connection.readyState]);
+      }
+
+      if (jsonStr.failure) {
+        console.log("用户退出openfire服务！");
+        self.connectState = false;
+        self.authState = false;
+        self.bindState = false;
+        self.presenceState = false;
+        self.connection.close();
+        // cur_reconnect_count = cur_reconnect_count + 1;
+        // if (cur_reconnect_count >= max_reconnect_count) {
+        //   console.log("达到最大重连次数，不再重连！");
+        //   return;
+        // }
+        // console.log("。。。。。。重连。。。。。。。。。!");
+        // setTimeout(connectWS(), 1000);
+      }
+    },
+
+    websocketsend(agentData) {
+      //数据发送
+      this.websock.send(agentData);
+    },
+
+    websocketclose(event) {
+      //关闭
+      console.log("connection closed (" + event.code + ")");
     }
   },
   components: {
@@ -529,20 +638,13 @@ export default {
     AlarmOverview,
     GeneralPower,
     OptionIndex,
-    HouseElectricity,
-    PassRecords,
     PeopleHouse,
-    PeopleInfo,
     OnePicture,
     MapSetting,
     AlarmList,
     SpecialPeople,
     GlobalIndex,
-    NewsDetail,
-    AlarmDetail,
-    PeopleDetail,
-    PeopleList,
-    RecentTrace
+    PopupWindow
   }
 };
 </script>
@@ -586,7 +688,7 @@ export default {
     position: absolute;
     z-index: 100;
     display: block !important;
-    border: .25rem dotted white !important;
+    border: 0.25rem dotted white !important;
   }
 
   .dragover-oulline {
@@ -600,13 +702,13 @@ export default {
   @keyframes glow {
     0% {
       border-color: #393;
-      box-shadow: 0 0 .5rem rgba(0, 255, 0, 0.2),
-        inset 0 0 .5rem rgba(0, 255, 0, 0.1), 0 .2rem 0 #393;
+      box-shadow: 0 0 0.5rem rgba(0, 255, 0, 0.2),
+        inset 0 0 0.5rem rgba(0, 255, 0, 0.1), 0 0.2rem 0 #393;
     }
     100% {
       border-color: #6f6;
       box-shadow: 0 0 2rem rgba(0, 255, 0, 0.6),
-        inset 0 0 1rem rgba(0, 255, 0, 0.4), 0 .2rem 0 #6f6;
+        inset 0 0 1rem rgba(0, 255, 0, 0.4), 0 0.2rem 0 #6f6;
     }
   }
 }

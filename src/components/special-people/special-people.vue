@@ -26,7 +26,7 @@ export default {
     return {
       list: [],
       timer: null,
-      time: 2000
+      time: 3000
     };
   },
   mounted() {
@@ -43,7 +43,7 @@ export default {
       const self = this;
       API.getSpecialPeopleList().then(
         res => {
-          console.log(res);
+          // console.log(res);
           self.list = res.data;
           self.timer = setInterval(() => {
             self.loop();
@@ -56,15 +56,18 @@ export default {
       this.$emit("showSpecialPeople", item);
     },
     loop() {
-      const item = this.list.shift();
-      this.list.push(item);
+      const self = this;
+      const item = self.list.shift();
+      setTimeout(() => {
+        self.list.push(item);
+      }, 1000);
     },
     mouseOverEvent() {
       const self = this;
       if (self.timer) {
         clearInterval(self.timer);
       }
-      console.log(self.timer);
+      // console.log(self.timer);
     },
     mouseOutEvent() {
       const self = this;

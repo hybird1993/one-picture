@@ -29,15 +29,26 @@
         </div>
       </div>
     </el-scrollbar>
+    <div class="close-item">
+      <img @click="close" src="../../assets/image/icon-close.png" />
+    </div>
   </div>
 </template>
 
 <script>
 const imgUrl = require("../../assets/image/p1.png");
 const imgUrl2 = require("../../assets/image/p3.png");
-import {API} from '../../request/api';
+import { API } from "../../request/api";
 export default {
   name: "pass-records",
+  props: {
+    prop: {
+      type: Object
+    },
+    componentId: {
+      type: String
+    }
+  },
   data() {
     return {
       list: [],
@@ -65,17 +76,29 @@ export default {
         labels: ["户籍人口", "重点青少年"]
       };
     });
+  },
+  methods: {
+    close() {
+      this.$parent.eventListener({
+        type: "close",
+        id: this.componentId
+      });
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
+.panel-container {
+  background-image: url("../../assets/image/detail-bg.png");
+  background-size: 100% 100%;
+}
 .panel-content {
-  padding: .5rem 0;
+  padding: 0.5rem 0;
 }
 .box-title {
-  border-bottom: .1rem solid rgba(30, 189, 222, 0.5);
+  border-bottom: 0.1rem solid rgba(30, 189, 222, 0.5);
   text-align: left;
   .text {
     display: inline-block;
@@ -97,7 +120,7 @@ export default {
   }
 }
 .box-content {
-  padding: .5rem;
+  padding: 0.5rem;
   .item-person {
     display: flex;
     margin: 1.25rem 0;
@@ -121,15 +144,15 @@ export default {
         text-align: left;
         span {
           background-color: red;
-          padding: .1rem;
+          padding: 0.1rem;
           display: inline-block;
-          margin: 0 .5rem;
+          margin: 0 0.5rem;
         }
       }
     }
     .item-person-right {
       display: flex;
-      margin-right: .5rem;
+      margin-right: 0.5rem;
       flex-direction: column;
       justify-content: space-around;
     }
@@ -139,11 +162,11 @@ export default {
 .box-content-top {
   overflow: hidden;
   height: 10rem;
-  margin: .5rem;
+  margin: 0.5rem;
   .item-person-pic {
     width: 7rem;
     height: 9rem;
-    margin: .5rem;
+    margin: 0.5rem;
     float: left;
     img {
       width: 100%;

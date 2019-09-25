@@ -183,16 +183,12 @@ export default {
           self.$set(item, "value", item.default);
         });
       }
-      console.log(this.paramList);
     },
     closeBox() {
       this.type = "";
     },
     saveAndStartTheme() {
       const self = this;
-      console.log(self.activedThemeId);
-      console.log(self.paramList);
-
       const themeId = self.activedThemeId;
       self.creatThemeDiv(themeId);
       localStorage.setItem("themeId", themeId);
@@ -220,7 +216,6 @@ export default {
       self.themeManager.add("clouds", new CloudsTheme());
       self.themeManager.add("starflash", new ShootingstarTheme());
       self.themeManager.add("starplait", new StarplaitTheme());
-      console.log(self.themeManager);
       const themeId = localStorage.getItem("themeId");
       if (themeId && themeId !== "default") {
         self.activedThemeId = themeId;

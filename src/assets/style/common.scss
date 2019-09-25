@@ -82,5 +82,17 @@
 }
 
 .flip-list-move {
-  transition: transform 1s;
+  transition: transform 2s;
+}
+// ul .flip-list-move:first-child {
+//   transition: transform 0s;
+// }
+
+.flip-list-enter-active, .flip-list-leave-active {
+  transition: all 1s;
+}
+
+.flip-list-enter, .flip-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }

@@ -10,6 +10,7 @@
 
       <el-scrollbar class="info-content">
         <ul v-if="radio === '1'">
+          <img :src="detail.icon" class="people-icon" />
           <li>
             <span class="item-title">姓名：</span>
             <span class="item.content">{{detail.name}}</span>
@@ -147,8 +148,11 @@ import { API } from "../../request/api";
 export default {
   name: "people-detail",
   props: {
-    id: {
+    prop: {
       type: [Number, String]
+    },
+    componentId: {
+      type: String
     }
   },
   data() {
@@ -164,12 +168,14 @@ export default {
   mounted() {
     const self = this;
     self.getInfo();
-    self.dict = self.$parent.dict;
-    console.log(self.dict);
+    self.dict = self.$parent.$parent.dict; // TODO 待优化  改为vuex
   },
   methods: {
     close() {
-      this.$emit("closePeopleDetail");
+      this.$parent.eventListener({
+        type: "close",
+        id: this.componentId
+      });
     },
     getInfo() {
       if (this.radio === "1") {
@@ -183,39 +189,56 @@ export default {
     },
     getPeopleDetail() {
       const self = this;
-      API.getPeopleDetail(this.id).then(
+      API.getPeopleDetail(this.prop).then(
         res => {
-          const _res = res;
-          _res['sexName'] = self.dict['性别'][_res.sex];
-          _res['ethnicityName'] = self.dict['民族'][_res.ethnicity];
-          _res[politicalStatusName] = self.dict['政治面貌'][_res.politicalStatus];
-          _res['educationalDegreeName'] = self.dict['学历'][_res.educationalDegree];
-          _res['maritalStatusName'] = self.dict['婚姻状况'][_res.maritalStatus];
-          _res['registeredResidenceName'] = self.dict['行政区划'][_res.registeredResidence];
-          _res['religiousBeliefName'] = self.dict['宗教信仰'][_res.religiousBelief];
-          _res['occupationCategoryName'] =  self.dict['职业类别'][_res.occupationCategory];
-          self.detail = _res;
-          self.residentBaseId = _res.residentBaseId;
+          try {
+            const _res = Object.assign({}, res);
+            _res["sexName"] = self.dict["性别"][_res.sex];
+            _res["ethnicityName"] = self.dict["民族"][_res.ethnicity];
+            _res["politicalStatusName"] =
+              self.dict["政治面貌"][_res.politicalStatus];
+            _res["educationalDegreeName"] =
+              self.dict["学历"][_res.educationalDegree];
+            _res["maritalStatusName"] =
+              self.dict["婚姻状况"][_res.maritalStatus];
+            _res["registeredResidenceName"] =
+              self.dict["行政区划"][_res.registeredResidence];
+            _res["religiousBeliefName"] =
+              self.dict["宗教信仰"][_res.religiousBelief];
+            _res["occupationCategoryName"] =
+              self.dict["职业类别"][_res.occupationCategory];
+            _res["icon"] = self.getPeopleIconUrl(_res.residentBaseId);
+            self.detail = _res;
+            self.residentBaseId = _res.residentBaseId;
+            self.getHouseInfo();
+          } catch (e) {
+            console.log(e);
+          }
         },
         err => {}
       );
     },
     getFamilyInfo() {
       const self = this;
-      API.getRelationlists(self.id).then(
+      API.getRelationlists(self.prop).then(
         res => {
           if (res[0] && res[0]["familyRelationDtos"]) {
-            self.relationlist = res[0]["familyRelationDtos"];
-            self.relationlist.forEach(item => {
-              item['sexName'] = self.dict['性别'][item.sex];
-              item['relationName'] = self.dict['家庭关系'][item.relation];
-              item['ethnicityName'] = self.dict['民族'][item.ethnicity];
-            });
+            try {
+              self.relationlist = res[0]["familyRelationDtos"];
+              self.relationlist.forEach(item => {
+                item["sexName"] = self.dict["性别"][item.sex];
+                item["relationName"] = self.dict["家庭关系"][item.relation];
+                item["ethnicityName"] = self.dict["民族"][item.ethnicity];
+              });
+            } catch (e) {
+              console.log(e);
+            }
           }
         },
         err => {}
       );
     },
+
     getCarInfo() {
       const self = this;
       API.getCarInfo(self.residentBaseId).then(
@@ -224,11 +247,37 @@ export default {
         },
         err => {}
       );
+    },
+
+    getHouseInfo() {
+      const self = this;
+      API.getHouseList(self.residentBaseId).then(
+        res => {
+          if (res[0] && res[0]["houseInfo"]) {
+            this.$parent.eventListener({
+              type: "house",
+              id: this.componentId,
+              data: res[0]["houseInfo"],
+            });
+          } else {
+            this.$parent.eventListener({
+              type: "house",
+              id: this.componentId,
+              data: null,
+            });
+          }
+        },
+        err => {}
+      );
+    },
+
+    getPeopleIconUrl(id) {
+      return `${process.env.VUE_APP_API}/pscm/m/resident/base/picture/${id}`;
     }
   },
   watch: {
-    id: function(val, oldVal) {
-      console.log("new: %s, old: %s", val, oldVal);
+    prop: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
       this.radio = "1";
       this.residentBaseId = null;
       this.getInfo();
@@ -257,10 +306,19 @@ export default {
       flex: 1;
       ul {
         margin: 0 1.25rem;
+        position: relative;
+        .people-icon {
+          width: 7.5rem;
+          height: 7.5rem;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 1;
+        }
         li {
           display: flex;
           line-height: 2.5rem;
-          padding-right: .5rem;
+          padding-right: 0.5rem;
           position: relative;
           text-align: left;
           .item-title {
@@ -285,9 +343,9 @@ export default {
             padding-left: 1rem;
           }
           .box-title {
-            border-bottom: .1rem solid rgba(30, 189, 222, 0.5);
+            border-bottom: 0.1rem solid rgba(30, 189, 222, 0.5);
             text-align: left;
-            margin-bottom: .5rem;
+            margin-bottom: 0.5rem;
             .text {
               display: inline-block;
               height: 100%;
@@ -309,13 +367,13 @@ export default {
           }
           .people-item {
             width: 100%;
-            padding-bottom: .5rem;
-            padding: .5rem 0 .5rem .5rem;
+            padding-bottom: 0.5rem;
+            padding: 0.5rem 0 0.5rem 0.5rem;
             table {
               width: 100%;
               td {
                 padding-left: 1rem;
-                border: .1rem solid rgba(255, 255, 255, 0.4);
+                border: 0.1rem solid rgba(255, 255, 255, 0.4);
               }
             }
           }
@@ -325,9 +383,9 @@ export default {
             content: "";
             position: absolute;
             top: 1.25rem;
-            margin-top: -.25rem;
-            height: .5rem;
-            width: .5rem;
+            margin-top: -0.25rem;
+            height: 0.5rem;
+            width: 0.5rem;
             margin-left: -1.25rem;
             display: block;
             border-radius: 50%;
@@ -338,8 +396,8 @@ export default {
           background-color: rgba(256, 256, 256, 0.1);
         }
         .people-relation:nth-child(n) {
-           background-color: rgba(256, 256, 256, 0.1);
-           margin-bottom: 10px;
+          background-color: rgba(256, 256, 256, 0.1);
+          margin-bottom: 10px;
         }
       }
     }

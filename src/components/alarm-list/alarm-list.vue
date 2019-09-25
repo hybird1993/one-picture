@@ -22,11 +22,16 @@
 import { API } from "../../request/api";
 export default {
   name: "alarm-list",
+  props: {
+    updateTime: {
+      type: Number
+    },
+  },
   data() {
     return {
       list: [],
       timer: null,
-      time: 2000
+      time: 3000
     };
   },
   mounted() {
@@ -43,7 +48,6 @@ export default {
       const self = this;
       API.getAlarmList().then(
         res => {
-          console.log(res);
           self.list = res.data;
           self.timer = setInterval(() => {
             self.loop();
@@ -56,15 +60,17 @@ export default {
       this.$emit("showAlarmDetail", item);
     },
     loop() {
-      const item = this.list.shift();
-      this.list.push(item);
+      const self = this;
+      const item = self.list.shift();
+      setTimeout(() => {
+        self.list.push(item);
+      }, 1000);
     },
     mouseOverEvent() {
       const self = this;
       if (self.timer) {
         clearInterval(self.timer);
       }
-      console.log(self.timer);
     },
     mouseOutEvent() {
       const self = this;
@@ -74,6 +80,14 @@ export default {
       self.timer = setInterval(() => {
         self.loop();
       }, self.time);
+    },
+  },
+  watch: {
+    updateTime: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
+      if (val) {
+        this.getAlarmList();
+      }
     }
   }
 };

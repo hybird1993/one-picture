@@ -111,6 +111,12 @@ const API = {
   getPeopleList: (type) => get('/pscm/m/resident/peopleInfoList', {type}),
 
   /**
+   * 房屋列表
+   * param {number} pid 人员id
+   */
+  getHouseList: (residentBaseId) => get(`/pscm/m/resident/houseinfolist/${residentBaseId}`, {}),
+
+  /**
    * 人口基本信息
    * param {string | number} idno 身份证号
    */
@@ -172,6 +178,22 @@ const API = {
     endDate,
     field: 'w',
     amount
+  }),
+
+  /**
+   * 全局指数
+   * param {string} startDate  结束日期  eg:20190807
+   * param {number} amount 周数目 
+   */
+  getHouseElectricity: (houseId, queryTime) => get('/pscm/electricData/getElectricDataByHouseId', {
+    houseId,
+    queryTime,
+  }),
+
+  /**
+   * 用户websocket连接
+   */
+  getUserInfo: () => get('/pscm/m/sysuser/n/user', {
   })
 }
 export {

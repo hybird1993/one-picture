@@ -112,7 +112,7 @@ export default {
       const self = this;
       API.getGridOptionIndex(self.startDate, self.endDate).then(
         res => {
-          console.log(res);
+          // console.log(res);
           self.showRankListChart(res);
         },
         err => {}
@@ -122,7 +122,7 @@ export default {
       const self = this;
       API.getCommunityOptionIndex(self.startDate, self.endDate).then(
         res => {
-          console.log(res);
+          // console.log(res);
           self.communityList = res.list;
           self.filterCommunityList(true);
         },
@@ -435,7 +435,7 @@ export default {
             fontSize: Math.round(12 * times)
           },
           formatter: function(params, ticket, callback) {
-            console.log(params);
+            // console.log(params);
             const obj = {};
             params.forEach(item => {
               if (!obj[item.axisIndex]) {
@@ -461,7 +461,7 @@ export default {
               str += "</div>";
             });
             str += "</div>";
-            console.log(str);
+            // console.log(str);
             return str;
           }
         },
@@ -570,7 +570,7 @@ export default {
             data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
             axisLabel: {
               color: "#fff",
-              fontSize: Math.round(12 * times),
+              fontSize: Math.round(10 * times),
               interval: 0, //横轴信息全部显示
               rotate: 20 //30度角倾斜显示,
             }
@@ -580,7 +580,7 @@ export default {
             data: ["邬家山村", "大邱村", "湖口村", "汪田村", "九夫村"],
             axisLabel: {
               color: "#fff",
-              fontSize: Math.round(12 * times),
+              fontSize: Math.round(10 * times),
               interval: 0, //横轴信息全部显示
               rotate: -20 //30度角倾斜显示
             }

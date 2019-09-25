@@ -21,14 +21,14 @@
 
 <script>
 import { API } from "../../request/api";
-import { setInterval, clearInterval } from "timers";
+import { setInterval, clearInterval, setTimeout } from "timers";
 export default {
   name: "latest-news",
   data() {
     return {
       list: [],
       timer: null,
-      time: 2000
+      time: 3000
     };
   },
   mounted() {
@@ -45,7 +45,6 @@ export default {
       const self = this;
       API.getLatestNews().then(
         res => {
-          console.log(res);
           self.list = res.list;
           self.timer = setInterval(() => {
             self.loop();
@@ -58,15 +57,17 @@ export default {
       this.$emit("showNewsDetail", item);
     },
     loop() {
-      const item = this.list.shift();
-      this.list.push(item);
+      const self = this;
+      const item = self.list.shift();
+      setTimeout(() => {
+        self.list.push(item);
+      }, 1000);
     },
     mouseOverEvent() {
       const self = this;
       if (self.timer) {
         clearInterval(self.timer);
       }
-      console.log(self.timer);
     },
     mouseOutEvent() {
       const self = this;

@@ -44,13 +44,15 @@
 </template>
 <script>
 import { API } from "../../request/api";
-import axios from 'axios';
 export default {
   name: "alarm-detail",
   props: {
-    id: {
+    prop: {
       type: Number,
     },
+    componentId: {
+      type: String,
+    }
   },
   data() {
     return {
@@ -63,11 +65,14 @@ export default {
   },
   methods: {
     close() {
-      this.$emit("closeAlarmDetail"); 
+      this.$parent.eventListener({
+        type: 'close',
+        id: this.componentId
+      });
     },
     getAlarmDetail() {
       const self = this;
-      API.getAlarmDetail(this.id).then(
+      API.getAlarmDetail(self.prop).then(
         res => {
           self.detail = res;
         },
@@ -76,12 +81,16 @@ export default {
     },
     dealAlarm() {
       // auth-token实际也可不传
-      window.open(`${axios.defaults.baseURL}/s/routine/workPc.html?alertId=${this.id}`, '_blank');   
+      this.$parent.eventListener({
+        type: 'alarmDeal',
+        url: `${process.env.VUE_APP_API}/s/routine/workPc.html?alertId=${this.prop}`
+      });
+
     },
   },
   watch: {
-    id: function(val, oldVal) {
-      console.log("new: %s, old: %s", val, oldVal);
+    prop: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
       this.getAlarmDetail();
     }
   }

@@ -64,13 +64,11 @@ export default {
   methods: {
     initChart() {
       const self = this;
-      console.log(self.$echarts);
       // 基于准备好的dom，初始化echarts实例
       self.peopleChart = self.$echarts.init(
         document.getElementById("peoplepie")
       );
       self.peopleChart.on("click", function(params) {
-        console.log(params);
         self.$emit("showPeopleList", params.name);
       });
       self.houseChart = self.$echarts.init(document.getElementById("housepie"));
@@ -79,7 +77,7 @@ export default {
       const self = this;
       API.getPeopleStatistics().then(
         res => {
-          console.log(res);
+          // console.log(res);
           const color1 = [];
           const data1 = Object.keys(res.detail).map((item, index) => {
             color1.push(self.color1[index]);
@@ -88,7 +86,6 @@ export default {
               name: item
             };
           });
-          console.log(data1);
           const data2 = [],
             color2 = [];
           data1.forEach((_item, index) => {
@@ -103,7 +100,6 @@ export default {
               });
             data2.push(..._arr);
           });
-          console.log(data2);
           self.keyPersonCount = res.focal;
           self.personCount = res.total;
           self.peopleChart.setOption(
