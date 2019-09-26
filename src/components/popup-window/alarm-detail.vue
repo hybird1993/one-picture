@@ -17,7 +17,7 @@
         </li>
         <li>
           <span class="item-title">告警状态：</span>
-          <span class="item-content alarm-status" @click="dealAlarm">{{detail.status}}</span>
+          <span class="item-content alarm-status" :class="{'status-alarm': !detail.isAlreadyDeal}" @click="dealAlarm">{{detail.status}}</span>
         </li>
         <li>
           <span class="item-title">告警分类：</span>
@@ -75,11 +75,15 @@ export default {
       API.getAlarmDetail(self.prop).then(
         res => {
           self.detail = res;
+          self.detail['isAlreadyDeal'] = self.detail.status === '已处理';
         },
         err => {}
       );
     },
     dealAlarm() {
+      if (this.detail['isAlreadyDeal']) {
+        return;
+      }
       // auth-token实际也可不传
       this.$parent.eventListener({
         type: 'alarmDeal',
@@ -125,8 +129,11 @@ export default {
           word-break: break-all;
         }
         .alarm-status {
-          color:red;
+          color: #91a22c;
+        }
+        .status-alarm {
           cursor: pointer;
+          color:red;
         }
       }
       li:nth-child(odd) {

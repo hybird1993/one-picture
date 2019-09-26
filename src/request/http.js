@@ -68,9 +68,6 @@ export function get(url, params) {
         params: params,
       })
       .then(res => {
-        console.log(res.headers);
-        console.log(document.cookie);
-        console.log(res.headers["set-cookie"]);
         // console.log(res);
         resolve(res.data);
       })

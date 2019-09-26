@@ -171,26 +171,21 @@ export default {
   },
   mounted() {
     const self = this;
-    if (process.env.NODE_ENV === "production") {
-      self.init();
-      self.isLogin = true;
-    } else {
-      API.login("_ONSCREEN", "AF21B8C562854").then(
-        res => {
-          self.getDict();
-          self.init();
-          self.isLogin = true;
-          self.userId = res.userInfo.userId;
-          self.initWebSocket();
-        },
-        err => {
-          // self.init();
-          // self.isLogin = true;
-        }
-      );
-      //  self.init();
-      //  self.isLogin = true;
-    }
+    API.login("_ONSCREEN", "AF21B8C562854").then(
+      res => {
+        self.getDict();
+        self.init();
+        self.isLogin = true;
+        self.userId = res.userInfo.userId;
+        self.initWebSocket();
+      },
+      err => {
+        // self.init();
+        // self.isLogin = true;
+      }
+    );
+    //  self.init();
+    //  self.isLogin = true;
   },
   methods: {
     init() {
@@ -370,6 +365,8 @@ export default {
         self.windowList.splice(index, 1);
       } else if (event.type === "alarmDeal") {
         self.openPopupWindow(event, "work-order", "alarmDeal");
+      } else if (event.type === "peopleDetail") {
+        self.openPopupWindow(event.id, "people-detail", "peopleDetail");
       } else if (event.type === "house") {
         if (event.data) {
           let index = parseInt(this.cacheStyle["alarmList"]["position"], 10);

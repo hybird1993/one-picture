@@ -11,7 +11,7 @@
         <li v-for="(item, index) of list" :key="item.id" @click="showDetail(item)">
           <span class="alarm-index">{{index + 1}}</span>
           <span class="alarm-title">{{item.headline}}</span>
-          <span class="alarm-status">{{item.status}}</span>
+          <span class="alarm-status" :class="{'status-alarm': !item.isAlreadyDeal}">{{item.status}}</span>
         </li>
       </transition-group>
     </el-scrollbar>
@@ -49,6 +49,9 @@ export default {
       API.getAlarmList().then(
         res => {
           self.list = res.data;
+          self.list.forEach(item => {
+            item['isAlreadyDeal'] = item.status === '已处理';
+          });
           self.timer = setInterval(() => {
             self.loop();
           }, self.time);
@@ -126,6 +129,9 @@ export default {
         line-height: 2rem;
         text-align: center;
         border-radius: 0.5rem;
+        background-color: #91a22c;
+      }
+      .status-alarm {
         background-color: red;
       }
     }
