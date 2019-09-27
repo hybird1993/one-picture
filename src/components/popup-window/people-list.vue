@@ -22,7 +22,7 @@
           <span class="item-grid">责任网格</span>
           <span class="item-phone">电话</span>
         </li>
-        <li v-for="(item, index) of list" :key="index" :class="{'li-online': !item.onLineState}">
+        <li v-for="(item, index) of list" :key="index" :class="item.class">
           <span class="item-name">{{item.realName}}</span>
           <span class="item-grid">{{item.gridNames}}</span>
           <span class="item-phone">{{item.mobilephone}}</span>
@@ -110,6 +110,9 @@ export default {
     },
     getGeneralPowerList() {
       this.list = this.prop.peopleList;
+      this.list.forEach(item => {
+        item.class = item.onLineState === 0 ? "li-offline" : "li-online";
+      });
       // console.log(this.list);
     },
     getData() {
@@ -151,6 +154,14 @@ export default {
       }
       .li-online {
         background-color: rgba(102, 179, 218, 0.6);
+        &:before {
+          background: #01a5db;
+        }
+      }
+      .li-offline {
+        &:before {
+          background: #eee;
+        }
       }
       li:nth-child(odd) {
         background-color: rgba(256, 256, 256, 0.1);
@@ -171,14 +182,29 @@ export default {
       }
     }
     .power-people-list {
-      .item-name {
-        width: 25%;
-      }
-      .item-grid {
-        width: 50%;
-      }
-      .item-phone {
-        width: 25%;
+      li {
+        padding-left: 2.5rem;
+        &:before {
+          content: "";
+          position: absolute;
+          top: 1.25rem;
+          margin-top: -0.35rem;
+          height: 0.7rem;
+          width: 0.7rem;
+          margin-left: -1.35rem;
+          display: block;
+          border-radius: 50%;
+        }
+        .item-name {
+          width: 25%;
+          padding-left: 0.5rem;
+        }
+        .item-grid {
+          width: 50%;
+        }
+        .item-phone {
+          width: 25%;
+        }
       }
     }
   }
