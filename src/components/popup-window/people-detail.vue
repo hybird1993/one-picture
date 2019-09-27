@@ -191,31 +191,37 @@ export default {
       const self = this;
       API.getPeopleDetail(this.prop).then(
         res => {
-          try {
-            const _res = Object.assign({}, res);
-            _res["sexName"] = self.dict["性别"][_res.sex];
-            _res["ethnicityName"] = self.dict["民族"][_res.ethnicity];
-            _res["politicalStatusName"] =
-              self.dict["政治面貌"][_res.politicalStatus];
-            _res["educationalDegreeName"] =
-              self.dict["学历"][_res.educationalDegree];
-            _res["maritalStatusName"] =
-              self.dict["婚姻状况"][_res.maritalStatus];
-            _res["registeredResidenceName"] =
-              self.dict["行政区划"][_res.registeredResidence];
-            _res["religiousBeliefName"] =
-              self.dict["宗教信仰"][_res.religiousBelief];
-            _res["occupationCategoryName"] =
-              self.dict["职业类别"][_res.occupationCategory];
-            _res["icon"] = self.getPeopleIconUrl(_res.residentBaseId);
-            self.detail = _res;
-            self.residentBaseId = _res.residentBaseId;
-            self.getHouseInfo();
-          } catch (e) {
-            console.log(e);
+          if (res) {
+            try {
+              const _res = Object.assign({}, res);
+              _res["sexName"] = self.dict["性别"][_res.sex];
+              _res["ethnicityName"] = self.dict["民族"][_res.ethnicity];
+              _res["politicalStatusName"] =
+                      self.dict["政治面貌"][_res.politicalStatus];
+              _res["educationalDegreeName"] =
+                      self.dict["学历"][_res.educationalDegree];
+              _res["maritalStatusName"] =
+                      self.dict["婚姻状况"][_res.maritalStatus];
+              _res["registeredResidenceName"] =
+                      self.dict["行政区划"][_res.registeredResidence];
+              _res["religiousBeliefName"] =
+                      self.dict["宗教信仰"][_res.religiousBelief];
+              _res["occupationCategoryName"] =
+                      self.dict["职业类别"][_res.occupationCategory];
+              _res["icon"] = self.getPeopleIconUrl(_res.residentBaseId);
+              self.detail = _res;
+              self.residentBaseId = _res.residentBaseId;
+              self.getHouseInfo();
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            self.detail = {};
           }
         },
-        err => {}
+        err => {
+          self.detail = {};
+        }
       );
     },
     getFamilyInfo() {

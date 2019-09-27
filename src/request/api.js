@@ -191,11 +191,20 @@ const API = {
   }),
 
   /**
-   * 用户websocket连接
+   * 获取房屋现居住人口信息
+   * param {number} houseId
+   */
+  getHousePeopleList: (houseId) => get('/pscm/m/resident/s/houseroh', {
+    houseId,
+  }),
+
+  /**
+   * 用户websocket连接(未使用)
    */
   getUserInfo: () => get('/pscm/m/sysuser/n/user', {
   })
-}
+};
+
 export {
   API
 };

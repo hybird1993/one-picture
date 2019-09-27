@@ -6,12 +6,12 @@
         <span class="text">人卡不一抓拍留影信息</span>
       </div>
       <div class="box-content-top">
-        <div v-for="item of list1" class="item-person-pic" :key="item.id">
-          <img :src="item.picUrl" />
+        <div v-for="(item, index) of list1" class="item-person-pic" :key="index">
+          <img :src="item" />
         </div>
       </div>
       <div class="box-title">
-        <span class="text">9栋1单元304房人口信息</span>
+        <span class="text">{{room}}人口信息</span>
       </div>
       <div class="box-content">
         <div v-for="item of list" class="item-person" :key="item.id">
@@ -24,7 +24,7 @@
             <div class="person-info">身份证号：{{item.idCard}}</div>
           </div>
           <div class="item-person-right">
-            <div class="custom-btn btn-small">详细信息</div>
+            <div class="custom-btn btn-small detail-btn" @click="showPeopleDetail(item)">详细信息</div>
           </div>
         </div>
       </div>
@@ -36,14 +36,12 @@
 </template>
 
 <script>
-const imgUrl = require("../../assets/image/p1.png");
-const imgUrl2 = require("../../assets/image/p3.png");
 import { API } from "../../request/api";
 export default {
   name: "pass-records",
   props: {
     prop: {
-      type: Object
+      type: Object,
     },
     componentId: {
       type: String
@@ -52,37 +50,94 @@ export default {
   data() {
     return {
       list: [],
-      list1: []
+      list1: [],
+      room: '',
     };
   },
   mounted() {
-    this.list = Array.from(new Array(10)).map((item, index) => {
-      return {
-        id: `news${index + 1}`,
-        name: "杨雨",
-        idCard: "3332545876685467544",
-        phone: "13966688866",
-        picUrl: imgUrl,
-        labels: ["户籍人口", "重点青少年"]
-      };
-    });
-    this.list1 = Array.from(new Array(5)).map((item, index) => {
-      return {
-        id: `news${index + 1}`,
-        name: "杨雨",
-        idCard: "3332545876685467544",
-        phone: "13966688866",
-        picUrl: imgUrl2,
-        labels: ["户籍人口", "重点青少年"]
-      };
-    });
+    this.showData();
   },
   methods: {
+    showData() {
+      const self = this;
+      self.list1 = self.prop['captureImageUri'].map(item => {
+        return process.env.VUE_APP_API + '/' + item;
+      });
+      self.getPeopleDetail(self.prop['identityCard']);
+    },
+    getPeopleDetail(id) {
+      const self = this;
+      API.getPeopleDetail(id).then(
+        res => {
+          if (res) {
+            self.getHouseInfo(res.residentBaseId);
+          } else {
+            self.list = [];
+          }
+        },
+        err => {
+          self.list = [];
+        }
+      );
+    },
+    getHouseInfo(id) {
+      const self = this;
+      API.getHouseList(id).then(
+        res => {
+          if (res[0] && res[0]["houseInfo"]) {
+            self.getHousePeopleList(res[0]["houseInfo"]['houseId']);
+            self.room = res[0]["houseInfo"]['buildingInfo']['address'] + res[0]["houseInfo"]['doorplate'];
+          } else {
+          }
+        },
+        err => {
+          self.list = [];
+        }
+      );
+    },
+
+    getHousePeopleList(id) {
+      const self = this;
+      API.getHousePeopleList(id).then(res => {
+        self.list = res.map(item => {
+          const person = item.residentBaseInfo;
+          return {
+            id: person.residentBaseId,
+            name: person.name,
+            idCard: person.idNo,
+            phone: person.contact,
+            picUrl: self.getPeopleIconUrl(person.residentBaseId),
+          }
+        });
+      }, err => {
+        self.list = [];
+      })
+    },
+
+    getPeopleIconUrl(id) {
+      return `${process.env.VUE_APP_API}/pscm/m/resident/base/picture/${id}`;
+    },
+
+    showPeopleDetail(item) {
+      this.$parent.eventListener({
+        type: "peopleDetail",
+        id: item.idCard,
+      });
+    },
+
     close() {
       this.$parent.eventListener({
         type: "close",
         id: this.componentId
       });
+    }
+  },
+  watch: {
+    prop: function(val, oldVal) {
+      console.log("new: %s, old: %s", val, oldVal);
+      if (oldVal && val.id !== oldVal.id) {
+        this.showData();
+      }
     }
   }
 };
@@ -155,26 +210,39 @@ export default {
       margin-right: 0.5rem;
       flex-direction: column;
       justify-content: space-around;
+      .detail-btn {
+        cursor: pointer;
+      }
     }
   }
 }
 
 .box-content-top {
   overflow: hidden;
-  height: 10rem;
+  min-height: 9.5rem;
   margin: 0.5rem;
   .item-person-pic {
-    width: 7rem;
-    height: 9rem;
+    width: 8.5rem;
+    height: 8.5rem;
     margin: 0.5rem;
     float: left;
+    background: linear-gradient(to left, #1cb6d7,#1cb6d7) left top no-repeat,
+    linear-gradient(to bottom, #1cb6d7, #1cb6d7) left top no-repeat,
+    linear-gradient(to left, #1cb6d7, #1cb6d7) right top no-repeat,
+    linear-gradient(to bottom, #1cb6d7, #1cb6d7) right top no-repeat,
+    linear-gradient(to left, #1cb6d7, #1cb6d7) left bottom no-repeat,
+    linear-gradient(to bottom, #1cb6d7, #1cb6d7) left bottom no-repeat,
+    linear-gradient(to left, #1cb6d7, #1cb6d7) right bottom no-repeat,
+    linear-gradient(to left, #1cb6d7, #1cb6d7) right bottom no-repeat;
+    background-size: .25rem 2rem, 2rem .25rem, .25rem 2rem, 2rem .25rem;
     img {
-      width: 100%;
-      height: 100%;
-      &:hover {
-        transform: scale(1.1);
-        transition: all 0.5s;
-      }
+      margin-top: .25rem;
+      width: 8rem;
+      height: 8rem;
+    }
+    &:hover {
+      transform: scale(1.1);
+      transition: all 0.5s;
     }
   }
 }
