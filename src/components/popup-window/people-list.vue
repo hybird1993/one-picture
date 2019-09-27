@@ -22,7 +22,7 @@
           <span class="item-grid">责任网格</span>
           <span class="item-phone">电话</span>
         </li>
-        <li v-for="(item, index) of list" :key="index" :class="item.class">
+        <li v-for="(item, index) of list" :key="index" :class="item.class" @click="showPeopleDetail(item)">
           <span class="item-name">{{item.realName}}</span>
           <span class="item-grid">{{item.gridNames}}</span>
           <span class="item-phone">{{item.mobilephone}}</span>
@@ -122,7 +122,13 @@ export default {
         this.getGeneralPowerList();
       } else {
       }
-    }
+    },
+    showPeopleDetail(item) {
+      this.$parent.eventListener({
+        type: "peopleDetail",
+        id: item.idCard,
+      });
+    },
   },
   watch: {
     prop: function(val, oldVal) {
@@ -184,6 +190,7 @@ export default {
     .power-people-list {
       li {
         padding-left: 2.5rem;
+        cursor: pointer;
         &:before {
           content: "";
           position: absolute;
