@@ -1,9 +1,7 @@
 <template>
   <div class="panel-container">
     <div class="panel-content">
- 
          <iframe :src="prop.url"></iframe>
- 
     </div>
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />

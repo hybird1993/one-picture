@@ -13,6 +13,7 @@
           class="over-hide"
           :key="item.newsId"
           @click="showDetail(item)"
+          :class="{'li-odd': item.isOdd}"
         >{{item.title}}</li>
       </transition-group>
     </el-scrollbar>
@@ -46,6 +47,9 @@ export default {
       API.getLatestNews().then(
         res => {
           self.list = res.list;
+          self.list.forEach((item, index) => {
+            item.isOdd = index % 2;
+          });
           self.timer = setInterval(() => {
             self.loop();
           }, self.time);
@@ -110,7 +114,7 @@ export default {
       border-radius: 50%;
       background: #01a5db;
     }
-    li:nth-child(odd) {
+    .li-odd {
       background-color: rgba(256, 256, 256, 0.1);
     }
     li:hover {

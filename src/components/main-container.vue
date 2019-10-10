@@ -1,7 +1,7 @@
 <template>
   <div class="main-container" ref="mainContainer">
     <div id="themeContainer" style="width: 100%;height: 100%;"></div>
-    <div v-for="item of defalutItemList" :key="item">
+    <div v-for="item of defalutItemList" :key="item" style="zIndex: 10;">
       <div
         v-if="styleMap[item].isShow || isDrag"
         class="item-box"
@@ -10,6 +10,7 @@
         :draggable="isAbleDrag"
         @drop="dropEvent($event, item)"
         @dragover.prevent="dragOverEvent($event, item)"
+        @dragend="dragEndEvent($event, item)"
         @dragstart="dragStartEvent($event, item)"
       >
         <div v-if="isLogin && styleMap[item].isShow" :style="styleMap[item].style">
@@ -73,7 +74,7 @@
       ></PopupWindow>
     </div>
 
-    <OnePicture></OnePicture>
+    <OnePicture :method="method" :params="params"></OnePicture>
   </div>
 </template>
 
@@ -94,7 +95,7 @@ export default {
   name: "main-container",
   data() {
     return {
-      defalutItemList: [
+      defalutItemList: [   // 默认展示模块
         "latestNews",
         "alarmOverview",
         "alarmList",
@@ -140,7 +141,11 @@ export default {
         },
         MapSetting: {}
       },
-      dict: {},
+
+      method: null, // 和地图通讯方法名
+      params: null, // 和地图通讯参数 
+
+      dict: {},     // 字典信息
       cacheStyle: {}, // 缓存的位置信息
       itemMap: new Map(), // 小模块位置
       itemMarginRow: "10px", // 行之间间距
@@ -148,19 +153,20 @@ export default {
       itemMinWidth: 468, // item最小宽度
       itemMinHeight: 316, // item最小高度
       borderColor: "rgba(0, 0, 0, 0)",
-      isLogin: false, // 是否登录
+      isLogin: true, // 是否登录
       isDrag: false, // 是否在拖拽
       dragOverItem: "", // 正拖拽经过的item
-      updateTime: null,  // 告警推送更新时间
 
-      windowList: [],
+      windowList: [],   // 打开的popupwindow列表
+
+      updateTime: null,  // 告警推送更新时间
       connection: null,
       streamId: null,
       userId: null,
-      connectionState: ["正在连接..", "连接已建立", "正在关闭..", "已经关闭"],
-      connectState: false,
-      authState: false,
-      bindState: false,
+      connectionState: ["正在连接..", "连接已建立", "正在关闭..", "已经关闭"],  // 链接状态提示
+      connectState: false,      // 是否链接
+      authState: false,    // 是否验证账号
+      bindState: false,   // 是否绑定
       presenceState: false,
     };
   },
@@ -214,11 +220,13 @@ export default {
       self.showItems();
     },
 
+    /**
+     * 计算每个小模块的位置
+     * 1       9      8
+     * 2              7
+     * 3    4    5    6   
+     */
     setItemPosition(itemWidth, itemHeight) {
-      // 计算每个小模块的位置
-      //    item1    item9     item8
-      //    item2              item7
-      //    item3  item4 item5 item6
       const self = this;
       self.itemMap.set(1, {
         width: `${itemWidth}px`,
@@ -283,6 +291,9 @@ export default {
       self.cacheItems();
     },
 
+    /**
+     * 缓存模块对应的index及是否显示
+     */
     cacheItems() {
       const self = this;
       const _cacheStyle = localStorage.getItem("cacheStyle");
@@ -335,6 +346,11 @@ export default {
       this.isDrag = true;
     },
 
+    dragEndEvent(event, id) {
+      this.dragOverItem = "";
+      this.isDrag = false;
+    },
+
     dragOverEvent(event, id) {
       this.dragOverItem = id;
     },
@@ -348,6 +364,9 @@ export default {
       localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
     },
 
+    /**
+     * 获取字典
+     */
     getDict() {
       const self = this;
       API.getDict().then(
@@ -358,8 +377,12 @@ export default {
       );
     },
 
+    /**
+     * 打开的窗口回传事件监听
+     */
     eventListener(event) {
       const self = this;
+      const mapEventMap = ['showRecentTrace', 'hideRecentTrace'];
       if (event.type === "close") {
         const index = self.windowList.findIndex(item => item.id === event.id);
         self.windowList.splice(index, 1);
@@ -378,10 +401,20 @@ export default {
           );
         } else {
         }
+      } else if (mapEventMap.includes(event.type)) {
+        this.sendMessageToMap(event.type, event.data);
       } else {
       }
     },
 
+    sendMessageToMap(method, params) {
+      this.method = method;
+      this.params = params;
+    },
+
+    /**
+     * 获取未使用的index
+     */
     getUnusedItemIndex(index) {
       const usedIndexArr = this.windowList.map(item => item.positionNum);
       usedIndexArr.push(index);
@@ -397,7 +430,10 @@ export default {
       }
       return _index;
     },
-
+    
+    /**
+     * 打开窗口
+     */
     openPopupWindow(event, component, type, itemIndex = -1) {
       const index = this.windowList.findIndex(item => item.type === type);
       if (index > -1) {
@@ -430,10 +466,16 @@ export default {
       return name.toLowerCase() + new Date().getTime();
     },
 
+    /**
+     * 点击最新资讯打开窗口
+     */
     showNewsDetail(event) {
       this.openPopupWindow(event, "news-detail", "news");
     },
 
+    /**
+     * 点击告警打开窗口
+     */
     showAlarmDetail(event) {
       let index = parseInt(this.cacheStyle["alarmList"]["position"], 10);
       this.openPopupWindow(event.id, "alarm-detail", "alarmDetail", index);
@@ -450,6 +492,9 @@ export default {
       }
     },
 
+    /**
+     * 点击人口与房屋人口分布饼状图打开窗口
+     */
     showPeopleList(event) {
       const index = parseInt(this.cacheStyle["peopleHouse"]["position"], 10);
       this.openPopupWindow(
@@ -460,6 +505,9 @@ export default {
       );
     },
 
+    /**
+     * 点击综治力量打开窗口
+     */
     showGeneralPowerList(event) {
       this.generalPowerType = event.type;
       this.generalPowerList = event.list;
@@ -472,6 +520,9 @@ export default {
       );
     },
 
+    /**
+     * 点击特殊人群打开窗口
+     */
     showSpecialPeople(event) {
       let index = parseInt(this.cacheStyle["specialPeople"]["position"], 10);
       this.openPopupWindow(event.id, "alarm-detail", "peopleAlarm", index);
@@ -484,6 +535,7 @@ export default {
           index
         );
       }
+      this.sendMessageToMap('importantPeopleLocation', event);
     },
 
     initWebSocket() {

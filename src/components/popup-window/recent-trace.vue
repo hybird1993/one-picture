@@ -9,8 +9,8 @@
           {{showDate}}
           <span @click="nextDay">&gt;</span>
         </div>
-        <button>显示轨迹</button>
-        <button>隐藏轨迹</button>
+        <button @click="showRecentTrace">显示轨迹</button>
+        <button @click="hideRecentTrace">隐藏轨迹</button>
       </div>
       <el-scrollbar class="trace-content">
         <ul>
@@ -76,6 +76,20 @@ export default {
       this.$parent.eventListener({
         type: "close",
         id: this.componentId
+      });
+    },
+    showRecentTrace() {
+      this.$parent.eventListener({
+        type: "showRecentTrace",
+        data: this.list.map(item => {
+          item.status = '未处理';
+          return item;
+        })
+      });
+    },
+    hideRecentTrace() {
+      this.$parent.eventListener({
+        type: "hideRecentTrace",
       });
     },
     getRencentTrace() {

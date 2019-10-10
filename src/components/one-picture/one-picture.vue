@@ -2,8 +2,13 @@
   <div class="panel-container">
     <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
-      <!-- <div id="mapContainer" class="map"></div> -->
-      <iframe src="./map.html" class="map" id="map"></iframe>
+      <!-- <iframe src="http://www.baidu.com" class="map" id="supermap"></iframe> -->
+      <iframe
+        src="http://10.129.75.1:8801/map2d/index.html"
+        class="map"
+        id="supermap"
+      ></iframe>
+      <!-- <iframe src="http://10.129.75.1:8801/map3d/index.html" class="map" id="supermap"></iframe> -->
     </div>
   </div>
 </template>
@@ -12,43 +17,61 @@
 import { setTimeout } from "timers";
 export default {
   name: "one-picture",
+  props: {
+    method: {
+      type: String,
+      default: null
+    },
+    params: {
+      type: [Array, String, Object],
+      default: null,
+    },
+  },
   data() {
-    return {};
+    return {
+      isShowMap: false,
+      map: null,
+      methodMap: {},
+    };
   },
   mounted() {
+    this.methodMap = {
+      importantPeopleLocation: '重点人员定位',    // 对应数据为特殊人员告警
+      alarmLocation: '告警定位',    // 对应数据为告警数组
+      showRecentTrace: '显示行踪',   
+      hideRecentTrace: '取消行踪显示',   
+    };
+    setTimeout(() => {
+      this.init();
+      window.addEventListener("message", this.handleMessage);
+    }, 1000);
     // 初始化地图容器
-    // this.inir();
-    this.clearMap();
-    window.addEventListener("message", this.handleMessage);
   },
   methods: {
-    clearMap() {
-      let map = document.getElementById("map").contentWindow;
-      setTimeout(() => {
-        map.postMessage({ method: "aaa", params: { a: 1, b: 2 } }, "*");
-      }, 1000);
-    },
     handleMessage(data) {
-      // console.log(data.method);
+      console.log(data.method);
+      console.log(data.params);
     },
     init() {
-      const map = L.map("mapContainer", {
-        // center: [30.430076485018596, 114.41137433052064], // 公司
-        center: [30.44326443351204, 114.43944445432024], // 佛祖岭
-        zoom: 18
-      });
-      const bussLayer = L.supermap
-        .tiledMapLayer(
-          "http://172.29.1.151:8090/iserver/services/map-OneMap2/rest/maps/一张图",
-          {
-            zIndex: 2,
-            transparent: true,
-            maxZoom: 24,
-            minZoom: 13
-          }
-        )
-        .addTo(map);
-      // console.log(bussLayer);
+      this.map = document.getElementById("supermap").contentWindow;
+    },
+    postMessage() {
+      const method = this.methodMap[this.method];
+      if (!method) {
+        return;
+      }
+    // this.map.postMessage({ method: "摄像头定位", params: "SPJK-002" }, "*");
+      this.map.postMessage({ method: method, params: this.params }, "*");
+    },
+  },
+  watch: {
+    method: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
+      this.postMessage();
+    },
+    params: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
+      this.postMessage();
     }
   }
 };
