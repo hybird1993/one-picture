@@ -2,18 +2,14 @@
   <div class="panel-container">
     <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
-      <!-- <iframe src="http://www.baidu.com" class="map" id="supermap"></iframe> -->
-      <iframe
-        src="http://10.129.75.1:8801/map2d/index.html"
-        class="map"
-        id="supermap"
-      ></iframe>
-      <!-- <iframe src="http://10.129.75.1:8801/map3d/index.html" class="map" id="supermap"></iframe> -->
+      <!-- <iframe src="map.html" class="map" id="supermap"></iframe> -->
+      <iframe :src="url" class="map" id="supermap"></iframe>
     </div>
   </div>
 </template>
-
 <script>
+import { API } from "../../request/api";
+import { Util } from "../../utils/util";
 import { setTimeout } from "timers";
 export default {
   name: "one-picture",
@@ -24,33 +20,49 @@ export default {
     },
     params: {
       type: [Array, String, Object],
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
       isShowMap: false,
       map: null,
       methodMap: {},
+      d2Url: null,
+      d3Url: null,
+      url: null
     };
   },
   mounted() {
+    const token = Util.getCookie();
+    this.d2Url = `http://172.29.1.20/s/demo/webOneMap/map2d/index.html?auth-token=${token}`;
+    this.d3Url = `http://172.29.1.20/s/demo/webOneMap/map3d/index.html?auth-token=${token}`;
+    this.url = this.d2Url;
     this.methodMap = {
-      importantPeopleLocation: '重点人员定位',    // 对应数据为特殊人员告警
-      alarmLocation: '告警定位',    // 对应数据为告警数组
-      showRecentTrace: '显示行踪',   
-      hideRecentTrace: '取消行踪显示',   
+      importantPeopleLocation: "重点人员定位", // 对应数据为特殊人员告警
+      alarmLocation: "告警定位", // 对应数据为告警数组
+      showRecentTrace: "显示行踪",
+      hideRecentTrace: "取消行踪显示"
     };
+    window.addEventListener("message", this.handleMessage);
     setTimeout(() => {
       this.init();
-      window.addEventListener("message", this.handleMessage);
     }, 1000);
     // 初始化地图容器
   },
   methods: {
     handleMessage(data) {
-      console.log(data.method);
-      console.log(data.params);
+      if (data.data.method) {
+        console.log(data.data.method);
+        console.log(data.data.params);
+      }
+      if (data.data.method === "搜索调度人员") {
+        this.searchPeopleByKey(data.data.params);
+      } else if (data.data.method === "查看关联人口") {
+        this.$emit("mapEvent", { type: "house", data: data.data.params });
+      } else if (data.data.method === "人脸搜索") {
+      } else {
+      }
     },
     init() {
       this.map = document.getElementById("supermap").contentWindow;
@@ -60,9 +72,10 @@ export default {
       if (!method) {
         return;
       }
-    // this.map.postMessage({ method: "摄像头定位", params: "SPJK-002" }, "*");
+      // this.map.postMessage({ method: "摄像头定位", params: "SPJK-002" }, "*");
       this.map.postMessage({ method: method, params: this.params }, "*");
     },
+    searchPeopleByKey(key) {}
   },
   watch: {
     method: function(val, oldVal) {

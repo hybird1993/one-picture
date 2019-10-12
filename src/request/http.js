@@ -14,9 +14,9 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 axios.defaults.withCredentials = true;    // 请求带上cookie
 
-// axios.defaults.headers.Cookie = `auth-token=${GetRequest().token}`;    // 请求带上cookie
+// axios.defaults.headers.Cookie = `auth-token=${getRequest().token}`;    // 请求带上cookie
 
-// document.cookie = `auth-token=${GetRequest().token}`;
+// document.cookie = `auth-token=${getRequest().token}`;
 
 // 请求拦截器
 // axios.interceptors.request.use( 
@@ -24,7 +24,7 @@ axios.defaults.withCredentials = true;    // 请求带上cookie
 //   // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
 //   // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
 //   // eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjgyNjgxNzMsInN1YiI6IjIzIiwiaXNzIjoid2ViIiwiZXhwIjoxNTY4MjY5OTczfQ.ARMkZFPL7KPr9dADE8brzoOqcu6LDuk-z8OnLbP7hAw
-//   const token = GetRequest().token;  
+//   const token = getRequest().token;  
 //   // if (token) {
 //   //   // config.xsrfCookieName = 'Cookie';
 //   //   config.headers.Cookie = `auth-token=${token}`
@@ -63,7 +63,7 @@ axios.interceptors.response.use(
  */
 export function get(url, params) {
   return new Promise((resolve, reject) => {
-    // document.cookie = `auth-token=${GetRequest().token}`;
+    // document.cookie = `auth-token=${getRequest().token}`;
     axios.get(url, {
         params: params,
       })
@@ -94,7 +94,7 @@ export function post(url, params) {
   });
 }
 
-function GetRequest() {
+function getRequest() {
   const url = location.search; //获取url中"?"符后的字串
   const theRequest = new Object();
   if (url.indexOf("?") != -1) {

@@ -15,44 +15,95 @@
           </div>
         </div>
         <div class="item-person-right">
-          <div class="custom-btn btn-small">详细信息</div>
-          <div class="custom-btn btn-small">显示轨迹</div>
+          <div class="custom-btn btn-small" @click="showPeopleDetail(item)">详细信息</div>
+          <div class="custom-btn btn-small" @click="showPeopleRecentTrace(item)">显示轨迹</div>
         </div>
       </div>
     </el-scrollbar>
+    <div class="close-item">
+      <img @click="close" src="../../assets/image/icon-close.png" />
+    </div>
   </div>
 </template>
 
 <script>
-const imgUrl = require("../../assets/image/p1.png");
-import {API} from '../../request/api';
+// const imgUrl = require("../../assets/image/p1.png");
+import { API } from "../../request/api";
 export default {
   name: "latest-news",
+  props: {
+    prop: {
+      type: [Number, String]
+    },
+    componentId: {
+      type: String
+    }
+  },
   data() {
     return {
       list: []
     };
   },
   mounted() {
-    this.list = Array.from(new Array(10)).map((item, index) => {
-      return {
-        id: `news${index + 1}`,
-        name: "杨雨",
-        idCard: "3332545876685467544",
-        phone: "13966688866",
-        picUrl: imgUrl,
-        labels: ["户籍人口", "重点青少年"]
-      };
-    });
-    this.getPeopleInfo();
+    this.getHousePeopleList();
+    // this.list = Array.from(new Array(10)).map((item, index) => {
+    //   return {
+    //     id: `news${index + 1}`,
+    //     name: "杨雨",
+    //     idCard: "3332545876685467544",
+    //     phone: "13966688866",
+    //     picUrl: imgUrl,
+    //     labels: ["户籍人口", "重点青少年"]
+    //   };
+    // });
+    // this.getPeopleInfo();
   },
   methods: {
-    getPeopleInfo() {
-      API.getPeopleInfo().then(res => {
+    getHousePeopleList() {
+      const self = this;
+      API.getHousePeopleList(self.prop).then(
+        res => {
+          self.list = res.map(item => {
+            const person = item.residentBaseInfo;
+            return {
+              id: person.residentBaseId,
+              name: person.name,
+              idCard: person.idNo,
+              phone: person.contact,
+              picUrl: self.getPeopleIconUrl(person.residentBaseId),
+              // TODO 多个标签是怎么返回的
+              labels: [person.formerName]
+            };
+          });
+        },
+        err => {
+          self.list = [];
+        }
+      );
+    },
 
-      }, err => {
+    getPeopleIconUrl(id) {
+      return `${process.env.VUE_APP_API}/pscm/m/resident/base/picture/${id}`;
+    },
 
-      })
+    close() {
+      this.$parent.eventListener({
+        type: "close",
+        id: this.componentId
+      });
+    },
+
+    showPeopleDetail(item) {
+      this.$parent.eventListener({
+        type: "peopleDetail",
+        id: item.idCard,
+      });
+    }
+  },
+  watch: {
+    prop: function(val, oldVal) {
+      console.log("new: %s, old: %s", val, oldVal);
+      this.getHousePeopleList();
     }
   }
 };
@@ -60,43 +111,50 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
-.panel-content {
-  margin: 1rem;
-  .item-person {
-    display: flex;
-    margin: 1.25rem 0;
-    .item-person-left {
-      margin-left: 1rem;
-      margin-right: 1.75rem;
-      img {
-        width: 5rem;
-        height: 5rem;
-        border-radius: 50%;
-      }
-    }
-    .item-person-center {
-      flex: 1;
+.panel-container {
+  background-image: url("../../assets/image/detail-bg.png");
+  background-size: 100% 100%;
+  .panel-content {
+    margin: 1rem;
+    .item-person {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      .person-info {
-        text-align: left;
-      }
-      .person-label {
-        text-align: left;
-        span {
-          background-color: red;
-          padding: .1rem;
-          display: inline-block;
-          margin: 0 .5rem;
+      margin: 1.25rem 0;
+      .item-person-left {
+        margin-left: 1rem;
+        margin-right: 1.75rem;
+        img {
+          width: 5rem;
+          height: 5rem;
+          border-radius: 50%;
         }
       }
-    }
-    .item-person-right {
-      display: flex;
-      margin-right: .5rem;
-      flex-direction: column;
-      justify-content: space-around;
+      .item-person-center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .person-info {
+          text-align: left;
+        }
+        .person-label {
+          text-align: left;
+          span {
+            background-color: red;
+            padding: 0.1rem;
+            display: inline-block;
+            margin: 0 0.5rem;
+          }
+        }
+      }
+      .item-person-right {
+        display: flex;
+        margin-right: 0.5rem;
+        flex-direction: column;
+        justify-content: space-around;
+        .custom-btn {
+          cursor: pointer;
+        }
+      }
     }
   }
 }

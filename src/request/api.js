@@ -1,7 +1,7 @@
 import {
   post,
   get
-} from './http';
+} from './ajax';
 const API = {
   /**
    * 登录
@@ -120,7 +120,7 @@ const API = {
    * 人口基本信息
    * param {string | number} idno 身份证号
    */
-  getPeopleDetail: (idNo) => get('pscm/m/resident/base/baseInfo', {
+  getPeopleDetail: (idNo) => get('/pscm/m/resident/base/baseInfo', {
     idNo
   }),
 
@@ -196,6 +196,13 @@ const API = {
    */
   getHousePeopleList: (houseId) => get('/pscm/m/resident/s/houseroh', {
     houseId,
+  }),
+
+  /**
+   * 模糊搜索人员
+   */
+  searchPeopleByKey: (key) => get('/pscm/m/resident/s/houseroh', {
+    key,
   }),
 
   /**

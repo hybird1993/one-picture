@@ -42,7 +42,8 @@ export default {
         id: this.componentId
       });
     }
-  }
+  },
+  
 };
 </script>
 

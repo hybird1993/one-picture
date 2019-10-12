@@ -74,7 +74,7 @@
       ></PopupWindow>
     </div>
 
-    <OnePicture :method="method" :params="params"></OnePicture>
+    <OnePicture v-if="isLogin" :method="method" :params="params" @mapEvent="mapEvent"></OnePicture>
   </div>
 </template>
 
@@ -91,6 +91,7 @@ import SpecialPeople from "./special-people";
 import GlobalIndex from "./global-index";
 import PopupWindow from "./popup-window";
 import { API } from "../request/api";
+import { Util } from "../utils/util";
 export default {
   name: "main-container",
   data() {
@@ -168,6 +169,9 @@ export default {
       authState: false,    // 是否验证账号
       bindState: false,   // 是否绑定
       presenceState: false,
+
+      defalutFontSize: 12,   // 默认字体大小
+      _itemStyle: null,   // 放大模块原有样式
     };
   },
   computed: {
@@ -199,8 +203,8 @@ export default {
       const mainContainer = this.$refs.mainContainer;
       const width = mainContainer.offsetWidth;
       if (width >= 1920) {
-        document.getElementsByTagName("html")[0].style.fontSize =
-          Math.round(12 * (width / 1920)) + "px";
+        this.defalutFontSize = Math.round(12 * (width / 1920));
+        document.getElementsByTagName("html")[0].style.fontSize = this.defalutFontSize + "px";
       }
       const height = mainContainer.offsetHeight;
       let itemWidth =
@@ -362,6 +366,22 @@ export default {
         self.cacheStyle[item.id]["isShow"] = item.checked;
       });
       localStorage.setItem("cacheStyle", JSON.stringify(self.cacheStyle));
+    },
+
+    // 地图事件回传
+    mapEvent(event) {
+      if (event.type === 'house') {
+          this.openPopupWindow(
+            event.data,
+            "house-electricity",
+            "houseElectricity",
+          );
+          this.openPopupWindow(
+            event.data,
+            "people-info",
+            "peopleInfo",
+          );
+      }
     },
 
     /**
@@ -539,7 +559,6 @@ export default {
     },
 
     initWebSocket() {
-      console.log(document.cookie);
       // 初始化weosocket
       // const wsuri = process.env.WS_API + "/websocket/threadsocket";//ws地址
       console.log(process.env.VUE_APP_WEBSOCKET_API);
@@ -560,12 +579,12 @@ export default {
         "<open from='hxct@unicorn' to='unicorn' xmlns='urn:ietf:params:xml:ns:xmpp-framing' xml:lang='en' version='1.0'/>";
       console.log("Client: " + stream);
       this.connection.send(stream);
-      API.getUserInfo().then(
-        res => {
-          console.log(res);
-        },
-        err => {}
-      );
+      // API.getUserInfo().then(
+      //   res => {
+      //     console.log(res);
+      //   },
+      //   err => {}
+      // );
     },
 
     websocketonerror(event) {
@@ -589,9 +608,7 @@ export default {
           const mechanism = data.mechanisms.mechanism[0];
           if (mechanism) {
             console.log("验证客户端身份！");
-            let password =
-              "auth-token=eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1Njk0MDAwNDQsInN1YiI6IjIzIiwiaXNzIjoid2ViIiwiZXhwIjoxNTY5NDAxODQ0fQ.KZhlL2oTaKhN0agynqGWMLuCvYhofOQ4V-q6Qc3lD6I";
-            password = password.split("=")[1];
+            const password = Util.getCookie();
             const username = "0#" + self.userId;
             //Base64编码
             var encodeToken = window.btoa(username + "\0" + password);
@@ -680,7 +697,19 @@ export default {
     websocketclose(event) {
       //关闭
       console.log("connection closed (" + event.code + ")");
-    }
+    },
+
+    // 窗口还原
+    zoomIn() {
+      document.getElementsByTagName("html")[0].style.fontSize = this.defalutFontSize + 'px';
+      _itemStyle = null;
+    },
+
+    // 窗口放大全屏
+    zoomOut() {
+      // _itemStyle = 
+      document.getElementsByTagName("html")[0].style.fontSize = this.defalutFontSize * 3 + 'px';
+    },
   },
   components: {
     LatestNews,

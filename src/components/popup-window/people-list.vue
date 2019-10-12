@@ -126,7 +126,7 @@ export default {
     showPeopleDetail(item) {
       this.$parent.eventListener({
         type: "peopleDetail",
-        id: item.idCard,
+        id: item.idcard,
       });
     },
   },

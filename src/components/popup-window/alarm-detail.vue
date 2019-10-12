@@ -40,6 +40,9 @@
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
+    <div class="close-item">
+      <img @click="close" src="../../assets/image/icon-close.png" />
+    </div>
   </div>
 </template>
 <script>
