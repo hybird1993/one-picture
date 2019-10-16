@@ -13,6 +13,12 @@
         <div v-html="prop.content"></div>
       </div>
     </el-scrollbar>
+    <div v-if="!isFullScreen" class="fullscreen-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="fullscreen-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
@@ -31,7 +37,9 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      isFullScreen: false,
+    };
   },
   mounted() {
   },
@@ -41,7 +49,23 @@ export default {
         type: 'close',
         id: this.componentId
       });
-    }
+    },
+
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.eventListener({
+        type: 'fullScreen',
+        id: this.componentId
+      });
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+       this.$parent.eventListener({
+        type: 'fullScreenExit',
+        id: this.componentId
+      });
+    },
   },
   
 };

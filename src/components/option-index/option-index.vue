@@ -37,6 +37,12 @@
         </div>
       </div>
     </div>
+    <div v-if="!isFullScreen" class="close-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="close-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
   </div>
 </template>
 
@@ -64,7 +70,8 @@ export default {
       radio: "1",
       year: null,
       week: null,
-      weekList: []
+      weekList: [],
+      isFullScreen: false,
     };
   },
   computed: {
@@ -215,6 +222,29 @@ export default {
       }
       this.getOptionIndex();
     },
+
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.fullScreen( 'optionIndex');
+      setTimeout(() => {
+        this.indexChart.resize();
+        this.rankChart.resize();
+        this.indexChart.setOption(this.setIndexChartOption());
+        this.rankChart.setOption(this.setRankChartOption());
+      }, 0)
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+      this.$parent.fullScreenExit( 'optionIndex');
+      setTimeout(() => {
+        this.indexChart.resize();
+        this.rankChart.resize();
+        this.indexChart.setOption(this.setIndexChartOption());
+        this.rankChart.setOption(this.setRankChartOption());
+      }, 0)
+    },
+
     // 格式化时间
     formatDate(date) {
       return TimeUtil.formatDate(date, "yyyyMMdd");
@@ -846,7 +876,7 @@ export default {
       }
       .praise-list {
         position: absolute;
-        right: 4.5rem;
+        left: 30rem;
         margin-top: 0.5rem;
         color: red;
       }

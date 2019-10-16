@@ -36,6 +36,12 @@
         </div>
       </div>
     </div>
+    <div v-if="!isFullScreen" class="close-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="close-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
   </div>
 </template>
 
@@ -52,7 +58,13 @@ export default {
       personCount: "",
       keyPersonCount: "",
       color1: ["#fac007", "#6560c1", "#3793d9", "#20eeac"],
-      color2: ["#f0a724", "#5551a8", "#256ca7", "#16a98a"]
+      color2: ["#f0a724", "#5551a8", "#256ca7", "#16a98a"],
+      isFullScreen: false,
+      _data: [],
+      _data1: [],
+      _data2: [],
+      _color1: [],
+      _color2: [],
     };
   },
   mounted() {
@@ -127,7 +139,34 @@ export default {
         err => {}
       );
     },
-    getHouseChartOption(data = []) {
+
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.fullScreen( 'peopleHouse');
+      setTimeout(() => {
+        this.peopleChart.resize();
+        this.peopleChart.setOption(this.getPeopleChartOption());
+        this.houseChart.resize();
+        this.houseChart.setOption(this.getHouseChartOption());
+      }, 0)
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+      this.$parent.fullScreenExit( 'peopleHouse');
+      setTimeout(() => {
+        this.peopleChart.resize();
+        this.peopleChart.setOption(this.getPeopleChartOption());
+        this.houseChart.resize();
+        this.houseChart.setOption(this.getHouseChartOption());
+      }, 0)
+    },
+
+    getHouseChartOption(data) {
+      if (!data) {
+        data = this._data;
+      }
+      this._data = data;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
       return {
@@ -200,6 +239,16 @@ export default {
       };
     },
     getPeopleChartOption(data1 = [], data2 = [], color1 = [], color2 = []) {
+      if (!data1) {
+        data1 = this._data1;
+        data2 = this._data2;
+        color1 = this._color1;
+        color2 = this._color2;
+      }
+      this._data1 = data1;
+      this._data2 = data2;
+      this._color1 = color1;
+      this._color2 = color2;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
       return {

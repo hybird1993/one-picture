@@ -25,7 +25,12 @@
         </ul>
       </el-scrollbar>
     </div>
-
+    <div v-if="!isFullScreen" class="fullscreen-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="fullscreen-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
@@ -54,7 +59,8 @@ export default {
   data() {
     return {
       date: null,
-      list: []
+      list: [],
+      isFullScreen: false,
     };
   },
   computed: {
@@ -72,12 +78,6 @@ export default {
     this.getRencentTrace();
   },
   methods: {
-    close() {
-      this.$parent.eventListener({
-        type: "close",
-        id: this.componentId
-      });
-    },
     showRecentTrace() {
       this.$parent.eventListener({
         type: "showRecentTrace",
@@ -87,11 +87,13 @@ export default {
         })
       });
     },
+
     hideRecentTrace() {
       this.$parent.eventListener({
         type: "hideRecentTrace",
       });
     },
+
     getRencentTrace() {
       const self = this;
       if (!self.date) {
@@ -106,16 +108,41 @@ export default {
         err => {}
       );
     },
+
     preDay() {
       const timestamp = this.date.getTime() - 24 * 60 * 60 * 1000;
       this.date = new Date(timestamp);
       this.getRencentTrace();
     },
+
     nextDay() {
       const timestamp = this.date.getTime() + 24 * 60 * 60 * 1000;
       this.date = new Date(timestamp);
       this.getRencentTrace();
-    }
+    },
+    
+    close() {
+      this.$parent.eventListener({
+        type: "close",
+        id: this.componentId
+      });
+    },
+    
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.eventListener({
+        type: 'fullScreen',
+        id: this.componentId
+      });
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+       this.$parent.eventListener({
+        type: 'fullScreenExit',
+        id: this.componentId
+      });
+    },
   },
   watch: {
     prop: function(val, oldVal) {

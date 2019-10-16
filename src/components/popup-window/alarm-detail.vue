@@ -37,8 +37,11 @@
         </li>
       </ul>
     </el-scrollbar>
-    <div class="close-item">
-      <img @click="close" src="../../assets/image/icon-close.png" />
+    <div v-if="!isFullScreen" class="fullscreen-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="fullscreen-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
     </div>
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
@@ -59,7 +62,8 @@ export default {
   },
   data() {
     return {
-      detail: {}
+      detail: {},
+      isFullScreen: false,
     };
   },
   mounted() {
@@ -93,6 +97,22 @@ export default {
         url: `${process.env.VUE_APP_API}/s/routine/workPc.html?alertId=${this.prop}`
       });
 
+    },
+
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.eventListener({
+        type: 'fullScreen',
+        id: this.componentId
+      });
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+       this.$parent.eventListener({
+        type: 'fullScreenExit',
+        id: this.componentId
+      });
     },
   },
   watch: {

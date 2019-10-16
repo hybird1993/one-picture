@@ -1,7 +1,7 @@
 <template>
   <div class="main-container" ref="mainContainer">
     <div id="themeContainer" style="width: 100%;height: 100%;"></div>
-    <div v-for="item of defalutItemList" :key="item" style="zIndex: 10;">
+    <div v-for="item of defalutItemList" :key="item" :id="item" style="zIndex: 10;">
       <div
         v-if="styleMap[item].isShow || isDrag"
         class="item-box"
@@ -65,7 +65,7 @@
       :id="window.id"
     >
       <img v-if="!window.isTopCenter" class="item-box-bg" src="../assets/image/icon-box.png" />
-      <img v-else class="item-box-bg" src="../assets/image/icon-box-center.png" />
+      <img v-else class="item-box-bg item-box-bg-header" src="../assets/image/icon-box-header.png" />
       <PopupWindow
         :component="window.component"
         :prop="window.data"
@@ -406,6 +406,7 @@ export default {
       if (event.type === "close") {
         const index = self.windowList.findIndex(item => item.id === event.id);
         self.windowList.splice(index, 1);
+        this.fullScreenExit(-1);
       } else if (event.type === "alarmDeal") {
         self.openPopupWindow(event, "work-order", "alarmDeal");
       } else if (event.type === "peopleDetail") {
@@ -423,6 +424,10 @@ export default {
         }
       } else if (mapEventMap.includes(event.type)) {
         this.sendMessageToMap(event.type, event.data);
+      }  else if (event.type === "fullScreen") {
+        this.fullScreen(event.id)
+      }  else if (event.type === "fullScreenExit") {
+        this.fullScreenExit(event.id)
       } else {
       }
     },
@@ -461,15 +466,8 @@ export default {
       } else {
         const id = this.createId(type);
         const isTopCenter = ["news", "alarmDeal"].includes(type);
-        let style, positionNum;
-        if (isTopCenter) {
-          style = this.itemMap.get(9);
-          positionNum = 9;
-        } else {
-          const styleIndex = this.getUnusedItemIndex(itemIndex);
-          style = this.itemMap.get(styleIndex);
-          positionNum = styleIndex;
-        }
+        const positionNum = isTopCenter ? 9 : this.getUnusedItemIndex(itemIndex);
+        const style = Object.assign({}, this.itemMap.get(positionNum));
         this.windowList.push({
           id,
           type,
@@ -700,14 +698,39 @@ export default {
     },
 
     // 窗口还原
-    zoomIn() {
+    fullScreenExit(id) {
       document.getElementsByTagName("html")[0].style.fontSize = this.defalutFontSize + 'px';
-      _itemStyle = null;
+      const index = this.windowList.findIndex(item => item.id === id);
+      if (index > -1) {
+        this.windowList[index]['style'] = this._itemStyle;
+        this.windowList[index]['style']['zIndex'] = 200;
+      } else {
+        this.styleMap[id]['style'] = this._itemStyle;
+        this.styleMap[id]['style']['zIndex'] = 200;
+        this.styleMap[id]['style']['backgroundColor'] = null;
+      }
+      this._itemStyle = null;
     },
 
     // 窗口放大全屏
-    zoomOut() {
-      // _itemStyle = 
+    fullScreen(id) {
+      const index = this.windowList.findIndex(item => item.id === id);
+      if (index > -1) {
+        this._itemStyle = Object.assign({}, this.windowList[index]['style']);
+        this.windowList[index]['style']['width'] = '100%';
+        this.windowList[index]['style']['height'] = '100%';
+        this.windowList[index]['style']['top'] = 0;
+        this.windowList[index]['style']['left'] = 0;
+        this.windowList[index]['style']['zIndex'] = 1000;
+      } else {
+        this._itemStyle = Object.assign({}, this.styleMap[id].style);;
+        this.styleMap[id]['style']['width'] = '100%';
+        this.styleMap[id]['style']['height'] = '100%';
+        this.styleMap[id]['style']['top'] = 0;
+        this.styleMap[id]['style']['left'] = 0;
+        this.styleMap[id]['style']['zIndex'] = 1000;
+        this.styleMap[id]['style']['backgroundColor'] = 'rgba(11, 60, 80, 1)';
+      }
       document.getElementsByTagName("html")[0].style.fontSize = this.defalutFontSize * 3 + 'px';
     },
   },
@@ -742,6 +765,7 @@ export default {
     position: absolute;
     z-index: 10;
     user-select: none;
+    background-color: rgba(11, 60, 80, 0.5);
     .item-box-bg {
       position: absolute;
       width: 100%;
@@ -760,6 +784,9 @@ export default {
       height: 100%;
       left: 0;
       top: 0;
+    }
+    .item-box-bg-header {
+      height: 3rem;
     }
   }
   .drag-outline {

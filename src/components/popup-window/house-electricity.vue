@@ -18,6 +18,12 @@
         <img class="icon-arrow" src="../../assets/image/icon-right-arrow.png" @click="nextDay"/>
       </div>
     </div>
+    <div v-if="!isFullScreen" class="fullscreen-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="fullscreen-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
@@ -42,6 +48,7 @@ export default {
       electricityCount: "",
       chart: null,
       date: null,
+      isFullScreen: false,
     };
   },
   computed: {
@@ -105,6 +112,8 @@ export default {
     },
 
     setChartOption() {
+      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      const times = parseInt(fontsize, 10) / 12;
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
@@ -112,11 +121,16 @@ export default {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
-          trigger: "axis"
+          trigger: "axis",
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          }
         },
         textStyle: {
           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-          color: "rgba(255, 255, 255, 0.65)"
+          color: "rgba(255, 255, 255, 0.65)",
+          fontSize: Math.round(12 * times)
         },
         legend: {
           show: false
@@ -160,10 +174,10 @@ export default {
           {
             type: "bar",
             data: [],
-            barWidth: 8,
+            barWidth: 8 * times,
             itemStyle: {
               normal: {
-                barBorderRadius: 4, // 柱条边线圆角
+                barBorderRadius: 4 * times, // 柱条边线圆角
                 color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 1,
@@ -175,13 +189,35 @@ export default {
                   }
                 ]),
                 shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowBlur: 10
+                shadowBlur: 10 * times
               }
             }
           }
         ,
         animation: false
       }
+    },
+    
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.eventListener({
+        type: 'fullScreen',
+        id: this.componentId
+      });
+      setTimeout(() => {
+        this.chart.setOption(this.setChartOption());
+      }, 0)
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+       this.$parent.eventListener({
+        type: 'fullScreenExit',
+        id: this.componentId
+      });
+      setTimeout(() => {
+        this.chart.setOption(this.setChartOption());
+      }, 0)
     },
   },
   watch: {

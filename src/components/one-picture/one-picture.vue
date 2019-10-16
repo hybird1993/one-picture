@@ -3,7 +3,7 @@
     <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
       <!-- <iframe src="map.html" class="map" id="supermap"></iframe> -->
-      <iframe :src="url" class="map" id="supermap"></iframe>
+      <!-- <iframe :src="url" class="map" id="supermap"></iframe> -->
     </div>
   </div>
 </template>

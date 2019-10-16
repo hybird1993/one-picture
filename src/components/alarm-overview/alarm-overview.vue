@@ -2,6 +2,12 @@
   <div class="panel-container">
     <div class="panel-title">告警视图总览</div>
     <div id="alarmbar" :style="{width: '100%', height: '100%'}"></div>
+    <div v-if="!isFullScreen" class="close-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="close-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
   </div>
 </template>
 
@@ -11,7 +17,10 @@ export default {
   name: "alarm-overview",
   data() {
     return {
-      indexChart: null
+      indexChart: null,
+      isFullScreen: false,
+      _name: [], 
+      _vaule: [],
     };
   },
   mounted() {
@@ -33,10 +42,35 @@ export default {
         err => {}
       );
     },
-    setChartOption(name = [], value = []) {
+            
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.fullScreen( 'alarmOverview');
+      setTimeout(() => {
+        this.indexChart.resize();
+        this.indexChart.setOption(this.setChartOption());
+      }, 0)
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+      this.$parent.fullScreenExit( 'alarmOverview');
+      setTimeout(() => {
+        this.indexChart.resize();
+        this.indexChart.setOption(this.setChartOption());
+      }, 0)
+    },
+
+    setChartOption(name, value) {
+      if (!name || !value) {
+        name = this._name;
+        value = this._value;
+      }
+      this._name = name;
+      this._value = value;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
-      return {
+      const option =  {
         title: {
           text: ""
         },
@@ -123,7 +157,8 @@ export default {
 
         animation: false
       };
-    }
+      return option;
+    },
   }
 };
 </script>

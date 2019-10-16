@@ -30,6 +30,12 @@
         </el-scrollbar>
       </div>
     </div>
+    <div v-if="!isFullScreen" class="close-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="close-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
   </div>
 </template>
 
@@ -49,7 +55,18 @@ export default {
       year: null,
       week: null,
       weekList: [],
-      avgCount: "2765.6"
+      avgCount: "2765.6",
+      isFullScreen: false,
+      _xData: [],
+      _seriesData: [
+        {
+          name: "",
+          type: "line",
+          areaStyle: {},
+          data: [],
+          smooth: true
+        }
+      ]
     };
   },
   computed: {
@@ -159,22 +176,36 @@ export default {
       }
       this.getGlobalIndex();
     },
+   
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.fullScreen( 'globalIndex');
+      setTimeout(() => {
+        this.lineChart.resize();
+        this.lineChart.setOption(this.setIndexChartOption());
+      }, 0)
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+      this.$parent.fullScreenExit( 'globalIndex');
+      setTimeout(() => {
+        this.lineChart.resize();
+        this.lineChart.setOption(this.setIndexChartOption());
+      }, 0)
+    },
     // 格式化时间
     formatDate(date) {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
-    setIndexChartOption(
-      xData = [],
-      seriesData = [
-        {
-          name: "",
-          type: "line",
-          areaStyle: {},
-          data: [],
-          smooth: true
-        }
-      ]
-    ) {
+
+    setIndexChartOption(xData, seriesData) {
+      if (!xData || !seriesData) {
+        xData = this._xData;
+        seriesData = this._seriesData;
+      }
+      this._xData = xData;
+      this._seriesData = seriesData;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
       return {

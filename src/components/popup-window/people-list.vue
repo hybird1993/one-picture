@@ -29,7 +29,12 @@
         </li>
       </ul>
     </el-scrollbar>
-
+    <div v-if="!isFullScreen" class="fullscreen-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="fullscreen-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
     <div class="close-item">
       <img @click="close" src="../../assets/image/icon-close.png" />
     </div>
@@ -54,19 +59,14 @@ export default {
   },
   data() {
     return {
-      list: []
+      list: [],
+      isFullScreen: false,
     };
   },
   mounted() {
     this.getData();
   },
   methods: {
-    close() {
-      this.$parent.eventListener({
-        type: "close",
-        id: this.componentId
-      });
-    },
     getPeopleList() {
       const self = this;
       API.getPeopleList(self.prop.peopleType).then(
@@ -108,6 +108,7 @@ export default {
         err => {}
       );
     },
+
     getGeneralPowerList() {
       this.list = this.prop.peopleList;
       this.list.forEach(item => {
@@ -115,6 +116,7 @@ export default {
       });
       // console.log(this.list);
     },
+
     getData() {
       if (this.prop.fromItem === "people") {
         this.getPeopleList();
@@ -123,10 +125,34 @@ export default {
       } else {
       }
     },
+
     showPeopleDetail(item) {
       this.$parent.eventListener({
         type: "peopleDetail",
         id: item.idcard,
+      });
+    },
+
+    close() {
+      this.$parent.eventListener({
+        type: "close",
+        id: this.componentId
+      });
+    },
+    
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.eventListener({
+        type: 'fullScreen',
+        id: this.componentId
+      });
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+       this.$parent.eventListener({
+        type: 'fullScreenExit',
+        id: this.componentId
       });
     },
   },

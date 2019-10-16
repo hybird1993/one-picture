@@ -17,6 +17,12 @@
         >{{item.title}}</li>
       </transition-group>
     </el-scrollbar>
+    <div v-if="!isFullScreen" class="close-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="close-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
   </div>
 </template>
 
@@ -29,7 +35,8 @@ export default {
     return {
       list: [],
       timer: null,
-      time: 3000
+      time: 3000,
+      isFullScreen: false,
     };
   },
   mounted() {
@@ -81,7 +88,17 @@ export default {
       self.timer = setInterval(() => {
         self.loop();
       }, self.time);
-    }
+    },
+        
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.fullScreen( 'latestNews');
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+      this.$parent.fullScreenExit( 'latestNews');
+    },
   }
 };
 </script>
@@ -92,7 +109,6 @@ export default {
   margin: 0.5rem 0;
   ul {
     margin: 0 1.25rem;
-    transition: 1s all;
     li {
       height: 2.5rem;
       line-height: 2.5rem;

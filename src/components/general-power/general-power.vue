@@ -4,6 +4,12 @@
     <div class="panel-content">
       <div id="pieChart" :style="{width: '100%', height: '100%'}"></div>
     </div>
+    <div v-if="!isFullScreen" class="close-item">
+      <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
+    </div>
+    <div v-else class="close-item">
+      <img @click="exitFullScreen" src="../../assets/image/icon-fullscreen-exit.png" />
+    </div>
   </div>
 </template>
 
@@ -13,7 +19,10 @@ export default {
   name: "general-power",
   data() {
     return {
-      powerChart: null
+      powerChart: null,
+      isFullScreen: false,
+      _data: [],
+      _total: '',
     };
   },
   mounted() {
@@ -25,6 +34,7 @@ export default {
       const self = this;
       // 绘制图表
       self.powerChart = self.$echarts.init(document.getElementById("pieChart"));
+      self.powerChart.setOption(self.setChartOption());
       self.powerChart.on("click", function(params) {
         self.$emit("showPeopleList", {
           type: params.data.name,
@@ -47,15 +57,47 @@ export default {
           const total = data.reduce((pre, next) => {
             return pre + next.value;
           }, 0);
+          console.log(self.powerChart)
           self.powerChart.setOption(self.setChartOption(data, total));
+          // self.powerChart.setOption({
+          //   series:[{data: data}]
+          // });
+          console.log(self.powerChart)
         },
         err => {}
       );
     },
-    setChartOption(data = [], total) {
+      
+    fullScreen() {
+      this.isFullScreen = true;
+      this.$parent.fullScreen( 'generalPower');
+      const self = this;
+      setTimeout(() => {
+        self.powerChart.resize();
+        self.powerChart.setOption(self.setChartOption());
+      }, 0)
+    },
+    
+    exitFullScreen() {
+      this.isFullScreen = false;
+      this.$parent.fullScreenExit( 'generalPower');
+      const self = this;
+      setTimeout(() => {
+        self.powerChart.resize();
+        self.powerChart.setOption(self.setChartOption());
+      }, 0)
+    },
+
+    setChartOption(data, total) {
+      if (!data) {
+        data = this._data;
+        total = this._total;
+      }
+      this._data = data;
+      this._total = total;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
-      return {
+      const option = {
         title: {
           text: total,
           x: "center",
@@ -85,7 +127,7 @@ export default {
           show: false
         },
         calculable: true,
-        series: [
+        series: 
           {
             name: "面积模式",
             type: "pie",
@@ -111,11 +153,12 @@ export default {
             },
             color: ["#fac007", "#5551a8", "#1aa980", "#f86531", "#53c9ce"],
             data: data
-          }
-        ],
+          },
+     
         animation: false
       };
-    }
+      return option;
+    },
   }
 };
 </script>
