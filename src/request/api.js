@@ -199,6 +199,16 @@ const API = {
   }),
 
   /**
+   * 获取建筑房屋列表
+   * param {number} buildId
+   */
+  getBuildingHouseList: (buildingId, pageNum = 1, pageSize = 10) => get('/pscm/m/resident/s/buildinghouses', {
+    buildingId, 
+    pageNum,
+    pageSize,
+  }),
+
+  /** TODO
    * 模糊搜索人员
    */
   searchPeopleByKey: (key) => get('/pscm/m/resident/s/houseroh', {
