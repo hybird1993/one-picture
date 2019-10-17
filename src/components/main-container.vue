@@ -171,7 +171,7 @@ export default {
       presenceState: false,
 
       defalutFontSize: 12,   // 默认字体大小
-      _itemStyle: null,   // 放大模块原有样式
+      itemStyle_: null,   // 放大模块原有样式
     };
   },
   computed: {
@@ -319,9 +319,9 @@ export default {
       const self = this;
       for (const key in self.cacheStyle) {
         if (self.cacheStyle.hasOwnProperty(key)) {
-          self.styleMap[key]["style"] = self.itemMap.get(
+          self.styleMap[key]["style"] = Object.assign({}, self.itemMap.get(
             self.cacheStyle[key]["position"]
-          );
+          ));
           self.styleMap[key]["isShow"] = self.cacheStyle[key]["isShow"];
         }
       }
@@ -371,16 +371,22 @@ export default {
     // 地图事件回传
     mapEvent(event) {
       if (event.type === 'house') {
-          this.openPopupWindow(
-            event.data,
-            "house-electricity",
-            "houseElectricity",
-          );
-          this.openPopupWindow(
-            event.data,
-            "people-info",
-            "peopleInfo",
-          );
+        this.openPopupWindow(
+          event.data,
+          "house-electricity",
+          "houseElectricity",
+        );
+        this.openPopupWindow(
+          event.data,
+          "people-info",
+          "peopleInfo",
+        );
+      } else if (event.type === 'building') {
+        this.openPopupWindow(
+          event.data,
+          "building-info",
+          "buildingInfo",
+        );
       }
     },
 
@@ -422,6 +428,13 @@ export default {
           );
         } else {
         }
+      } else if (event.type === "peopleInfo") {
+        this.openPopupWindow(
+          event.data,
+          "people-info",
+          "peopleInfo",
+        );
+        this.getHouseDetail(event.data);
       } else if (mapEventMap.includes(event.type)) {
         this.sendMessageToMap(event.type, event.data);
       }  else if (event.type === "fullScreen") {
@@ -556,6 +569,14 @@ export default {
       this.sendMessageToMap('importantPeopleLocation', event);
     },
 
+    getHouseDetail(id) {
+      API.getHouseDetail(id).then(res => {
+        if (res.drawingPath) {
+          
+        }
+      })
+    },
+
     initWebSocket() {
       // 初始化weosocket
       // const wsuri = process.env.WS_API + "/websocket/threadsocket";//ws地址
@@ -609,8 +630,8 @@ export default {
             const password = Util.getCookie();
             const username = "0#" + self.userId;
             //Base64编码
-            var encodeToken = window.btoa(username + "\0" + password);
-            var message =
+            const encodeToken = window.btoa(username + "\0" + password);
+            const message =
               "<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='" +
               mechanism +
               "'>" +
@@ -642,7 +663,7 @@ export default {
         } else {
           console.log("用户session绑定成功！");
           self.bindState = true;
-          var message = "<presence id='" + self.streamId + "'><status>Online</status><priority>0</priority></presence>";
+          const message = "<presence id='" + self.streamId + "'><status>Online</status><priority>0</priority></presence>";
           console.log("Client: " + message);
           self.connection.send(message);
           self.presenceState = true;
@@ -702,28 +723,28 @@ export default {
       document.getElementsByTagName("html")[0].style.fontSize = this.defalutFontSize + 'px';
       const index = this.windowList.findIndex(item => item.id === id);
       if (index > -1) {
-        this.windowList[index]['style'] = this._itemStyle;
+        this.windowList[index]['style'] = this.itemStyle_;
         this.windowList[index]['style']['zIndex'] = 200;
       } else {
-        this.styleMap[id]['style'] = this._itemStyle;
+        this.styleMap[id]['style'] = this.itemStyle_;
         this.styleMap[id]['style']['zIndex'] = 200;
         this.styleMap[id]['style']['backgroundColor'] = null;
       }
-      this._itemStyle = null;
+      this.itemStyle_ = null;
     },
 
     // 窗口放大全屏
     fullScreen(id) {
       const index = this.windowList.findIndex(item => item.id === id);
       if (index > -1) {
-        this._itemStyle = Object.assign({}, this.windowList[index]['style']);
+        this.itemStyle_ = Object.assign({}, this.windowList[index]['style']);
         this.windowList[index]['style']['width'] = '100%';
         this.windowList[index]['style']['height'] = '100%';
         this.windowList[index]['style']['top'] = 0;
         this.windowList[index]['style']['left'] = 0;
         this.windowList[index]['style']['zIndex'] = 1000;
       } else {
-        this._itemStyle = Object.assign({}, this.styleMap[id].style);;
+        this.itemStyle_ = Object.assign({}, this.styleMap[id].style);
         this.styleMap[id]['style']['width'] = '100%';
         this.styleMap[id]['style']['height'] = '100%';
         this.styleMap[id]['style']['top'] = 0;

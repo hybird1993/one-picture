@@ -1,3 +1,4 @@
+
 export default
 {
     install(Vue)
@@ -15,13 +16,13 @@ export default
             /*创建 XMLHttpRequest 对象*/
             var createXHR=function(){
                 var xhr;
-                if (window.XMLHttpRequest)
-                {// code for IE7+, Firefox, Chrome, Opera, Safari
+                // if (window.XMLHttpRequest)
+                // {// code for IE7+, Firefox, Chrome, Opera, Safari
                     xhr=new XMLHttpRequest();
-                }
-                else {// code for IE6, IE5
-                    xhr=new ActiveXObject("Microsoft.XMLHTTP");
-                }
+                // }
+                // else {// code for IE6, IE5
+                    // xhr=new ActiveXObject("Microsoft.XMLHTTP");
+                // }
                 return xhr
             };
             /*向服务器发送请求*/
@@ -88,6 +89,7 @@ export default
                                         break;
                                 }
                                 resolve(responseData);
+                                break;
                             default:
                                 reject(new Error("这里做错误处理"));
                         }

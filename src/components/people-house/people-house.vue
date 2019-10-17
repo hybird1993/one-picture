@@ -60,11 +60,11 @@ export default {
       color1: ["#fac007", "#6560c1", "#3793d9", "#20eeac"],
       color2: ["#f0a724", "#5551a8", "#256ca7", "#16a98a"],
       isFullScreen: false,
-      _data: [],
-      _data1: [],
-      _data2: [],
-      _color1: [],
-      _color2: [],
+      data_: [],
+      data1_: [],
+      data2_: [],
+      color1_: [],
+      color2_: [],
     };
   },
   mounted() {
@@ -164,9 +164,9 @@ export default {
 
     getHouseChartOption(data) {
       if (!data) {
-        data = this._data;
+        data = this.data_;
       }
-      this._data = data;
+      this.data_ = data;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
       return {
@@ -219,7 +219,8 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontWeight: "bolder"
+                  fontWeight: "bolder",
+                  fontSize: Math.round(12 * times),
                 }
               }
               // emphasis: {
@@ -238,17 +239,17 @@ export default {
         animation: false
       };
     },
-    getPeopleChartOption(data1 = [], data2 = [], color1 = [], color2 = []) {
+    getPeopleChartOption(data1, data2, color1, color2) {
       if (!data1) {
-        data1 = this._data1;
-        data2 = this._data2;
-        color1 = this._color1;
-        color2 = this._color2;
+        data1 = this.data1_;
+        data2 = this.data2_;
+        color1 = this.color1_;
+        color2 = this.color2_;
       }
-      this._data1 = data1;
-      this._data2 = data2;
-      this._color1 = color1;
-      this._color2 = color2;
+      this.data1_ = data1;
+      this.data2_ = data2;
+      this.color1_ = color1;
+      this.color2_ = color2;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
       return {
@@ -292,7 +293,8 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontWeight: "bolder"
+                  fontWeight: "bolder",
+                  fontSize: Math.round(12 * times),
                 }
               }
             },
@@ -315,7 +317,8 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontWeight: "bolder"
+                  fontWeight: "bolder",
+                  fontSize: Math.round(12 * times),
                 }
               }
             },
@@ -333,6 +336,7 @@ export default {
 @import "../../assets/style/common.scss";
 .chart-container {
   display: flex;
+  justify-content: center;
   padding-left: 1rem;
   .chart-item {
     margin-top: .5rem;

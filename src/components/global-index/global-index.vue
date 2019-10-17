@@ -21,6 +21,7 @@
               v-for="item of communityList"
               class="over-hide"
               :key="item.id"
+              :title="item.orgName"
               @click="changeItemStatus(item)"
             >
               <span :class="{'checked': item.checked}"></span>
@@ -57,8 +58,8 @@ export default {
       weekList: [],
       avgCount: "2765.6",
       isFullScreen: false,
-      _xData: [],
-      _seriesData: [
+      xData_: [],
+      seriesData_: [
         {
           name: "",
           type: "line",
@@ -201,11 +202,11 @@ export default {
 
     setIndexChartOption(xData, seriesData) {
       if (!xData || !seriesData) {
-        xData = this._xData;
-        seriesData = this._seriesData;
+        xData = this.xData_;
+        seriesData = this.seriesData_;
       }
-      this._xData = xData;
-      this._seriesData = seriesData;
+      this.xData_ = xData;
+      this.seriesData_ = seriesData;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
       return {
@@ -308,6 +309,7 @@ export default {
   }
   .chart-container {
     display: flex;
+    justify-content: center;
     padding-left: 1rem;
     #indexline {
       width: 29rem;

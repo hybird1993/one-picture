@@ -60,6 +60,8 @@ export default {
         this.searchPeopleByKey(data.data.params);
       } else if (data.data.method === "查看关联人口") {
         this.$emit("mapEvent", { type: "house", data: data.data.params });
+      } else if (data.data.method === "查看建筑") {
+        this.$emit("mapEvent", { type: "building", data: data.data.params });
       } else if (data.data.method === "人脸搜索") {
       } else {
       }

@@ -351,12 +351,10 @@ export default {
         xAxis: [
           {
             type: "category",
-            axisLabel: {
-              interval: 0, //横轴信息全部显示
-              rotate: 20 //30度角倾斜显示
-            },
             data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
             axisLabel: {
+              interval: 0, //横轴信息全部显示
+              rotate: 20, //30度角倾斜显示
               color: "#fff",
               fontSize: Math.round(12 * times)
             }
@@ -830,6 +828,7 @@ export default {
   .chart-container {
     display: flex;
     padding-left: 1rem;
+    justify-content: center;
     #indexbar {
       width: 29rem;
       height: 20rem;
@@ -864,6 +863,8 @@ export default {
     #rankbar {
       width: 36rem;
       height: 18rem;
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
     .rank-label {
       display: flex;

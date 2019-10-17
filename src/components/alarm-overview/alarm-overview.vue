@@ -19,8 +19,8 @@ export default {
     return {
       indexChart: null,
       isFullScreen: false,
-      _name: [], 
-      _vaule: [],
+      name_: [],
+      vaule_: []
     };
   },
   mounted() {
@@ -42,42 +42,35 @@ export default {
         err => {}
       );
     },
-            
+
     fullScreen() {
       this.isFullScreen = true;
-      this.$parent.fullScreen( 'alarmOverview');
+      this.$parent.fullScreen("alarmOverview");
       setTimeout(() => {
         this.indexChart.resize();
         this.indexChart.setOption(this.setChartOption());
-      }, 0)
+      }, 0);
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-      this.$parent.fullScreenExit( 'alarmOverview');
+      this.$parent.fullScreenExit("alarmOverview");
       setTimeout(() => {
         this.indexChart.resize();
         this.indexChart.setOption(this.setChartOption());
-      }, 0)
+      }, 0);
     },
 
     setChartOption(name, value) {
       if (!name || !value) {
-        name = this._name;
-        value = this._value;
+        name = this.name_;
+        value = this.value_;
       }
-      this._name = name;
-      this._value = value;
+      this.name_ = name;
+      this.value_ = value;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
-      const option =  {
-        title: {
-          text: ""
-        },
-        textStyle: {
-          color: "#fff",
-          fontSize: Math.round(12 * times)
-        },
+      const option = {
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -89,9 +82,6 @@ export default {
             fontSize: Math.round(12 * times)
           }
         },
-
-        legend: {},
-
         grid: {
           left: "3%",
           right: "7%",
@@ -102,63 +92,56 @@ export default {
           show: false
         },
         calculable: true,
-        xAxis: [
-          {
-            type: "value",
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: ["rgba(255,255,255,0.2)"],
-                width: Math.round(1 * times),
-                type: "solid"
-              }
-            },
-            axisLabel: {
-              color: "#fff",
-              fontSize: Math.round(12 * times)
+        xAxis: {
+          type: "value",
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ["rgba(255,255,255,0.2)"],
+              width: Math.round(1 * times),
+              type: "solid"
             }
-            //	  boundaryGap : [0, 0]
+          },
+          axisLabel: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
           }
-        ],
-        yAxis: [
-          {
-            type: "category",
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: ["rgba(255,255,255,0.2)"],
-                width: Math.round(1 * times),
-                type: "solid"
-              }
-            },
-            axisLabel: {
-              color: "#fff",
-              fontSize: Math.round(12 * times)
-            },
-            data: name
-          }
-        ],
-        series: [
-          {
-            type: "bar",
-            barWidth: Math.round(12 * times),
-            data: value,
-            itemStyle: {
-              normal: {
-                color: "#fac007"
-              }
-            },
-            textStyle: {
-              color: "#fff",
-              fontSize: Math.round(12 * times)
+          //	  boundaryGap : [0, 0]
+        },
+        yAxis: {
+          type: "category",
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ["rgba(255,255,255,0.2)"],
+              width: Math.round(1 * times),
+              type: "solid"
             }
+          },
+          axisLabel: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          },
+          data: name
+        },
+        series: {
+          type: "bar",
+          barWidth: Math.round(12 * times),
+          data: value,
+          itemStyle: {
+            normal: {
+              color: "#fac007"
+            }
+          },
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
           }
-        ],
-
-        animation: false
+        }
       };
+      console.log(JSON.stringify(option));
       return option;
-    },
+    }
   }
 };
 </script>

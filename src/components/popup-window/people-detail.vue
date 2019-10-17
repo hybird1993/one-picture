@@ -253,6 +253,9 @@ export default {
 
     getCarInfo() {
       const self = this;
+      if (!self.residentBaseId) {
+        return;
+      }
       API.getCarInfo(self.residentBaseId).then(
         res => {
           self.carList = res.list;
@@ -263,6 +266,9 @@ export default {
 
     getHouseInfo() {
       const self = this;
+      if (!self.residentBaseId) {
+        return;
+      }
       API.getHouseList(self.residentBaseId).then(
         res => {
           if (res[0] && res[0]["houseInfo"]) {

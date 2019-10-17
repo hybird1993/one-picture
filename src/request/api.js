@@ -19,7 +19,8 @@ const API = {
   /**
    * 获取字典
    */
-  getDict: () => get('/pscm/m/dict/get/RESIDENT', {
+  getDict: () => get(`/pscm/m/dict/get/RESIDENT`, {
+    time: new Date().getTime()
   }),
 
   /**
@@ -206,6 +207,14 @@ const API = {
     buildingId, 
     pageNum,
     pageSize,
+  }),
+
+  /**
+   * 获取建筑平铺图
+   * param {number} buildId
+   */
+  getBuildingTile: (buildingId) => get('/pscm/m/resident/s/buildingTile', {
+    buildingId, 
   }),
 
   /** TODO

@@ -21,8 +21,8 @@ export default {
     return {
       powerChart: null,
       isFullScreen: false,
-      _data: [],
-      _total: '',
+      data_: [],
+      total_: '',
     };
   },
   mounted() {
@@ -90,11 +90,11 @@ export default {
 
     setChartOption(data, total) {
       if (!data) {
-        data = this._data;
-        total = this._total;
+        data = this.data_;
+        total = this.total_;
       }
-      this._data = data;
-      this._total = total;
+      this.data_ = data;
+      this.total_ = total;
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
       const option = {
@@ -146,7 +146,7 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                 fontSize: Math.round(12 * times),
+                  fontSize: Math.round(12 * times),
                   fontWeight: "bolder"
                 }
               }

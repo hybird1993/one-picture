@@ -49,8 +49,8 @@ export default {
       chart: null,
       date: null,
       isFullScreen: false,
-      _xData: null,
-      _sData: null,
+      xData_: null,
+      sData_: null,
     };
   },
   computed: {
@@ -106,8 +106,8 @@ export default {
           xData = res.electricCount.map(item => item.countHour); 
           sData = res.electricCount.map(item => item.electricNum); 
         } 
-        this._xData = xData;
-        this._sData = sData;
+        this.xData_ = xData;
+        this.sData_ = sData;
         self.chart.setOption({
           xAxis: {data: xData}, series: {data: sData}
         })
@@ -212,7 +212,7 @@ export default {
         this.chart.resize();
         this.chart.setOption(this.setChartOption());
         this.chart.setOption({
-          xAxis: {data: this._xData}, series: {data: this._sData}
+          xAxis: {data: this.xData_}, series: {data: this.sData_}
         });
       }, 0)
     },
@@ -227,7 +227,7 @@ export default {
         this.chart.resize();
         this.chart.setOption(this.setChartOption());
         this.chart.setOption({
-          xAxis: {data: this._xData}, series: {data: this._sData}
+          xAxis: {data: this.xData_}, series: {data: this.sData_}
         });
       }, 0)
     },
