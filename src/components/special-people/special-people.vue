@@ -10,7 +10,7 @@
       >
         <li v-for="(item, index) of list" :key="item.id" @click="showDetail(item)">
           <span class="alarm-index">{{index + 1}}</span>
-          <span class="alarm-title">{{item.headline}}</span>
+          <span class="alarm-title">{{item.content}}</span>
           <span class="alarm-status" :class="{'status-alarm': !item.isAlreadyDeal}">{{item.status}}</span>
         </li>
       </transition-group>

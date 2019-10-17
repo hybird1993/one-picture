@@ -139,7 +139,6 @@ export default {
           }
         }
       };
-      console.log(JSON.stringify(option));
       return option;
     }
   }

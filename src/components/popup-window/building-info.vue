@@ -86,7 +86,7 @@ export default {
       console.log();
       this.houseList = Object.values(
         this.buildingTileData[this.selectUint]
-      ).map(item => {
+      ).reverse().map(item => {
         return Object.values(item);
       });
       console.log(this.selectHouseId)

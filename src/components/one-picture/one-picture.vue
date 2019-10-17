@@ -42,7 +42,8 @@ export default {
       importantPeopleLocation: "重点人员定位", // 对应数据为特殊人员告警
       alarmLocation: "告警定位", // 对应数据为告警数组
       showRecentTrace: "显示行踪",
-      hideRecentTrace: "取消行踪显示"
+      hideRecentTrace: "取消行踪显示",
+      unImportantPersonTrace: "黑名单行踪轨迹",
     };
     window.addEventListener("message", this.handleMessage);
     setTimeout(() => {

@@ -82,7 +82,7 @@ export default {
       this.$parent.eventListener({
         type: "showRecentTrace",
         data: this.list.map(item => {
-          item.status = '未处理';
+         // item.status = '未处理';
           return item;
         })
       });

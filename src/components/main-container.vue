@@ -408,7 +408,7 @@ export default {
      */
     eventListener(event) {
       const self = this;
-      const mapEventMap = ['showRecentTrace', 'hideRecentTrace'];
+      const mapEventMap = ['showRecentTrace', 'hideRecentTrace', 'unImportantPersonTrace'];
       if (event.type === "close") {
         const index = self.windowList.findIndex(item => item.id === event.id);
         self.windowList.splice(index, 1);

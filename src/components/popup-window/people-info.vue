@@ -16,7 +16,7 @@
         </div>
         <div class="item-person-right">
           <div class="custom-btn btn-small" @click="showPeopleDetail(item)">详细信息</div>
-          <div class="custom-btn btn-small" @click="showPeopleRecentTrace(item)">显示轨迹</div>
+          <div class="custom-btn btn-small" @click="getUnInportantPersonTrace(item)">显示轨迹</div>
         </div>
       </div>
     </el-scrollbar>
@@ -35,6 +35,7 @@
 <script>
 // const imgUrl = require("../../assets/image/p1.png");
 import { API } from "../../request/api";
+import { TimeUtil } from "../../utils/time-util";
 export default {
   name: "latest-news",
   props: {
@@ -85,6 +86,25 @@ export default {
         },
         err => {
           self.list = [];
+        }
+      );
+    },
+
+    getUnInportantPersonTrace(item) {
+      const self = this;
+      const startTime = TimeUtil.formatDate(new Date((new Date().getTime() - 30 * 24 * 60 *60 * 1000)), 'yyyy-MM-dd hh:mm:ss')
+      const endTime = TimeUtil.formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
+      API.getUnInportantPersonTrace(item.idCard, startTime, endTime).then(
+        res => {
+          if (res.data.length > 0) {
+            this.$parent.eventListener({
+              type: "unImportantPersonTrace",
+              data: res.data,
+            });
+          }
+        },
+        err => {
+      
         }
       );
     },
