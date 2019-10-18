@@ -126,14 +126,19 @@ export default {
       const self = this;
       API.getHousePeopleList(id).then(res => {
         self.list = res.map(item => {
-          const person = item.residentBaseInfo;
+            const person = item.residentBaseInfo;
+            let labels = [];
+            labels.push(person.formerName);
+            if (person.ethnicity && person.ethnicity !== '无') {
+              labels = labels.concat(person.ethnicity.split(','));
+            }
           return {
             id: person.residentBaseId,
             name: person.name,
             idCard: person.idNo,
             phone: person.contact,
             picUrl: self.getPeopleIconUrl(person.residentBaseId),
-            labels: [person.formerName]
+            labels: labels
           }
         });
       }, err => {

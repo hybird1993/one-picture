@@ -73,6 +73,11 @@ export default {
         res => {
           self.list = res.map(item => {
             const person = item.residentBaseInfo;
+            let labels = [];
+            labels.push(person.formerName);
+            if (person.ethnicity && person.ethnicity !== '无') {
+              labels = labels.concat(person.ethnicity.split(','));
+            }
             return {
               id: person.residentBaseId,
               name: person.name,
@@ -80,7 +85,7 @@ export default {
               phone: person.contact,
               picUrl: self.getPeopleIconUrl(person.residentBaseId),
               // TODO 多个标签是怎么返回的
-              labels: [person.formerName]
+              labels: labels
             };
           });
         },
