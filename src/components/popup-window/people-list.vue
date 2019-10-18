@@ -9,7 +9,7 @@
           <span class="item-grid">所属网格</span>
           <span class="item-phone">电话</span>
         </li>
-        <li v-for="(item, index) of list" :key="index" :class="{'li-dot': !item.noDot}">
+        <li v-for="(item, index) of list" :key="index" :class="{'li-dot': !item.noDot}" @click="showPeopleDetail(item)">
           <span class="item-name">{{item.name}}</span>
           <span class="item-address">{{item.address}}</span>
           <span class="item-grid">{{item.grid}}</span>
@@ -22,7 +22,7 @@
           <span class="item-grid">责任网格</span>
           <span class="item-phone">电话</span>
         </li>
-        <li v-for="(item, index) of list" :key="index" :class="item.class" @click="showPeopleDetail(item)">
+        <li v-for="(item, index) of list" :key="index" :class="item.class">
           <span class="item-name">{{item.realName}}</span>
           <span class="item-grid">{{item.gridNames}}</span>
           <span class="item-phone">{{item.mobilephone}}</span>
@@ -129,7 +129,7 @@ export default {
     showPeopleDetail(item) {
       this.$parent.eventListener({
         type: "peopleDetail",
-        id: item.idcard,
+        id: item.idNo,
       });
     },
 
@@ -200,23 +200,28 @@ export default {
       }
     }
     .people-list {
-      .item-name {
-        width: 15%;
-      }
-      .item-address {
-        width: 30%;
-      }
-      .item-grid {
-        width: 30%;
-      }
-      .item-phone {
-        width: 25%;
+      li {
+        cursor: pointer;
+        &:nth-child(1) {
+          cursor: default;
+        }
+        .item-name {
+          width: 15%;
+        }
+        .item-address {
+          width: 30%;
+        }
+        .item-grid {
+          width: 30%;
+        }
+        .item-phone {
+          width: 25%;
+        }
       }
     }
     .power-people-list {
       li {
         padding-left: 2.5rem;
-        cursor: pointer;
         &:before {
           content: "";
           position: absolute;
