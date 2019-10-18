@@ -217,6 +217,19 @@ const API = {
     buildingId, 
   }),
 
+  /**
+   * 获取非重点人员轨迹
+   * param {number} idNo 身份证号
+   * param {string} startTime  yyyy-MM-dd HH:mm:ss
+   * param {string} endTime  
+   */
+  getUnInportantPersonTrace: (idNo, startTime, endTime, pageSize = 10) => get('/pscm/m/resident/getHistoricalTrack', {
+    idNo,
+    startTime,
+    endTime,
+    pageSize,
+  }),
+
   /** TODO
    * 模糊搜索人员
    */
