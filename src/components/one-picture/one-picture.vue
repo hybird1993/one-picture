@@ -4,6 +4,10 @@
     <div class="panel-content">
       <!-- <iframe src="map.html" class="map" id="supermap"></iframe> -->
       <iframe :src="url" class="map" id="supermap"></iframe> 
+      <div class="map-type">
+        <img v-if="mapType === '2d'" @click="changeMapType('3d')" src="../../assets/image/bg-2D.png">
+        <img v-if="mapType === '3d'" @click="changeMapType('2d')" src="../../assets/image/bg-3D.png">
+      </div>
     </div>
   </div>
 </template>
@@ -30,7 +34,8 @@ export default {
       methodMap: {},
       d2Url: null,
       d3Url: null,
-      url: null
+      url: null,
+      mapType: '2d',
     };
   },
   mounted() {
@@ -70,6 +75,14 @@ export default {
     init() {
       this.map = document.getElementById("supermap").contentWindow;
     },
+    changeMapType(type) {
+      this.mapType = type;;
+      if (this.mapType === '2d') {
+        this.url = this.d2Url;
+      } else {
+        this.url = this.d3Url;
+      }
+    },
     postMessage() {
       const method = this.methodMap[this.method];
       if (!method) {
@@ -104,5 +117,17 @@ export default {
   z-index: 1;
   background: rgba(0, 0, 0, 0.1);
   cursor: move;
+}
+.map-type {
+  z-index: 1;
+  bottom: 34%;
+  position: absolute;
+  right: 25.5%;
+  width: 9rem;
+  height: 7rem;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

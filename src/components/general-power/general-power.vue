@@ -23,11 +23,19 @@ export default {
       isFullScreen: false,
       data_: [],
       total_: '',
+      timer: null,
     };
   },
   mounted() {
     this.initChart();
-    this.getPowerStatistics();
+    this.timer = setInterval(() => {
+      this.getPowerStatistics();
+    }, 1000 * 10);
+  },
+  destroyed() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   },
   methods: {
     initChart() {

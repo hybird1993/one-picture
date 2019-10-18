@@ -14,7 +14,7 @@
         <span class="text">{{room}}人口信息</span>
       </div>
       <div class="box-content">
-        <div v-for="item of list" class="item-person" :key="item.id">
+        <!-- <div v-for="item of list" class="item-person" :key="item.id">
           <div class="item-person-left">
             <img :src="item.picUrl" />
           </div>
@@ -25,6 +25,24 @@
           </div>
           <div class="item-person-right">
             <div class="custom-btn btn-small detail-btn" @click="showPeopleDetail(item)">详细信息</div>
+            <div class="custom-btn btn-small" @click="getUnInportantPersonTrace(item)">显示轨迹</div>
+          </div>
+        </div> -->
+        <div v-for="item of list" class="item-person" :key="item.id">
+          <div class="item-person-left">
+            <img :src="item.picUrl" />
+            <div>{{item.name}}</div>
+          </div>
+          <div class="item-person-center">
+            <div class="person-info">联系方式：{{item.phone}}</div>
+            <div class="person-info">身份证号：{{item.idCard}}</div>
+            <div class="person-label">
+              <span v-for="label of item.labels" :key="label">{{label}}</span>
+            </div>
+          </div>
+          <div class="item-person-right">
+            <div class="custom-btn btn-small" @click="showPeopleDetail(item)">详细信息</div>
+            <div class="custom-btn btn-small" @click="getUnInportantPersonTrace(item)">显示轨迹</div>
           </div>
         </div>
       </div>
@@ -43,6 +61,7 @@
 
 <script>
 import { API } from "../../request/api";
+import { TimeUtil } from "../../utils/time-util";
 export default {
   name: "pass-records",
   props: {
@@ -114,11 +133,31 @@ export default {
             idCard: person.idNo,
             phone: person.contact,
             picUrl: self.getPeopleIconUrl(person.residentBaseId),
+            labels: [person.formerName]
           }
         });
       }, err => {
         self.list = [];
       })
+    },
+
+    getUnInportantPersonTrace(item) {
+      const self = this;
+      const startTime = TimeUtil.formatDate(new Date((new Date().getTime() - 30 * 24 * 60 *60 * 1000)), 'yyyy-MM-dd hh:mm:ss')
+      const endTime = TimeUtil.formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
+      API.getUnInportantPersonTrace(item.idCard, startTime, endTime).then(
+        res => {
+          if (res.data.length > 0) {
+            this.$parent.eventListener({
+              type: "unImportantPersonTrace",
+              data: res.data,
+            });
+          }
+        },
+        err => {
+      
+        }
+      );
     },
 
     getPeopleIconUrl(id) {
@@ -208,6 +247,7 @@ export default {
       img {
         width: 5rem;
         height: 5rem;
+        border-radius: 50%;
       }
     }
     .item-person-center {
@@ -233,7 +273,7 @@ export default {
       margin-right: 0.5rem;
       flex-direction: column;
       justify-content: space-around;
-      .detail-btn {
+      .detail-btn, .custom-btn {
         cursor: pointer;
       }
     }
