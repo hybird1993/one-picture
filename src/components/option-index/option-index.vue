@@ -57,6 +57,7 @@ const legend7 = require("../../assets/image/icon-legend-7.png");
 const legend8 = require("../../assets/image/icon-legend-8.png");
 import { API } from "../../request/api";
 import { TimeUtil } from "../../utils/time-util";
+import { Util } from "../../utils/util";
 export default {
   name: "option-index",
   data() {
@@ -250,8 +251,12 @@ export default {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
     setIndexChartOption() {
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      // alert(JSON.stringify(document.getElementsByTagName("html")[0]));
+      // alert(JSON.stringify(document.getElementsByTagName("html")[0].style));
+      // const fontsize = document.getElementsByTagName("html")[0].style.fontSize || '12px';
+      // alert(fontsize);
+      // const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes();
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms

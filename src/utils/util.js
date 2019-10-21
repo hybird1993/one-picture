@@ -24,6 +24,10 @@ const Util = {
     }
     return "";
   },
+
+  getFontSizeTimes: function() {
+    return (window.screen.availWidth / 1920).toFixed(2);
+  },
 }
 
 export {

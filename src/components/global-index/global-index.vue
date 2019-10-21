@@ -43,6 +43,7 @@
 <script>
 import { API } from "../../request/api";
 import { TimeUtil } from "../../utils/time-util";
+import { Util } from "../../utils/util";
 export default {
   name: "global-index",
   data() {
@@ -207,8 +208,9 @@ export default {
       }
       this.xData_ = xData;
       this.seriesData_ = seriesData;
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      // const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      // const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes();
       return {
         tooltip: {
           trigger: "axis",
@@ -233,20 +235,20 @@ export default {
           "#25a59a",
           "#bdbdbd"
         ],
-        dataZoom: [
-          {
-              show: true,
-              start: 30,
-              end: 70,
-              xAxisIndex: [0]
-          },
-          {
-              type: 'inside',
-              start: 30,
-              end: 70,
-              xAxisIndex: [0]
-          }
-        ],
+        // dataZoom: [
+        //   {
+        //       show: true,
+        //       start: 30,
+        //       end: 70,
+        //       xAxisIndex: [0]
+        //   },
+        //   {
+        //       type: 'inside',
+        //       start: 30,
+        //       end: 70,
+        //       xAxisIndex: [0]
+        //   }
+        // ],
         grid: {
           top:  Math.round(12 * times),
           left: "3%",

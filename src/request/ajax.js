@@ -98,6 +98,8 @@ export function get(url, params) {
       data: params,
     }).then(res => {
       // console.log(res);
+
+      alert(res);
       resolve(res);
     })
     .catch(err => {

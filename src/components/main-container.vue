@@ -159,6 +159,7 @@ export default {
       dragOverItem: "", // 正拖拽经过的item
 
       windowList: [],   // 打开的popupwindow列表
+      videoWindowList: [],   // 打开的视频窗口列表
 
       updateTime: null,  // 告警推送更新时间
       connection: null,
@@ -181,12 +182,16 @@ export default {
   },
   mounted() {
     const self = this;
+    self.init();
     if (Util.getRequest('auth-token')) {
+      alert(Util.getRequest('auth-token'));
       document.cookie = `auth-token=${Util.getRequest('auth-token')}`;
       self.getDict();
       self.init();
+      self.showItems();
       self.isLogin = true;
       self.userId = Util.getRequest('userId');
+      alert(Util.getRequest('userId'))
       if (!self.userId) {
         API.getUserInfo().then(
           res => {
@@ -203,7 +208,7 @@ export default {
       API.login("_ONSCREEN", "AF21B8C562854").then(
         res => {
           self.getDict();
-          self.init();
+          self.showItems();
           self.isLogin = true;
           self.userId = res.userInfo.userId;
           self.initWebSocket();
@@ -222,7 +227,7 @@ export default {
     init() {
       const self = this;
       const mainContainer = this.$refs.mainContainer;
-      const width = mainContainer.offsetWidth;
+      const width = window.screen.availWidth;
       if (width >= 1920) {
         this.defalutFontSize = Math.round(12 * (width / 1920));
         document.getElementsByTagName("html")[0].style.fontSize = this.defalutFontSize + "px";
@@ -242,7 +247,6 @@ export default {
           : self.itemMinHeight;
 
       self.setItemPosition(itemWidth, itemHeight);
-      self.showItems();
     },
 
     /**
@@ -417,12 +421,13 @@ export default {
               x: parseInt(style.left, 10),
               y: parseInt(style.top, 10),
               w: parseInt(style.width, 10),
-              h: parseInt(style.height, 10)
+              h: parseInt(style.height, 10) 
             },
             "time": 1000 * 10,
             "allowClose": true,
           }
           alert(JSON.stringify(param));
+          alert(JSON.stringify(param.position));
           jsobj.SendUIMessage('播放视频', param);
         }
       }

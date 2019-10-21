@@ -13,6 +13,7 @@
 
 <script>
 import { API } from "../../request/api";
+import { Util } from "../../utils/util";
 export default {
   name: "alarm-overview",
   data() {
@@ -33,8 +34,10 @@ export default {
     },
     getAlarmStatistics() {
       const self = this;
+      alert('告警视图');
       API.getAlarmStatistics().then(
         res => {
+          alert(res);
           const name = Object.keys(res);
           const value = name.map(item => res[item]);
           this.indexChart.setOption(this.setChartOption(name, value));
@@ -68,8 +71,9 @@ export default {
       }
       this.name_ = name;
       this.value_ = value;
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      // const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      // const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes();
       const option = {
         tooltip: {
           trigger: "axis",

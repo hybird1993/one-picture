@@ -2,8 +2,8 @@
   <div class="panel-container">
     <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
-      <!-- <iframe src="map.html" class="map" id="supermap"></iframe> -->
-      <iframe :src="url" class="map" id="supermap"></iframe>
+      <iframe  v-show="mapType === '2d'" :src="d2Url" class="map" id="supermap2D"></iframe>
+      <iframe  v-show="mapType === '3d'" :src="d3Url" class="map" id="supermap3D"></iframe>
       <div class="map-type">
         <img
           v-if="mapType === '2d'"
@@ -38,11 +38,11 @@ export default {
   data() {
     return {
       isShowMap: false,
-      map: null,
+      map2D: null,
+      map3D: null,
       methodMap: {},
       d2Url: null,
       d3Url: null,
-      url: null,
       mapType: "2d"
     };
   },
@@ -50,13 +50,13 @@ export default {
     const token = Util.getCookie();
     this.d2Url = `http://172.29.1.20/s/demo/webOneMap/map2d/index.html?auth-token=${token}`;
     this.d3Url = `http://172.29.1.20/s/demo/webOneMap/map3d/index.html?auth-token=${token}`;
-    this.url = this.d2Url;
     this.methodMap = {
       importantPeopleLocation: "重点人员定位", // 对应数据为特殊人员告警
       alarmLocation: "告警定位", // 对应数据为告警数组
       showRecentTrace: "显示行踪",
       hideRecentTrace: "取消行踪显示",
-      unImportantPersonTrace: "黑名单行踪轨迹"
+      unImportantPersonTrace: "黑名单行踪轨迹",
+      roamingVideoEnd: "当前漫游完毕",
     };
     window.addEventListener("message", this.handleMessage);
     setTimeout(() => {
@@ -77,6 +77,8 @@ export default {
       } else if (data.data.method === "查看建筑") {
         this.$emit("mapEvent", { type: "building", data: data.data.params });
       } else if (data.data.method === "人脸搜索") {
+      } else if (data.data.method === "漫游视频") {
+        this.$emit("mapEvent", { type: "playVideo", data: data.data.params });
       } else if (data.data.method === "视频信息") {
         this.$emit("mapEvent", { type: "playVideo", data: data.data.params });
         // const param = {
@@ -90,23 +92,18 @@ export default {
       }
     },
     init() {
-      this.map = document.getElementById("supermap").contentWindow;
+      this.map2D = document.getElementById("supermap2D").contentWindow;
+      this.map3D = document.getElementById("supermap3D").contentWindow;
     },
     changeMapType(type) {
       this.mapType = type;
-      if (this.mapType === "2d") {
-        this.url = this.d2Url;
-      } else {
-        this.url = this.d3Url;
-      }
     },
     postMessage() {
       const method = this.methodMap[this.method];
       if (!method) {
         return;
       }
-      // this.map.postMessage({ method: "摄像头定位", params: "SPJK-002" }, "*");
-      this.map.postMessage({ method: method, params: this.params }, "*");
+      this.map2D.postMessage({ method: method, params: this.params }, "*");
     },
     searchPeopleByKey(key) {}
   },

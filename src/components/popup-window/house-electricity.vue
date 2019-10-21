@@ -33,6 +33,7 @@
 <script>
 import { API } from "../../request/api";
 import { TimeUtil } from "../../utils/time-util";
+import { Util } from "../../utils/util";
 export default {
   name: "house-electricity",
   props: {
@@ -116,8 +117,9 @@ export default {
     },
 
     setChartOption() {
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      // const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
+      // const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes();
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
