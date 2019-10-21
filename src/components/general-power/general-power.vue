@@ -65,12 +65,7 @@ export default {
           const total = data.reduce((pre, next) => {
             return pre + next.value;
           }, 0);
-          console.log(self.powerChart)
           self.powerChart.setOption(self.setChartOption(data, total));
-          // self.powerChart.setOption({
-          //   series:[{data: data}]
-          // });
-          console.log(self.powerChart)
         },
         err => {}
       );

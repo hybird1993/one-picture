@@ -181,21 +181,42 @@ export default {
   },
   mounted() {
     const self = this;
-    API.login("_ONSCREEN", "AF21B8C562854").then(
-      res => {
-        self.getDict();
-        self.init();
-        self.isLogin = true;
-        self.userId = res.userInfo.userId;
+    if (Util.getRequest('auth-token')) {
+      document.cookie = `auth-token=${Util.getRequest('auth-token')}`;
+      self.getDict();
+      self.init();
+      self.isLogin = true;
+      self.userId = Util.getRequest('userId');
+      if (!self.userId) {
+        API.getUserInfo().then(
+          res => {
+            console.log(res);
+            self.userId = res.userId;
+            self.initWebSocket();
+          },
+          err => {}
+        );
+      } else {
         self.initWebSocket();
-      },
-      err => {
-        // self.init();
-        // self.isLogin = true;
       }
-    );
-    //  self.init();
-    //  self.isLogin = true;
+    } else {
+      API.login("_ONSCREEN", "AF21B8C562854").then(
+        res => {
+          self.getDict();
+          self.init();
+          self.isLogin = true;
+          self.userId = res.userInfo.userId;
+          self.initWebSocket();
+        },
+        err => {
+          // self.init();
+          // self.isLogin = true;
+        }
+      );
+      //  self.init();
+      //  self.isLogin = true;
+    }
+
   },
   methods: {
     init() {
@@ -387,6 +408,23 @@ export default {
           "building-info",
           "buildingInfo",
         );
+      } else if (event.type === 'playVideo') {
+        if(jsobj != null) {
+          const style = this.itemMap.get(1);
+          const param = {
+            "cameraInfo": event.data,
+            "position": {
+              x: parseInt(style.left, 10),
+              y: parseInt(style.top, 10),
+              w: parseInt(style.width, 10),
+              h: parseInt(style.height, 10)
+            },
+            "time": 1000 * 10,
+            "allowClose": true,
+          }
+          alert(JSON.stringify(param));
+          jsobj.SendUIMessage('播放视频', param);
+        }
       }
     },
 
@@ -412,7 +450,12 @@ export default {
       if (event.type === "close") {
         const index = self.windowList.findIndex(item => item.id === event.id);
         self.windowList.splice(index, 1);
-        this.fullScreenExit(-1);
+        if (this.itemStyle_) {
+          this.fullScreenExit(-1);
+        };
+        if (event.id.toLowerCase().includes('recenttrace')) {
+            this.sendMessageToMap('hideRecentTrace', {});
+        }
       } else if (event.type === "alarmDeal") {
         self.openPopupWindow(event, "work-order", "alarmDeal");
       } else if (event.type === "peopleDetail") {
@@ -598,12 +641,6 @@ export default {
         "<open from='hxct@unicorn' to='unicorn' xmlns='urn:ietf:params:xml:ns:xmpp-framing' xml:lang='en' version='1.0'/>";
       console.log("Client: " + stream);
       this.connection.send(stream);
-      // API.getUserInfo().then(
-      //   res => {
-      //     console.log(res);
-      //   },
-      //   err => {}
-      // );
     },
 
     websocketonerror(event) {

@@ -3,10 +3,18 @@
     <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
       <!-- <iframe src="map.html" class="map" id="supermap"></iframe> -->
-      <iframe :src="url" class="map" id="supermap"></iframe> 
+      <iframe :src="url" class="map" id="supermap"></iframe>
       <div class="map-type">
-        <img v-if="mapType === '2d'" @click="changeMapType('3d')" src="../../assets/image/bg-2D.png">
-        <img v-if="mapType === '3d'" @click="changeMapType('2d')" src="../../assets/image/bg-3D.png">
+        <img
+          v-if="mapType === '2d'"
+          @click="changeMapType('3d')"
+          src="../../assets/image/bg-2D.png"
+        />
+        <img
+          v-if="mapType === '3d'"
+          @click="changeMapType('2d')"
+          src="../../assets/image/bg-3D.png"
+        />
       </div>
     </div>
   </div>
@@ -35,7 +43,7 @@ export default {
       d2Url: null,
       d3Url: null,
       url: null,
-      mapType: '2d',
+      mapType: "2d"
     };
   },
   mounted() {
@@ -48,7 +56,7 @@ export default {
       alarmLocation: "告警定位", // 对应数据为告警数组
       showRecentTrace: "显示行踪",
       hideRecentTrace: "取消行踪显示",
-      unImportantPersonTrace: "黑名单行踪轨迹",
+      unImportantPersonTrace: "黑名单行踪轨迹"
     };
     window.addEventListener("message", this.handleMessage);
     setTimeout(() => {
@@ -69,6 +77,15 @@ export default {
       } else if (data.data.method === "查看建筑") {
         this.$emit("mapEvent", { type: "building", data: data.data.params });
       } else if (data.data.method === "人脸搜索") {
+      } else if (data.data.method === "视频信息") {
+        this.$emit("mapEvent", { type: "playVideo", data: data.data.params });
+        // const param = {
+        //   cameraInfo: data.data.params,
+        //   position: { x: 0, y: 0, w: 472, h: 316 },
+        //   time: 10000,
+        //   allowClose: true
+        // };
+        // jsobj.SendUIMessage("播放视频", param);
       } else {
       }
     },
@@ -76,8 +93,8 @@ export default {
       this.map = document.getElementById("supermap").contentWindow;
     },
     changeMapType(type) {
-      this.mapType = type;;
-      if (this.mapType === '2d') {
+      this.mapType = type;
+      if (this.mapType === "2d") {
         this.url = this.d2Url;
       } else {
         this.url = this.d3Url;

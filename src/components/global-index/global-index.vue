@@ -233,6 +233,20 @@ export default {
           "#25a59a",
           "#bdbdbd"
         ],
+        dataZoom: [
+          {
+              show: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: [0]
+          },
+          {
+              type: 'inside',
+              start: 30,
+              end: 70,
+              xAxisIndex: [0]
+          }
+        ],
         grid: {
           top:  Math.round(12 * times),
           left: "3%",

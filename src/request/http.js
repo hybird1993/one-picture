@@ -14,9 +14,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 axios.defaults.withCredentials = true;    // 请求带上cookie
 
-// axios.defaults.headers.Cookie = `auth-token=${getRequest().token}`;    // 请求带上cookie
-
-// document.cookie = `auth-token=${getRequest().token}`;
+// axios.defaults.headers.Cookie = `auth-token=${getRequest()}`;    // 请求带上cookie
 
 // 请求拦截器
 // axios.interceptors.request.use( 

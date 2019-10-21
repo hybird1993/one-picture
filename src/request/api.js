@@ -140,7 +140,7 @@ const API = {
     residentBaseId
   }),
 
-    /**
+  /**
    * 近期行踪
    * param {string | number} idno 身份证号
    * param {string} startTime 开始时间
