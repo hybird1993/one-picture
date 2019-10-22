@@ -14,6 +14,10 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 axios.defaults.withCredentials = true;    // 请求带上cookie
 
+// if (getCookie()) {
+//   document.cookie = `auth-token=${getCookie()};Path=/`;
+//   alert(`document.cookie: ${document.cookie}`)
+// }
 // axios.defaults.headers.Cookie = `auth-token=${getRequest()}`;    // 请求带上cookie
 
 // 请求拦截器
@@ -41,6 +45,7 @@ axios.defaults.withCredentials = true;    // 请求带上cookie
 // 响应拦截器
 axios.interceptors.response.use(
   response => {
+    // alert(response.status)
     if (response.status === 200) {
       return Promise.resolve(response);
     } else {
@@ -49,6 +54,7 @@ axios.interceptors.response.use(
   },
   // 服务器状态码不是200的情况 
   error => {
+    alert(error)
     if (error.response.status) {
       return Promise.reject(error.response);
     }
@@ -92,15 +98,15 @@ export function post(url, params) {
   });
 }
 
-function getRequest() {
-  const url = location.search; //获取url中"?"符后的字串
-  const theRequest = new Object();
-  if (url.indexOf("?") != -1) {
-    const str = url.substr(1);
-      const strs = str.split("&");
-      for (var i = 0; i < strs.length; i++) {
-          theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-      }
+function getCookie(name = 'auth-token') {
+  const strcookie = document.cookie; //获取cookie字符串
+  var arrcookie = strcookie.split("; ");//分割
+  //遍历匹配
+  for ( var i = 0; i < arrcookie.length; i++) {
+  var arr = arrcookie[i].split("=");
+  if (arr[0] == name){
+  return arr[1];
   }
-  return theRequest;
+  }
+  return "";
 }

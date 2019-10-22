@@ -208,9 +208,7 @@ export default {
       }
       this.xData_ = xData;
       this.seriesData_ = seriesData;
-      // const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      // const times = parseInt(fontsize, 10) / 12;
-      const times = Util.getFontSizeTimes();
+      const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
         tooltip: {
           trigger: "axis",

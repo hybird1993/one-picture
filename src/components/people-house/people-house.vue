@@ -48,6 +48,7 @@
 <script>
 import { API } from "../../request/api";
 import { setTimeout } from "timers";
+import { Util } from "../../utils/util";
 export default {
   name: "people-house",
   data() {
@@ -167,8 +168,7 @@ export default {
         data = this.data_;
       }
       this.data_ = data;
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
         // title: {
         //   text: "34.6%",
@@ -250,8 +250,7 @@ export default {
       this.data2_ = data2;
       this.color1_ = color1;
       this.color2_ = color2;
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
         title: {
           text: "人口分布",

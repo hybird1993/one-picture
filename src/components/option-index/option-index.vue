@@ -251,12 +251,7 @@ export default {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
     setIndexChartOption() {
-      // alert(JSON.stringify(document.getElementsByTagName("html")[0]));
-      // alert(JSON.stringify(document.getElementsByTagName("html")[0].style));
-      // const fontsize = document.getElementsByTagName("html")[0].style.fontSize || '12px';
-      // alert(fontsize);
-      // const times = parseInt(fontsize, 10) / 12;
-      const times = Util.getFontSizeTimes();
+      const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms

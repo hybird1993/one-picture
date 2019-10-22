@@ -177,21 +177,25 @@ export default {
   },
   computed: {
     isAbleDrag: function() {
-      return this.windowList.length === 0;
+      return this.windowList.length === 0 && !this.itemStyle_;
     }
   },
   mounted() {
     const self = this;
     self.init();
-    if (Util.getRequest('auth-token')) {
-      alert(Util.getRequest('auth-token'));
-      document.cookie = `auth-token=${Util.getRequest('auth-token')}`;
+    if (false && Util.getRequest('auth-token')) {
+    // if (Util.getRequest('auth-token')) {
+      // alert(Util.getRequest('auth-token'));
+      var exp = new Date();
+      exp.setTime(exp.getTime() + 1000 * 60 *60);//过期时间 2分钟
+      document.cookie = `auth-token=${Util.getRequest('auth-token')};Path=/;expires=" + ${exp.toGMTString()}`;
+      // alert(document.cookie)
       self.getDict();
       self.init();
       self.showItems();
       self.isLogin = true;
       self.userId = Util.getRequest('userId');
-      alert(Util.getRequest('userId'))
+      // alert(Util.getRequest('userId'))
       if (!self.userId) {
         API.getUserInfo().then(
           res => {
@@ -205,6 +209,13 @@ export default {
         self.initWebSocket();
       }
     } else {
+      if (Util.getRequest('auth-token')) { 
+        var exp = new Date();
+        exp.setTime(exp.getTime() + 1000 * 60 *60);//过期时间 2分钟
+        document.cookie = `auth-token=${Util.getRequest('auth-token')};Path=/;`;
+        // document.cookie = `auth-token=${Util.getRequest('auth-token')};Path=/;expires=" + ${exp.toGMTString()}`;
+        self.userId = Util.getRequest('userId');
+      }
       API.login("_ONSCREEN", "AF21B8C562854").then(
         res => {
           self.getDict();
@@ -413,23 +424,35 @@ export default {
           "buildingInfo",
         );
       } else if (event.type === 'playVideo') {
-        if(jsobj != null) {
-          const style = this.itemMap.get(1);
-          const param = {
-            "cameraInfo": event.data,
-            "position": {
-              x: parseInt(style.left, 10),
-              y: parseInt(style.top, 10),
-              w: parseInt(style.width, 10),
-              h: parseInt(style.height, 10) 
-            },
-            "time": 1000 * 10,
-            "allowClose": true,
-          }
-          alert(JSON.stringify(param));
-          alert(JSON.stringify(param.position));
-          jsobj.SendUIMessage('播放视频', param);
+        this.playVideo('play', 0, event.data, {time: 1000 * 10})
+      }
+    },
+
+    playVideo(type, index, cameraInfo, param = {}) {
+      if(jsobj != null) {
+        const index = this.getUnusedItemIndex(0);
+        const style = this.itemMap.get(index);
+        const params = Object.assign(
+          {
+          "cameraInfo": cameraInfo,
+          "position": {
+            x: parseInt(style.left, 10),
+            y: parseInt(style.top, 10),
+            w: parseInt(style.width, 10),
+            h: parseInt(style.height, 10) 
+          },
+          "allowClose": true,
+          }, param
+        )
+        alert(JSON.stringify(params));
+        alert(JSON.stringify(params.position));
+        this.videoWindowList.push(index);
+        typeObj = {
+          play: '播放视频',
+          review: '回放视频'
         }
+        const typeName = typeObj[type];
+        jsobj.SendUIMessage(typeName, params);
       }
     },
 
@@ -499,12 +522,14 @@ export default {
     },
 
     /**
-     * 获取未使用的index
+     * 获取未使用的index  (0-8)
      */
     getUnusedItemIndex(index) {
-      const usedIndexArr = this.windowList.map(item => item.positionNum);
+      // TODO 加上时间判断
+      let usedIndexArr = this.windowList.map(item => item.positionNum);
       usedIndexArr.push(index);
-      const avalibaledIndexArr = [8, 7, 6, 5, 4, 3, 2, 1];
+      usedIndexArr = usedIndexArr.concat(this.videoWindowList);
+      const avalibaledIndexArr = [8, 7, 6, 5, 4, 3, 2, 1].filter(item => item !== index);
       let _index;
       avalibaledIndexArr.forEach(item => {
         if (usedIndexArr.indexOf(item) === -1) {
@@ -512,8 +537,20 @@ export default {
         }
       });
       if (!_index) {
-        _index = index + 1 > 8 ? 1 : index + 1;
+        if (this.videoWindowList.length > 0) {
+          avalibaledIndexArr.forEach(item => {
+            if (videoWindowList.indexOf(item) === -1) {
+              _index = item;
+            }
+          });
+          if (!_index) {
+            _index = avalibaledIndexArr.reverse()[0];
+          }
+        } else {
+          _index = avalibaledIndexArr.reverse()[0];
+        }
       }
+
       return _index;
     },
     
@@ -568,6 +605,12 @@ export default {
       }
       if (event.captureImageUri) {
         this.openPopupWindow(event, "pass-records", "passRecords", index);
+      }
+      if (event.videoUrl) {
+        const happenTime = new Date();
+        const startTime = happenTime - 1000 * 15;
+        const endTime = happenTime + 1000 * 15;
+        this.playVideo('review', index, event.videoUrl, {startTime, endTime});
       }
     },
 

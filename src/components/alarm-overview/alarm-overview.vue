@@ -34,10 +34,8 @@ export default {
     },
     getAlarmStatistics() {
       const self = this;
-      alert('告警视图');
       API.getAlarmStatistics().then(
         res => {
-          alert(res);
           const name = Object.keys(res);
           const value = name.map(item => res[item]);
           this.indexChart.setOption(this.setChartOption(name, value));
@@ -73,7 +71,7 @@ export default {
       this.value_ = value;
       // const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       // const times = parseInt(fontsize, 10) / 12;
-      const times = Util.getFontSizeTimes();
+      const times = Util.getFontSizeTimes(this.isFullScreen);
       const option = {
         tooltip: {
           trigger: "axis",

@@ -15,6 +15,7 @@
 
 <script>
 import { API } from "../../request/api";
+import { Util } from "../../utils/util";
 export default {
   name: "general-power",
   data() {
@@ -28,9 +29,10 @@ export default {
   },
   mounted() {
     this.initChart();
-    this.timer = setInterval(() => {
-      this.getPowerStatistics();
-    }, 1000 * 10);
+    this.getPowerStatistics();
+    // this.timer = setInterval(() => {
+    //   this.getPowerStatistics();
+    // }, 1000 * 10);
   },
   destroyed() {
     if (this.timer) {
@@ -98,8 +100,7 @@ export default {
       }
       this.data_ = data;
       this.total_ = total;
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes(this.isFullScreen);
       const option = {
         title: {
           text: total,
@@ -169,6 +170,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  padding-top: 30px;
+  padding-top: 2.5rem;
 }
 </style>
