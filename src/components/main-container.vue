@@ -429,9 +429,9 @@ export default {
     },
 
     playVideo(type, index, cameraInfo, param = {}) {
-      if(jsobj != null) {
-        const index = this.getUnusedItemIndex(0);
-        const style = this.itemMap.get(index);
+      // if(jsobj != null) {
+        const _index = this.getUnusedItemIndex(index);
+        const style = this.itemMap.get(_index);
         const params = Object.assign(
           {
           "cameraInfo": cameraInfo,
@@ -446,14 +446,14 @@ export default {
         )
         alert(JSON.stringify(params));
         alert(JSON.stringify(params.position));
-        this.videoWindowList.push(index);
+        this.videoWindowList.push(_index);
         typeObj = {
           play: '播放视频',
           review: '回放视频'
         }
         const typeName = typeObj[type];
         jsobj.SendUIMessage(typeName, params);
-      }
+      // }
     },
 
     /**
@@ -607,9 +607,9 @@ export default {
         this.openPopupWindow(event, "pass-records", "passRecords", index);
       }
       if (event.videoUrl) {
-        const happenTime = new Date();
-        const startTime = happenTime - 1000 * 15;
-        const endTime = happenTime + 1000 * 15;
+        const happenTime = new Date(event.alarmTime).getTime();
+        const startTime = new Date(happenTime - 1000 * 15);
+        const endTime = new Date(happenTime + 1000 * 15);
         this.playVideo('review', index, event.videoUrl, {startTime, endTime});
       }
     },
