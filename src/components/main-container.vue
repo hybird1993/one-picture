@@ -173,6 +173,8 @@ export default {
 
       defalutFontSize: 12,   // 默认字体大小
       itemStyle_: null,   // 放大模块原有样式
+
+      _cameraInfo: null,   // 用以测试 TODO
     };
   },
   computed: {
@@ -183,8 +185,8 @@ export default {
   mounted() {
     const self = this;
     self.init();
-    if (false && Util.getRequest('auth-token')) {
-    // if (Util.getRequest('auth-token')) {
+    // if (false && Util.getRequest('auth-token')) {
+    if (Util.getRequest('auth-token')) {
       // alert(Util.getRequest('auth-token'));
       var exp = new Date();
       exp.setTime(exp.getTime() + 1000 * 60 *60);//过期时间 2分钟
@@ -429,7 +431,9 @@ export default {
     },
 
     playVideo(type, index, cameraInfo, param = {}) {
-      // if(jsobj != null) {
+      this._cameraInfo = cameraInfo;
+      console.log(`video--->type: ${type}  ---- index: ${index}  ----  cameraInfo: ${cameraInfo}  ---- param: ${JSON.stringify(param)}`)
+      if(jsobj) {
         const _index = this.getUnusedItemIndex(index);
         const style = this.itemMap.get(_index);
         const params = Object.assign(
@@ -447,13 +451,15 @@ export default {
         alert(JSON.stringify(params));
         alert(JSON.stringify(params.position));
         this.videoWindowList.push(_index);
-        typeObj = {
+        const typeObj = {
           play: '播放视频',
           review: '回放视频'
         }
         const typeName = typeObj[type];
+        alert(typeName);
+        alert(params);
         jsobj.SendUIMessage(typeName, params);
-      // }
+      }
     },
 
     /**
@@ -606,11 +612,12 @@ export default {
       if (event.captureImageUri) {
         this.openPopupWindow(event, "pass-records", "passRecords", index);
       }
+      event.videoUrl = this._cameraInfo;
       if (event.videoUrl) {
         const happenTime = new Date(event.alarmTime).getTime();
-        const startTime = new Date(happenTime - 1000 * 15);
+        const beginTime = new Date(happenTime - 1000 * 15);
         const endTime = new Date(happenTime + 1000 * 15);
-        this.playVideo('review', index, event.videoUrl, {startTime, endTime});
+        this.playVideo('review', index, event.videoUrl, {beginTime, endTime});
       }
     },
 
@@ -713,7 +720,9 @@ export default {
           if (mechanism) {
             console.log("验证客户端身份！");
             const password = Util.getCookie();
+            console.log(password);
             const username = "0#" + self.userId;
+            console.log(username);
             //Base64编码
             const encodeToken = window.btoa(username + "\0" + password);
             const message =

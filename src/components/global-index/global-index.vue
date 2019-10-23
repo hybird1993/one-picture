@@ -57,7 +57,7 @@ export default {
       year: null,
       week: null,
       weekList: [],
-      avgCount: "2765.6",
+      avgCount: "",
       isFullScreen: false,
       xData_: [],
       seriesData_: [
