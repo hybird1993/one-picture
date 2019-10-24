@@ -1,20 +1,20 @@
 <template>
   <div class="panel-container">
     <div class="panel-title">特殊人群</div>
-    <el-scrollbar class="panel-content">
+    <div class="panel-content">
       <transition-group
-        name="flip-list"
+        name="flip-list-alarm"
         tag="ul"
         @mousemove.native="mouseOverEvent"
         @mouseout.native="mouseOutEvent"
       >
-        <li v-for="(item, index) of list" :key="item.id" @click="showDetail(item)">
-          <span class="alarm-index">{{index + 1}}</span>
+        <li v-for="item of list" :key="item.id" @click="showDetail(item)">
+          <span class="alarm-index">{{item.index}}</span>
           <span class="alarm-title">{{item.content}}</span>
           <span class="alarm-status" :class="{'status-alarm': !item.isAlreadyDeal}">{{item.status}}</span>
         </li>
       </transition-group>
-    </el-scrollbar>
+    </div>
     <div v-if="!isFullScreen" class="close-item">
       <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
     </div>
@@ -32,8 +32,9 @@ export default {
     return {
       list: [],
       timer: null,
-      time: 3000,
+      time: 1000 * 4,
       isFullScreen: false,
+      isMouseOver: false,
     };
   },
   mounted() {
@@ -52,41 +53,46 @@ export default {
         res => {
           // console.log(res);
           self.list = res.data;
-          self.list.forEach(item => {
+          self.list.forEach((item, index) => {
+            item.index = index + 1;
             item['isAlreadyDeal'] = item.status === '已处理';
           });
-          self.timer = setInterval(() => {
-            self.loop();
-          }, self.time);
+          self.loop();
         },
         err => {}
       );
     },
+
     showDetail(item) {
       this.$emit("showSpecialPeople", item);
     },
+
     loop() {
+      const self = this;  
+      if (self.timer) {
+        clearInterval(self.timer);
+      }    
+      self.timer = setInterval(() => {
+        self.showList();
+      }, self.time);
+    },
+
+    showList() {
       const self = this;
+      if (this.isMouseOver) {
+        return;
+      }
       const item = self.list.shift();
       setTimeout(() => {
-        self.list.push(item);
-      }, 1000);
+         self.list.push(item);
+      }, 1000)
     },
+
     mouseOverEvent() {
-      const self = this;
-      if (self.timer) {
-        clearInterval(self.timer);
-      }
-      // console.log(self.timer);
+      this.isMouseOver = true;
     },
     mouseOutEvent() {
-      const self = this;
-      if (self.timer) {
-        clearInterval(self.timer);
-      }
-      self.timer = setInterval(() => {
-        self.loop();
-      }, self.time);
+      this.isMouseOver = false;
     },
 
     fullScreen() {
@@ -106,6 +112,7 @@ export default {
 @import "../../assets/style/common.scss";
 .panel-content {
   margin: 0.5rem 0;
+  overflow: hidden;
   ul {
     margin: 0 1.25rem;
     li {
@@ -142,5 +149,39 @@ export default {
       }
     }
   }
+
+  .flip-list-alarm-move {
+    transition: transform 2s;
+  }
+
+  .flip-list-alarm-leave-active {
+    transition: all 2s;
+  }
+
+  .flip-list-alarm-leave {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .flip-list-alarm-leave-to {
+    transform: translateX(-100%);
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .flip-list-alarm-enter-active {
+    transition: all 2s;
+  }
+
+  .flip-list-alarm-enter {
+    visibility: hidden;
+    opacity: 0;
+  }
+  
+  .flip-list-alarm-enter-to {
+    visibility: visible;
+    opacity: 1;
+  }
+
 }
 </style>

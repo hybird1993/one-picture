@@ -60,7 +60,7 @@ export default {
     };
     window.addEventListener("message", this.handleMessage);
     setTimeout(() => {
-      this.init();
+      // this.init();
     }, 1000);
     // 初始化地图容器
   },
@@ -78,7 +78,7 @@ export default {
         this.$emit("mapEvent", { type: "building", data: data.data.params });
       } else if (data.data.method === "人脸搜索") {
       } else if (data.data.method === "漫游视频") {
-        this.$emit("mapEvent", { type: "playVideo", data: data.data.params });
+        this.$emit("mapEvent", { type: "roamingVideoStart", data: data.data.params });
       } else if (data.data.method === "视频信息") {
         this.$emit("mapEvent", { type: "playVideo", data: data.data.params });
         // const param = {
@@ -99,11 +99,23 @@ export default {
       this.mapType = type;
     },
     postMessage() {
+      alert(this.method)
       const method = this.methodMap[this.method];
       if (!method) {
         return;
       }
-      this.map2D.postMessage({ method: method, params: this.params }, "*");
+      alert(method)
+      if (['roamingVideoEnd'].includes(this.method)) {
+        if (!this.map3D) {
+          this.map3D = document.getElementById("supermap3D").contentWindow;
+        }
+        this.map3D.postMessage({ method: method, params: this.params }, "*");
+      } else {
+        if (!this.map2D) {
+          this.map2D = document.getElementById("supermap2D").contentWindow;
+        }
+        this.map2D.postMessage({ method: method, params: this.params }, "*");
+      }
     },
     searchPeopleByKey(key) {}
   },

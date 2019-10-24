@@ -112,6 +112,7 @@ export default {
         },
         yAxis: {
           type: "category",
+          boundaryGap: false,
           splitLine: {
             show: true,
             lineStyle: {

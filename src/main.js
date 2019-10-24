@@ -10,6 +10,6 @@ Vue.config.productionTip = false;
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$x2js = new x2js();
 Vue.use(ElementUI);
-new Vue({
+Vue.prototype.eventBus = window.eventBus = new Vue({
     render: h => h(App),
 }).$mount('#app');

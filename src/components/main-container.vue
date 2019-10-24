@@ -92,6 +92,7 @@ import GlobalIndex from "./global-index";
 import PopupWindow from "./popup-window";
 import { API } from "../request/api";
 import { Util } from "../utils/util";
+import { TimeUtil } from "../utils/time-util";
 export default {
   name: "main-container",
   data() {
@@ -173,8 +174,6 @@ export default {
 
       defalutFontSize: 12,   // 默认字体大小
       itemStyle_: null,   // 放大模块原有样式
-
-      _cameraInfo: null,   // 用以测试 TODO
     };
   },
   computed: {
@@ -185,8 +184,8 @@ export default {
   mounted() {
     const self = this;
     self.init();
-    // if (false && Util.getRequest('auth-token')) {
-    if (Util.getRequest('auth-token')) {
+    if (false && Util.getRequest('auth-token')) {
+    // if (Util.getRequest('auth-token')) {
       // alert(Util.getRequest('auth-token'));
       var exp = new Date();
       exp.setTime(exp.getTime() + 1000 * 60 *60);//过期时间 2分钟
@@ -211,13 +210,6 @@ export default {
         self.initWebSocket();
       }
     } else {
-      if (Util.getRequest('auth-token')) { 
-        var exp = new Date();
-        exp.setTime(exp.getTime() + 1000 * 60 *60);//过期时间 2分钟
-        document.cookie = `auth-token=${Util.getRequest('auth-token')};Path=/;`;
-        // document.cookie = `auth-token=${Util.getRequest('auth-token')};Path=/;expires=" + ${exp.toGMTString()}`;
-        self.userId = Util.getRequest('userId');
-      }
       API.login("_ONSCREEN", "AF21B8C562854").then(
         res => {
           self.getDict();
@@ -234,6 +226,7 @@ export default {
       //  self.init();
       //  self.isLogin = true;
     }
+    window.mainContainer = this;
 
   },
   methods: {
@@ -258,7 +251,6 @@ export default {
         Math.floor(itemHeight) > self.itemMinHeight
           ? Math.floor(itemHeight)
           : self.itemMinHeight;
-
       self.setItemPosition(itemWidth, itemHeight);
     },
 
@@ -384,6 +376,7 @@ export default {
     },
 
     dragStartEvent(event, id) {
+      console.log(event)
       event.dataTransfer.setData("id", id);
       this.isDrag = true;
     },
@@ -427,11 +420,23 @@ export default {
         );
       } else if (event.type === 'playVideo') {
         this.playVideo('play', 0, event.data, {time: 1000 * 10})
+      } else if (event.type === 'roamingVideoStart') {
+        alert(23233)
+        // this.playVideo('play', 0, event.data, {time: 1000 * 10})
+        alert(1111)
+        setTimeout(() => {
+          alert(2222)
+          this.sendMessageToMap('roamingVideoEnd', '');
+        }, 1000 * 15)
       }
     },
 
+    // 格式化时间
+    formatDate(date) {
+      return TimeUtil.formatDate(date, "yyyy-MM-dd hh:mm:ss");
+    },
+
     playVideo(type, index, cameraInfo, param = {}) {
-      this._cameraInfo = cameraInfo;
       console.log(`video--->type: ${type}  ---- index: ${index}  ----  cameraInfo: ${cameraInfo}  ---- param: ${JSON.stringify(param)}`)
       if(jsobj) {
         const _index = this.getUnusedItemIndex(index);
@@ -457,7 +462,8 @@ export default {
         }
         const typeName = typeObj[type];
         alert(typeName);
-        alert(params);
+        alert(JSON.stringify(params.beginTime));
+        alert(JSON.stringify(params.endTime));
         jsobj.SendUIMessage(typeName, params);
       }
     },
@@ -523,8 +529,14 @@ export default {
     },
 
     sendMessageToMap(method, params) {
+      alert(method)
       this.method = method;
       this.params = params;
+    },
+
+    recvUIMessage(name, data) {
+      alert(name);
+      alert(data)
     },
 
     /**
@@ -556,7 +568,6 @@ export default {
           _index = avalibaledIndexArr.reverse()[0];
         }
       }
-
       return _index;
     },
     
@@ -612,11 +623,12 @@ export default {
       if (event.captureImageUri) {
         this.openPopupWindow(event, "pass-records", "passRecords", index);
       }
-      event.videoUrl = this._cameraInfo;
       if (event.videoUrl) {
         const happenTime = new Date(event.alarmTime).getTime();
-        const beginTime = new Date(happenTime - 1000 * 15);
-        const endTime = new Date(happenTime + 1000 * 15);
+        const beginTime = this.formatDate(new Date(happenTime - 1000 * 15));
+        const endTime = this.formatDate(new Date(happenTime + 1000 * 15));
+        console.log(beginTime);
+        console.log(endTime);
         this.playVideo('review', index, event.videoUrl, {beginTime, endTime});
       }
     },

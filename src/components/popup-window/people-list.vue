@@ -111,7 +111,9 @@ export default {
 
     getGeneralPowerList() {
       this.list = this.prop.peopleList;
-      this.list.forEach(item => {
+      this.list.sort((pre, next) => {
+        return next.onLineState - pre.onLineState;
+      }).forEach(item => {
         item.class = item.onLineState === 0 ? "li-offline" : "li-online";
       });
       // console.log(this.list);
@@ -184,8 +186,11 @@ export default {
         position: relative;
         text-align: left;
       }
+      li:nth-child(odd) {
+        background-color: rgba(256, 256, 256, 0.1);
+      }
       .li-online {
-        background-color: rgba(102, 179, 218, 0.6);
+        background-color: rgba(102, 179, 218, 0.6)!important;
         &:before {
           background: #01a5db;
         }
@@ -194,9 +199,6 @@ export default {
         &:before {
           background: #eee;
         }
-      }
-      li:nth-child(odd) {
-        background-color: rgba(256, 256, 256, 0.1);
       }
     }
     .people-list {

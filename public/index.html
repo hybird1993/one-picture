@@ -20,5 +20,18 @@
   <div id="app"></div>
   <!-- built files will be auto injected -->
 </body>
-
+<script>
+  function RecvUIMessage(name, data) {
+    if (name == "当前漫游完毕") {
+      if (window.mainContainer) {
+        window.mainContainer.recvUIMessage(name, data)
+      }
+    }
+  }
+  // let i = 1;
+  // setInterval(() => {
+  //   // RecvUIMessage('当前漫游完毕', ++i)
+  // }, 1000 * 10)
+ 
+</script>
 </html>

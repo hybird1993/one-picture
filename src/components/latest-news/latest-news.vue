@@ -1,7 +1,7 @@
 <template>
   <div class="panel-container">
     <div class="panel-title">最新资讯</div>
-    <el-scrollbar class="panel-content">
+    <div class="panel-content">
       <transition-group
         name="flip-list"
         tag="ul"
@@ -13,10 +13,10 @@
           class="over-hide"
           :key="item.newsId"
           @click="showDetail(item)"
-          :class="{'li-odd': item.isOdd}"
+          :class="{'li-odd': item.isOdd, 'li-last': item.isLast}"
         >{{item.title}}</li>
       </transition-group>
-    </el-scrollbar>
+    </div>
     <div v-if="!isFullScreen" class="close-item">
       <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
     </div>
@@ -37,6 +37,7 @@ export default {
       timer: null,
       time: 3000,
       isFullScreen: false,
+      isMouseOver: false,
     };
   },
   mounted() {
@@ -56,10 +57,9 @@ export default {
           self.list = res.list;
           self.list.forEach((item, index) => {
             item.isOdd = index % 2;
+            item.isLast = index === (self.list.length - 1);
           });
-          self.timer = setInterval(() => {
-            self.loop();
-          }, self.time);
+          self.loop();
         },
         err => {}
       );
@@ -69,25 +69,31 @@ export default {
     },
     loop() {
       const self = this;
-      const item = self.list.shift();
-      setTimeout(() => {
-        self.list.push(item);
-      }, 1000);
-    },
-    mouseOverEvent() {
-      const self = this;
-      if (self.timer) {
-        clearInterval(self.timer);
-      }
-    },
-    mouseOutEvent() {
-      const self = this;
       if (self.timer) {
         clearInterval(self.timer);
       }
       self.timer = setInterval(() => {
-        self.loop();
+        self.showList();
       }, self.time);
+      self.showList();
+    },
+
+    showList() {
+      const self = this;
+      if (this.isMouseOver) {
+        return;
+      }
+      const item = self.list.shift();
+      setTimeout(() => {
+         self.list.push(item);
+      }, 1000)
+    },
+
+    mouseOverEvent() {
+      this.isMouseOver = true;
+    },
+    mouseOutEvent() {
+      this.isMouseOver = false;
     },
         
     fullScreen() {
@@ -107,6 +113,7 @@ export default {
 @import "../../assets/style/common.scss";
 .panel-content {
   margin: 0.5rem 0;
+  overflow: hidden;
   ul {
     margin: 0 1.25rem;
     li {
@@ -135,6 +142,9 @@ export default {
     }
     li:hover {
       background-color: rgba(102, 179, 218, 0.6);
+    }
+    .li-last {
+      margin-bottom: 2rem;
     }
   }
 }

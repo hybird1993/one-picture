@@ -1,20 +1,21 @@
 <template>
   <div class="panel-container">
     <div class="panel-title">告警信息</div>
-    <el-scrollbar class="panel-content">
+    <div class="panel-content">
       <transition-group
-        name="flip-list"
+        name="flip-list-alarm"
         tag="ul"
         @mousemove.native="mouseOverEvent"
         @mouseout.native="mouseOutEvent"
       >
-        <li v-for="(item, index) of list" :key="item.id" @click="showDetail(item)">
-          <span class="alarm-index">{{index + 1}}</span>
+        <li v-for="item of showList" :key="item.id" @click="showDetail(item)">
+          <span class="alarm-index">{{item.index}}</span>
           <span class="alarm-title">{{item.content}}</span>
           <span class="alarm-status" :class="{'status-alarm': !item.isAlreadyDeal}">{{item.status}}</span>
         </li>
       </transition-group>
-    </el-scrollbar>
+      
+    </div>
     <div v-if="!isFullScreen" class="close-item">
       <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
     </div>
@@ -31,14 +32,19 @@ export default {
   props: {
     updateTime: {
       type: Number
-    },
+    }
   },
   data() {
     return {
       list: [],
       timer: null,
-      time: 3000,
+      time: 1000 * 7,
       isFullScreen: false,
+      isDataGet: false,
+      startIndex: 0,
+      step: 4,
+      showList: [],
+      isMouseOver: false,
     };
   },
   mounted() {
@@ -56,51 +62,68 @@ export default {
       API.getAlarmList().then(
         res => {
           self.list = res.data;
-          self.list.forEach(item => {
-            item['isAlreadyDeal'] = item.status === '已处理';
+          self.list.forEach((item, index) => {
+            item.index = index + 1;
+            item["isAlreadyDeal"] = item.status === "已处理";
           });
-          self.timer = setInterval(() => {
-            self.loop();
-          }, self.time);
+          self.isDataGet = true;
+          if (self.timer) {
+            clearInterval(self.timer);
+          }
+          this.startIndex = 0;
+          self.loop();
         },
         err => {}
       );
     },
+
     showDetail(item) {
       this.$emit("showAlarmDetail", item);
     },
+
     loop() {
-      const self = this;
-      const item = self.list.shift();
-      setTimeout(() => {
-        self.list.push(item);
-      }, 1000);
-    },
-    mouseOverEvent() {
-      const self = this;
-      if (self.timer) {
-        clearInterval(self.timer);
-      }
-    },
-    mouseOutEvent() {
       const self = this;
       if (self.timer) {
         clearInterval(self.timer);
       }
       self.timer = setInterval(() => {
-        self.loop();
+        self.getShowList();
       }, self.time);
+      self.getShowList();
     },
-    
+
+    getShowList() {
+      if (this.isMouseOver) {
+        return;
+      }
+      if (this.startIndex > this.list.length) {
+        this.startIndex = 0;
+      }
+      const endIndex = this.startIndex + this.step;
+      const arr = this.list.filter((item, index) => {
+        return index >= this.startIndex && index < endIndex;
+      })
+      this.startIndex = endIndex;
+      this.showList = arr;
+    },
+
+    mouseOverEvent() {
+      this.isMouseOver = true;
+    },
+    mouseOutEvent() {
+      this.isMouseOver = false;
+    },
+
     fullScreen() {
+      console.log(this)
       this.isFullScreen = true;
-      this.$parent.fullScreen( 'alarmList');
+      this.$parent.fullScreen("alarmList");
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-      this.$parent.fullScreenExit( 'alarmList');
-    },
+      this.$parent.fullScreenExit("alarmList");
+    }
   },
   watch: {
     updateTime: function(val, oldVal) {
@@ -117,6 +140,7 @@ export default {
 @import "../../assets/style/common.scss";
 .panel-content {
   margin: 0.5rem 0;
+  overflow: hidden;
   ul {
     margin: 0 1.25rem;
     li {
@@ -126,7 +150,7 @@ export default {
       position: relative;
       text-align: left;
       cursor: pointer;
-      min-height: 4rem;
+      min-height: 5rem;
       border-bottom: 0.1rem solid rgba(50, 50, 50, 0.7);
       .alarm-index {
         display: inline-block;
@@ -136,7 +160,7 @@ export default {
       }
       .alarm-title {
         flex: 1;
-        line-height: 1.75rem;
+        line-height: 1.5rem;
       }
       .alarm-status {
         display: inline-block;
@@ -153,5 +177,38 @@ export default {
       }
     }
   }
+  // .flip-list-alarm-move {
+  //   transition: transform 2s;
+  // }
+
+  .flip-list-alarm-enter-active {
+    transition: all 2s;
+  }
+
+  .flip-list-alarm-leave-active {
+    transition: all 1s;
+  }
+
+  .flip-list-alarm-leave {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .flip-list-alarm-enter-to {
+    transition-delay: 1s;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .flip-list-alarm-leave-to {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .flip-list-alarm-enter {
+    visibility: hidden;
+    opacity: 0;
+   }
 }
+
 </style>

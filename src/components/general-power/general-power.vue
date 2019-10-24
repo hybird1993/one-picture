@@ -2,7 +2,7 @@
   <div class="panel-container">
     <div class="panel-title">综治力量</div>
     <div class="panel-content">
-      <div id="pieChart" :style="{width: '100%', height: '100%'}"></div>
+      <div id="pieChart"></div>
     </div>
     <div v-if="!isFullScreen" class="close-item">
       <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
@@ -171,5 +171,11 @@ export default {
 @import "../../assets/style/common.scss";
 .panel-content {
   padding-top: 2.5rem;
+  #pieChart {
+    width: 39rem;
+    height: 22rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
 }
 </style>
