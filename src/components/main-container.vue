@@ -1,7 +1,7 @@
 <template>
   <div class="main-container" ref="mainContainer">
     <div id="themeContainer" style="width: 100%;height: 100%;"></div>
-    <div v-for="item of defalutItemList" :key="item" :id="item" style="zIndex: 10;">
+    <div v-for="defalutItem of defalutItemList" :v-bind="item = defalutItem.name" :key="defalutItem.name" :id="item" style="zIndex: 10;">
       <div
         v-if="styleMap[item].isShow || isDrag"
         class="item-box"
@@ -98,14 +98,38 @@ export default {
   data() {
     return {
       defalutItemList: [   // 默认展示模块
-        "latestNews",
-        "alarmOverview",
-        "alarmList",
-        "optionIndex",
-        "globalIndex",
-        "peopleHouse",
-        "specialPeople",
-        "generalPower"
+        {
+          name: "latestNews",
+          index: 8,
+        },
+        {
+          name: "alarmOverview",
+          index: 7,
+        },
+        {
+          name: "alarmList",
+          index: 6,
+        },
+        {
+          name: "optionIndex",
+          index: 5,
+        },
+        {
+          name: "globalIndex",
+          index: 4,
+        },
+        {
+          name: "peopleHouse",
+          index: 3,
+        },
+        {
+          name: "specialPeople",
+          index: 2,
+        },
+        {
+          name: "generalPower",
+          index: 1,
+        },
       ],
       styleMap: {
         // 各个组件的位置信息及显示与否
@@ -176,6 +200,17 @@ export default {
       itemStyle_: null,   // 放大模块原有样式
 
       eventTime: null,   // 当前给地图发消息的时间
+      roamingVideoInfo: {
+        index: null,
+        name: '',
+      },
+
+      roamingVideoWindowPosition: {
+        x: 0,
+        y: 0,
+        w: 0,
+        h: 0,
+      },
     };
   },
   computed: {
@@ -186,8 +221,8 @@ export default {
   mounted() {
     const self = this;
     self.init();
-    // if (false && Util.getRequest('auth-token')) {
-    if (Util.getRequest('auth-token')) {
+    if (false && Util.getRequest('auth-token')) {
+    // if (Util.getRequest('auth-token')) {
       // alert(Util.getRequest('auth-token'));
       var exp = new Date();
       exp.setTime(exp.getTime() + 1000 * 60 *60);//过期时间 2分钟
@@ -258,55 +293,55 @@ export default {
 
     /**
      * 计算每个小模块的位置
-     * 1       9      8
-     * 2              7
-     * 3    4    5    6   
+     * 8       9      1
+     * 7              2
+     * 6    5    4    3   
      */
     setItemPosition(itemWidth, itemHeight) {
       const self = this;
-      self.itemMap.set(1, {
+      self.itemMap.set(8, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: 0,
         top: 0
       });
-      self.itemMap.set(2, {
+      self.itemMap.set(7, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: 0,
         top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
       });
-      self.itemMap.set(3, {
+      self.itemMap.set(6, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: 0,
         top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
       });
-      self.itemMap.set(4, {
+      self.itemMap.set(5, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
         top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
       });
-      self.itemMap.set(5, {
+      self.itemMap.set(4, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 2}px`,
         top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
       });
-      self.itemMap.set(6, {
+      self.itemMap.set(3, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 3}px`,
         top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
       });
-      self.itemMap.set(7, {
+      self.itemMap.set(2, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
         top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
       });
-      self.itemMap.set(8, {
+      self.itemMap.set(1, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
@@ -324,6 +359,12 @@ export default {
         left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
         top: 0
       };
+      self.roamingVideoWindowPosition = {
+        top: 0,
+        left: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10) * 2}`,
+        width: `${itemWidth}`,
+        height: `${itemHeight}`,
+      }
       self.cacheItems();
     },
 
@@ -337,9 +378,9 @@ export default {
         self.cacheStyle = JSON.parse(_cacheStyle);
       } else {
         self.cacheStyle = {};
-        self.defalutItemList.forEach((item, index) => {
-          self.cacheStyle[item] = {
-            position: index + 1,
+        self.defalutItemList.forEach(item => {
+          self.cacheStyle[item.name] = {
+            position: item.index,
             isShow: true
           };
         });
@@ -421,13 +462,10 @@ export default {
           "buildingInfo",
         );
       } else if (event.type === 'playVideo') {
-        this.playVideo('play', 0, event.data, {time: 1000 * 10})
+        this.playVideo('play', 0, event.data, {})
       } else if (event.type === 'roamingVideoStart') {
         try {
-          this.playVideo('play', 0, event.data, {time: 1000 * 10})
-          setTimeout(() => {
-            this.sendMessageToMap('roamingVideoEnd', '');
-          }, 1000 * 15)
+          this.playVideo('play', 10, event.data, {time: 1000 * 10})
         } catch(e) { 
           setTimeout(() => {
             this.sendMessageToMap('roamingVideoEnd', '');
@@ -446,33 +484,47 @@ export default {
       console.log('播放视频');
       console.log(`video--->type: ${type}  ---- index: ${index}  ----  cameraInfo: ${cameraInfo}  ---- param: ${JSON.stringify(param)}`)
       try {
-        if(jsobj) {
-          const _index = this.getUnusedItemIndex(index);
-          const style = this.itemMap.get(_index);
-          const params = Object.assign(
-            {
-            "cameraInfo": cameraInfo,
-            "position": {
-              x: parseInt(style.left, 10),
-              y: parseInt(style.top, 10),
-              w: parseInt(style.width, 10),
-              h: parseInt(style.height, 10) 
-            },
-            "allowClose": true,
-            }, param
-          )
-
-          this.videoWindowList.push(_index);
+        if(jsobj) {  // TODO 待优化
+          let params;
+          if (index === 10) { // 漫游视频播放
+             params = Object.assign(
+              {
+              "cameraInfo": cameraInfo,
+              "position": this.roamingVideoWindowPosition,
+              // windowId: index,
+              "allowClose": true,
+              }, param
+            )
+            this.roamingVideoInfo = cameraInfo;
+          } else {
+            const _index = this.getUnusedItemIndex(index);
+            const style = this.itemMap.get(_index);
+            params = Object.assign(
+              {
+              "cameraInfo": cameraInfo,
+              // "position": {
+              //   x: parseInt(style.left, 10),
+              //   y: parseInt(style.top, 10),
+              //   w: parseInt(style.width, 10),
+              //   h: parseInt(style.height, 10) 
+              // },
+              windowId: _index,
+              "allowClose": true,
+              }, param
+            )
+            this.videoWindowList.push(_index);
+          }
+    
           const typeObj = {
             play: '播放视频',
             review: '回放视频'
           }
           const typeName = typeObj[type];
-          alert(JSON.stringify(params));
-          alert(typeName);
-          alert(params.beginTime);
-          alert(params.endTime);
-          alert(JSON.stringify(params.position));
+          // alert(JSON.stringify(params));
+          // alert(typeName);
+          // alert(params.beginTime);
+          // alert(params.endTime);
+          // alert(JSON.stringify(params.position));
           jsobj.SendUIMessage(typeName, params);
         }
       } catch(e) {
@@ -481,7 +533,15 @@ export default {
     },
 
     recvUIMessage(name, data) {
-
+      alert(name);
+      alert(data);
+      if (name === '播放结束') {
+        if (data === this.roamingVideoInfo) {
+          this.roamingVideoInfo = '';
+          this.sendMessageToMap('cancelCameraLight');
+          this.sendMessageToMap('roamingVideoEnd');
+        }
+      }
     },
 
     /**
@@ -555,7 +615,6 @@ export default {
      * 获取未使用的index  (0-8)
      */
     getUnusedItemIndex(index) {
-      // TODO 加上时间判断
       let usedIndexArr = this.windowList.map(item => item.positionNum);
       usedIndexArr.push(index);
       usedIndexArr = usedIndexArr.concat(this.videoWindowList);
@@ -904,7 +963,7 @@ export default {
     position: absolute;
     z-index: 10;
     user-select: none;
-    background-color: rgba(11, 60, 80, 0.5);
+    // background-color: rgba(11, 60, 80, 0.5);
     .item-box-bg {
       position: absolute;
       width: 100%;

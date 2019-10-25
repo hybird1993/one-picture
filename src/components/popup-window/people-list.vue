@@ -236,11 +236,11 @@ export default {
           border-radius: 50%;
         }
         .item-name {
-          width: 25%;
+          width: 30%;
           padding-left: 0.5rem;
         }
         .item-grid {
-          width: 50%;
+          width: 45%;
         }
         .item-phone {
           width: 25%;

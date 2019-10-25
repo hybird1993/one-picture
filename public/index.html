@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="favicon.ico">
   <title>one-picture</title>
-  <link rel="stylesheet" href="http://172.29.1.20/s/map/plugin/leaflet1.0.3/leaflet.css" />
+  <!-- <link rel="stylesheet" href="http://172.29.1.20/s/map/plugin/leaflet1.0.3/leaflet.css" />
   <script type="text/javascript" src="http://172.29.1.20/s/map/plugin/leaflet1.0.3/leaflet.js"></script>
-  <script type="text/javascript" src="http://172.29.1.20/s/map/plugin/supermap/iclient9-leaflet.js"></script>
+  <script type="text/javascript" src="http://172.29.1.20/s/map/plugin/supermap/iclient9-leaflet.js"></script> -->
 </head>
 
 <body>
@@ -22,12 +22,9 @@
 </body>
 <script>
   function RecvUIMessage(name, data) {
-    alert(name);
-    if (name == "当前漫游完毕") {
-      if (window.mainContainer) {
-        window.mainContainer.recvUIMessage(name, data)
-      }
-    }
+    if (window.mainContainer) {
+      window.mainContainer.recvUIMessage(name, data)
+    }   
   }
   // let i = 1;
   // setInterval(() => {
