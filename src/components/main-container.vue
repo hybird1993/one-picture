@@ -74,7 +74,7 @@
       ></PopupWindow>
     </div>
 
-    <OnePicture v-if="isLogin" :method="method" :params="params" @mapEvent="mapEvent"></OnePicture>
+    <OnePicture v-if="isLogin" :method="method" :params="params" :event-time="eventTime" @mapEvent="mapEvent"></OnePicture>
   </div>
 </template>
 
@@ -174,6 +174,8 @@ export default {
 
       defalutFontSize: 12,   // 默认字体大小
       itemStyle_: null,   // 放大模块原有样式
+
+      eventTime: null,   // 当前给地图发消息的时间
     };
   },
   computed: {
@@ -184,8 +186,8 @@ export default {
   mounted() {
     const self = this;
     self.init();
-    if (false && Util.getRequest('auth-token')) {
-    // if (Util.getRequest('auth-token')) {
+    // if (false && Util.getRequest('auth-token')) {
+    if (Util.getRequest('auth-token')) {
       // alert(Util.getRequest('auth-token'));
       var exp = new Date();
       exp.setTime(exp.getTime() + 1000 * 60 *60);//过期时间 2分钟
@@ -421,13 +423,16 @@ export default {
       } else if (event.type === 'playVideo') {
         this.playVideo('play', 0, event.data, {time: 1000 * 10})
       } else if (event.type === 'roamingVideoStart') {
-        alert(23233)
-        // this.playVideo('play', 0, event.data, {time: 1000 * 10})
-        alert(1111)
-        setTimeout(() => {
-          alert(2222)
-          this.sendMessageToMap('roamingVideoEnd', '');
-        }, 1000 * 15)
+        try {
+          this.playVideo('play', 0, event.data, {time: 1000 * 10})
+          setTimeout(() => {
+            this.sendMessageToMap('roamingVideoEnd', '');
+          }, 1000 * 15)
+        } catch(e) { 
+          setTimeout(() => {
+            this.sendMessageToMap('roamingVideoEnd', '');
+          }, 1000 * 1)
+        }
       }
     },
 
@@ -436,36 +441,47 @@ export default {
       return TimeUtil.formatDate(date, "yyyy-MM-dd hh:mm:ss");
     },
 
+    // 调用cs端播放视频
     playVideo(type, index, cameraInfo, param = {}) {
+      console.log('播放视频');
       console.log(`video--->type: ${type}  ---- index: ${index}  ----  cameraInfo: ${cameraInfo}  ---- param: ${JSON.stringify(param)}`)
-      if(jsobj) {
-        const _index = this.getUnusedItemIndex(index);
-        const style = this.itemMap.get(_index);
-        const params = Object.assign(
-          {
-          "cameraInfo": cameraInfo,
-          "position": {
-            x: parseInt(style.left, 10),
-            y: parseInt(style.top, 10),
-            w: parseInt(style.width, 10),
-            h: parseInt(style.height, 10) 
-          },
-          "allowClose": true,
-          }, param
-        )
-        alert(JSON.stringify(params));
-        alert(JSON.stringify(params.position));
-        this.videoWindowList.push(_index);
-        const typeObj = {
-          play: '播放视频',
-          review: '回放视频'
+      try {
+        if(jsobj) {
+          const _index = this.getUnusedItemIndex(index);
+          const style = this.itemMap.get(_index);
+          const params = Object.assign(
+            {
+            "cameraInfo": cameraInfo,
+            "position": {
+              x: parseInt(style.left, 10),
+              y: parseInt(style.top, 10),
+              w: parseInt(style.width, 10),
+              h: parseInt(style.height, 10) 
+            },
+            "allowClose": true,
+            }, param
+          )
+
+          this.videoWindowList.push(_index);
+          const typeObj = {
+            play: '播放视频',
+            review: '回放视频'
+          }
+          const typeName = typeObj[type];
+          alert(JSON.stringify(params));
+          alert(typeName);
+          alert(params.beginTime);
+          alert(params.endTime);
+          alert(JSON.stringify(params.position));
+          jsobj.SendUIMessage(typeName, params);
         }
-        const typeName = typeObj[type];
-        alert(typeName);
-        alert(JSON.stringify(params.beginTime));
-        alert(JSON.stringify(params.endTime));
-        jsobj.SendUIMessage(typeName, params);
+      } catch(e) {
+        throw new Error('视频播放异常');
       }
+    },
+
+    recvUIMessage(name, data) {
+
     },
 
     /**
@@ -492,7 +508,7 @@ export default {
         self.windowList.splice(index, 1);
         if (this.itemStyle_) {
           this.fullScreenExit(-1);
-        };
+        }
         if (event.id.toLowerCase().includes('recenttrace')) {
             this.sendMessageToMap('hideRecentTrace', {});
         }
@@ -528,15 +544,11 @@ export default {
       }
     },
 
+    // 给地图发消息
     sendMessageToMap(method, params) {
-      alert(method)
       this.method = method;
       this.params = params;
-    },
-
-    recvUIMessage(name, data) {
-      alert(name);
-      alert(data)
+      this.eventTime = new Date().getTime();
     },
 
     /**
@@ -557,7 +569,7 @@ export default {
       if (!_index) {
         if (this.videoWindowList.length > 0) {
           avalibaledIndexArr.forEach(item => {
-            if (videoWindowList.indexOf(item) === -1) {
+            if (this.videoWindowList.indexOf(item) === -1) {
               _index = item;
             }
           });

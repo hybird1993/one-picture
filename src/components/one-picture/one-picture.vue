@@ -33,14 +33,16 @@ export default {
     params: {
       type: [Array, String, Object],
       default: null
-    }
+    },
+    eventTime: [String, Number]
   },
   data() {
     return {
       isShowMap: false,
       map2D: null,
       map3D: null,
-      methodMap: {},
+      methodMap2D: {},   // 向2D地图发的消息种类
+      methodMap3D: {},   // 向3D地图发的消息种类
       d2Url: null,
       d3Url: null,
       mapType: "2d"
@@ -50,25 +52,24 @@ export default {
     const token = Util.getCookie();
     this.d2Url = `http://172.29.1.20/s/demo/webOneMap/map2d/index.html?auth-token=${token}`;
     this.d3Url = `http://172.29.1.20/s/demo/webOneMap/map3d/index.html?auth-token=${token}`;
-    this.methodMap = {
+    this.methodMap2D = {
       importantPeopleLocation: "重点人员定位", // 对应数据为特殊人员告警
       alarmLocation: "告警定位", // 对应数据为告警数组
       showRecentTrace: "显示行踪",
       hideRecentTrace: "取消行踪显示",
       unImportantPersonTrace: "黑名单行踪轨迹",
-      roamingVideoEnd: "当前漫游完毕",
+      cameraLocation: '摄像头定位',
+      cancelCameraLight: '取消高亮',
     };
+    this.methodMap3D = {
+      roamingVideoEnd: "当前漫游完毕",
+    }
     window.addEventListener("message", this.handleMessage);
-    setTimeout(() => {
-      // this.init();
-    }, 1000);
-    // 初始化地图容器
   },
   methods: {
     handleMessage(data) {
       if (data.data.method) {
-        console.log(data.data.method);
-        console.log(data.data.params);
+        console.log(`接收到地图发来的消息-----> ${data.data.method} ----> ${(typeof data.data.params === 'object') ? JSON.stringify(data.data.params) : data.data.params}`);
       }
       if (data.data.method === "搜索调度人员") {
         this.searchPeopleByKey(data.data.params);
@@ -79,44 +80,53 @@ export default {
       } else if (data.data.method === "人脸搜索") {
       } else if (data.data.method === "漫游视频") {
         this.$emit("mapEvent", { type: "roamingVideoStart", data: data.data.params });
+      } else if (data.data.method === "结束漫游") {
+        this.$emit("mapEvent", { type: "cancelCameraLight", data: data.data.params });
+      } else if (data.data.method === "摄像头定位") {
+        this.postMessage('cameraLocation', data.data.params)
       } else if (data.data.method === "视频信息") {
         this.$emit("mapEvent", { type: "playVideo", data: data.data.params });
-        // const param = {
-        //   cameraInfo: data.data.params,
-        //   position: { x: 0, y: 0, w: 472, h: 316 },
-        //   time: 10000,
-        //   allowClose: true
-        // };
-        // jsobj.SendUIMessage("播放视频", param);
       } else {
       }
     },
-    init() {
-      this.map2D = document.getElementById("supermap2D").contentWindow;
-      this.map3D = document.getElementById("supermap3D").contentWindow;
-    },
+
     changeMapType(type) {
       this.mapType = type;
     },
-    postMessage() {
-      alert(this.method)
-      const method = this.methodMap[this.method];
+
+    postMessage(data, param) {
+      const _method = data || this.method;
+      let method;
+      let type = '';
+      if (this.methodMap2D[_method]) {
+        type = '2d';
+        method = this.methodMap2D[_method];
+      } else if (this.methodMap3D[_method]) {
+        type = '3d';
+        method = this.methodMap3D[_method];
+      } else {
+      }
       if (!method) {
         return;
       }
-      alert(method)
-      if (['roamingVideoEnd'].includes(this.method)) {
+      const params = data ? param : this.params;
+      console.log(method);
+      console.log(params);
+      if (type === '3d') {
         if (!this.map3D) {
           this.map3D = document.getElementById("supermap3D").contentWindow;
         }
-        this.map3D.postMessage({ method: method, params: this.params }, "*");
+        console.log(`给3D地图发消息-----> ${method} ----> ${(typeof params === 'object') ? JSON.stringify(params) : params}`)
+        this.map3D.postMessage({ method, params }, "*");
       } else {
         if (!this.map2D) {
           this.map2D = document.getElementById("supermap2D").contentWindow;
         }
-        this.map2D.postMessage({ method: method, params: this.params }, "*");
+        console.log(`给2D地图发消息-----> ${method} ----> ${(typeof params === 'object') ? JSON.stringify(params) : params}`)
+        this.map2D.postMessage({ method, params }, "*");
       }
     },
+
     searchPeopleByKey(key) {}
   },
   watch: {
@@ -127,7 +137,11 @@ export default {
     params: function(val, oldVal) {
       // console.log("new: %s, old: %s", val, oldVal);
       this.postMessage();
-    }
+    },
+    eventTime: function(val, oldVal) {
+      // console.log("new: %s, old: %s", val, oldVal);
+      this.postMessage();
+    } 
   }
 };
 </script>

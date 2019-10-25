@@ -22,6 +22,7 @@
 </body>
 <script>
   function RecvUIMessage(name, data) {
+    alert(name);
     if (name == "当前漫游完毕") {
       if (window.mainContainer) {
         window.mainContainer.recvUIMessage(name, data)
@@ -30,7 +31,7 @@
   }
   // let i = 1;
   // setInterval(() => {
-  //   // RecvUIMessage('当前漫游完毕', ++i)
+  //   RecvUIMessage('当前漫游完毕', ++i)
   // }, 1000 * 10)
  
 </script>
