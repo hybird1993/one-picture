@@ -225,8 +225,8 @@ export default {
   mounted() {
     const self = this;
     self.init();
-    if (false && Util.getRequest("auth-token")) {
-      // if (Util.getRequest('auth-token')) {
+    // if (false && Util.getRequest("auth-token")) {
+    if (Util.getRequest('auth-token')) {
       // alert(Util.getRequest('auth-token'));
       var exp = new Date();
       exp.setTime(exp.getTime() + 1000 * 60 * 60); //过期时间 2分钟
@@ -497,8 +497,8 @@ export default {
         )}`
       );
       try {
-        // if (jsobj) {
-        if (true) {
+        if (jsobj) {
+        // if (true) {
           let windowId;
           if (index === this.roamingVideoWindowId) {
             windowId = index;
