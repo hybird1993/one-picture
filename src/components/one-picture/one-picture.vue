@@ -1,6 +1,5 @@
 <template>
   <div class="panel-container">
-    <!-- <div class="panel-title">指挥调度一张图</div> -->
     <div class="panel-content">
       <iframe  v-show="mapType === '2d'" :src="d2Url" class="map" id="supermap2D"></iframe>
       <iframe  v-show="mapType === '3d'" :src="d3Url" class="map" id="supermap3D"></iframe>
@@ -148,6 +147,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
+.panel-container {
+  position: absolute;
+  left: 0;
+  top:0;
+}
 .map {
   width: 100%;
   height: 100%;

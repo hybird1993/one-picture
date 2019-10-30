@@ -2,55 +2,54 @@
   <div class="main-container" ref="mainContainer">
     <div id="themeContainer" style="width: 100%;height: 100%;"></div>
     <div
-      v-for="defalutItem of defalutItemList"
-      :v-bind="item = defalutItem.name"
-      :key="defalutItem.name"
-      :id="item"
+      v-for="item of defalutItemList"
+      :key="item.name"
+      :id="item.name"
       style="zIndex: 10;"
     >
       <div
-        v-if="styleMap[item].isShow || isDrag"
+        v-if="styleMap[item.name].isShow || isDrag"
         class="item-box"
-        :style="styleMap[item].style"
-        :class="{'drag-outline': isDrag, 'dragover-oulline': dragOverItem === item}"
+        :style="styleMap[item.name].style"
+        :class="{'drag-outline': isDrag, 'dragover-oulline': dragOverItem === item.name}"
         :draggable="isAbleDrag"
-        @drop="dropEvent($event, item)"
-        @dragover.prevent="dragOverEvent($event, item)"
-        @dragend="dragEndEvent($event, item)"
-        @dragstart="dragStartEvent($event, item)"
+        @drop="dropEvent($event, item.name)"
+        @dragover.prevent="dragOverEvent($event, item.name)"
+        @dragend="dragEndEvent($event, item.name)"
+        @dragstart="dragStartEvent($event, item.name)"
       >
-        <div v-if="isLogin && styleMap[item].isShow" :style="styleMap[item].style">
+        <div v-if="isLogin && styleMap[item.name].isShow" :style="styleMap[item.name].style">
           <img class="item-box-bg" src="../assets/image/icon-box.png" draggable="false" />
           <!-- 最新资讯 -->
-          <template v-if="item === 'latestNews'">
+          <template v-if="item.name === 'latestNews'">
             <LatestNews @showNewsDetail="showNewsDetail"></LatestNews>
           </template>
           <!-- 告警视图总览 -->
-          <template v-else-if="item === 'alarmOverview'">
+          <template v-else-if="item.name === 'alarmOverview'">
             <AlarmOverview></AlarmOverview>
           </template>
           <!-- 告警信息 -->
-          <template v-else-if="item === 'alarmList'">
+          <template v-else-if="item.name === 'alarmList'">
             <AlarmList @showAlarmDetail="showAlarmDetail" :update-time="updateTime"></AlarmList>
           </template>
           <!-- 分项指数 -->
-          <template v-else-if="item === 'optionIndex'">
+          <template v-else-if="item.name === 'optionIndex'">
             <OptionIndex></OptionIndex>
           </template>
           <!-- 全局指数 -->
-          <template v-else-if="item === 'globalIndex'">
+          <template v-else-if="item.name === 'globalIndex'">
             <GlobalIndex></GlobalIndex>
           </template>
           <!-- 人口与房屋 -->
-          <template v-else-if="item === 'peopleHouse'">
+          <template v-else-if="item.name === 'peopleHouse'">
             <PeopleHouse @showPeopleList="showPeopleList"></PeopleHouse>
           </template>
           <!-- 特殊人口 -->
-          <template v-else-if="item === 'specialPeople'">
+          <template v-else-if="item.name === 'specialPeople'">
             <SpecialPeople @showSpecialPeople="showSpecialPeople"></SpecialPeople>
           </template>
           <!-- 综治力量 -->
-          <template v-else-if="item === 'generalPower'">
+          <template v-else-if="item.name === 'generalPower'">
             <GeneralPower @showPeopleList="showGeneralPowerList"></GeneralPower>
           </template>
         </div>
@@ -58,7 +57,7 @@
     </div>
 
     <!-- 地图设置 -->
-    <div class="item-box-header" :style="styleMap.MapSetting">
+    <div class="item-box-header" :style="styleMap.MapSetting" id="mapSetting">
       <img class="item-box-bg" src="../assets/image/icon-box-header.png" />
       <MapSetting :item-map="itemMap" @changeItemStatus="changeItemStatus"></MapSetting>
     </div>
@@ -82,6 +81,7 @@
 
     <OnePicture
       v-if="isLogin"
+      id="onePicture"
       :method="method"
       :params="params"
       :event-time="eventTime"
@@ -438,6 +438,7 @@ export default {
     },
 
     dragOverEvent(event, id) {
+      console.log(id);
       this.dragOverItem = id;
     },
 
