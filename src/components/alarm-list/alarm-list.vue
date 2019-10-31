@@ -8,7 +8,7 @@
         @mousemove.native="mouseOverEvent"
         @mouseout.native="mouseOutEvent"
       >
-        <li v-for="item of showList" :key="item.id" @click="showDetail(item)">
+        <li v-for="item of showList" :key="item.id" :title="item.content" @click="showDetail(item)">
           <span class="alarm-index">{{item.index}}</span>
           <span class="alarm-title">{{item.content}}</span>
           <span class="alarm-status" :class="{'status-alarm': !item.isAlreadyDeal}">{{item.status}}</span>

@@ -59,7 +59,7 @@ export default {
       setTimeout(() => {
         this.indexChart.resize();
         this.indexChart.setOption(this.setChartOption());
-      }, 0);
+      }, 10);
     },
 
     setChartOption(name, value) {
@@ -112,7 +112,7 @@ export default {
         },
         yAxis: {
           type: "category",
-          boundaryGap: false,
+          // boundaryGap: false,
           splitLine: {
             show: true,
             lineStyle: {
@@ -131,11 +131,33 @@ export default {
           type: "bar",
           barWidth: Math.round(12 * times),
           data: value,
+
+          // itemStyle: {
+          //   normal: {
+          //     color: "#fac007"
+          //   }
+          // },
+
           itemStyle: {
             normal: {
-              color: "#fac007"
+              // barBorderRadius: 4 * times, // 柱条边线圆角
+              color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                {
+                  offset: 1,
+                  color: 'rgba(18, 112, 172, 0.8)'
+                },
+                {
+                  offset: 0,
+                  color: 'rgba(6, 46, 60, 0.8)'
+                }
+              ]),
+              borderColor: '#1ebdde',
+              borderWidth: Math.round(1 * times),
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 10 * times
             }
           },
+
           textStyle: {
             color: "#fff",
             fontSize: Math.round(12 * times)

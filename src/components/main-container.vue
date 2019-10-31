@@ -219,7 +219,7 @@ export default {
   },
   computed: {
     isAbleDrag: function() {
-      return this.windowList.length === 0 && !this.itemStyle_;
+      return false; //this.windowList.length === 0 && !this.itemStyle_;
     }
   },
   mounted() {
@@ -276,20 +276,26 @@ export default {
       const self = this;
       const mainContainer = this.$refs.mainContainer;
       const width = window.screen.availWidth;
-      if (width >= 1920) {
+      // if (width >= 1920) {
         this.defalutFontSize = Math.round(12 * (width / 1920));
         document.getElementsByTagName("html")[0].style.fontSize =
           this.defalutFontSize + "px";
-      }
+      // }
       const height = mainContainer.offsetHeight;
+      // let itemWidth =
+      //   (parseInt(width, 10)) / 5;
+      // let itemHeight =
+      //   (parseInt(height, 10) - parseInt(self.itemMarginRow, 10) * 3) / 4;
       let itemWidth =
         (parseInt(width, 10) - parseInt(self.itemMarginCol, 10) * 3) / 4;
+
       itemWidth =
         Math.floor(itemWidth) > self.itemMinWidth
           ? Math.floor(itemWidth)
           : self.itemMinWidth;
       let itemHeight =
         (parseInt(height, 10) - parseInt(self.itemMarginRow, 10) * 2) / 3;
+  
       itemHeight =
         Math.floor(itemHeight) > self.itemMinHeight
           ? Math.floor(itemHeight)
@@ -301,10 +307,85 @@ export default {
      * 计算每个小模块的位置
      * 8       9      1
      * 7              2
-     * 6    5    4    3
+     * 6    5    4    3    (now)
+     * 
+     * 
+     * 8    9    9    9    1
+     * 7    9    9    9    2 
+     * 6    9    9    9    3  
+     * 5    9    9    9    4
+     * 
      */
     setItemPosition(itemWidth, itemHeight) {
       const self = this;
+      // self.itemMap.set(8, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: 0,
+      //   top: 0
+      // });
+      // self.itemMap.set(7, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: 0,
+      //   top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
+      // });
+      // self.itemMap.set(6, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: 0,
+      //   top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
+      // });
+      // self.itemMap.set(5, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
+      //   top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
+      // });
+      // self.itemMap.set(4, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 2}px`,
+      //   top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
+      // });
+      // self.itemMap.set(3, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 3}px`,
+      //   top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
+      // });
+      // self.itemMap.set(2, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
+      //   top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
+      // });
+      // self.itemMap.set(1, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
+      //   top: 0
+      // });
+      // self.itemMap.set(9, {
+      //   width: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
+      //   height: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10)}px`,
+      //   left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
+      //   top: 0
+      // });
+      // self.styleMap.MapSetting = {
+      //   width: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
+      //   height: `3.5rem`,
+      //   left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
+      //   top: 0
+      // };
+
+      // self.itemMap.set(self.roamingVideoWindowId, {
+      //   width: `${itemWidth}`,
+      //   height: `${itemHeight}`,
+      //   top: 0,
+      //   left: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10) * 2}`
+      // });
+
       self.itemMap.set(8, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
@@ -372,6 +453,76 @@ export default {
         top: 0,
         left: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10) * 2}`
       });
+
+      // self.itemMap.set(8, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: 0,
+      //   top: 0
+      // });
+      // self.itemMap.set(7, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: 0,
+      //   top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
+      // });
+      // self.itemMap.set(6, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: 0,
+      //   top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
+      // });
+      // self.itemMap.set(5, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: 0,
+      //   top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 3}px`
+      // });
+      // self.itemMap.set(4, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${itemWidth * 4}px`,
+      //   top: `${itemHeight * 3 + parseInt(self.itemMarginRow, 10) * 3}px`
+      // });
+      // self.itemMap.set(3, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${itemWidth * 4}px`,
+      //   top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
+      // });
+      // self.itemMap.set(2, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${itemWidth * 4}px`,
+      //   top: `${itemHeight + parseInt(self.itemMarginRow, 10) * 1}px`
+      // });
+      // self.itemMap.set(1, {
+      //   width: `${itemWidth}px`,
+      //   height: `${itemHeight}px`,
+      //   left: `${itemWidth * 4}px`,
+      //   top: 0
+      // });
+      // self.itemMap.set(9, {
+      //   width: `${itemWidth * 3}px`,
+      //   height: `100%`,
+      //   left: `${itemWidth}px`,
+      //   top: 0
+      // });
+      // self.styleMap.MapSetting = {
+      //   width: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
+      //   height: `3.5rem`,
+      //   left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
+      //   top: 0
+      // };
+
+      // self.itemMap.set(self.roamingVideoWindowId, {
+      //   width: `${itemWidth}`,
+      //   height: `${itemHeight}`,
+      //   top: 0,
+      //   left: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10) * 2}`
+      // });
+  
+
       self.cacheItems();
     },
 

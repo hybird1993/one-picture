@@ -49,6 +49,7 @@
 import { API } from "../../request/api";
 import { setTimeout } from "timers";
 import { Util } from "../../utils/util";
+import { PeopleChartConfig, HouseChartConfig } from "../../utils/charts.config";
 export default {
   name: "people-house",
   data() {
@@ -58,8 +59,8 @@ export default {
       houseCount: "",
       personCount: "",
       keyPersonCount: "",
-      color1: ["#fac007", "#6560c1", "#3793d9", "#20eeac"],
-      color2: ["#f0a724", "#5551a8", "#256ca7", "#16a98a"],
+      color1: PeopleChartConfig[0],
+      color2: PeopleChartConfig[1],
       isFullScreen: false,
       data_: [],
       data1_: [],
@@ -193,14 +194,7 @@ export default {
           show: false
         },
         calculable: true,
-        color: [
-          "#f86531",
-          "#fac007",
-          "#3c9ce5",
-          "#5551a8",
-          "#5551a8",
-          "#23ffb4"
-        ],
+        color: HouseChartConfig,
         series: [
           {
             type: "pie",

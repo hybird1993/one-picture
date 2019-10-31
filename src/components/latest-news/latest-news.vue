@@ -13,6 +13,7 @@
           class="over-hide"
           :key="item.newsId"
           @click="showDetail(item)"
+          :title="item.title"
           :class="{'li-odd': item.isOdd, 'li-last': item.isLast}"
         >{{item.title}}</li>
       </transition-group>

@@ -58,6 +58,7 @@ const legend8 = require("../../assets/image/icon-legend-8.png");
 import { API } from "../../request/api";
 import { TimeUtil } from "../../utils/time-util";
 import { Util } from "../../utils/util";
+import { OptionIndexChartConfig } from "../../utils/charts.config";
 export default {
   name: "option-index",
   data() {
@@ -250,6 +251,8 @@ export default {
     formatDate(date) {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
+    
+    // 社区级
     setIndexChartOption() {
       const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
@@ -278,7 +281,7 @@ export default {
               name: "隐患排查",
               icon: "image://" + legend1,
               textStyle: {
-                color: "#28a1f7",
+                color: OptionIndexChartConfig.troublesShooting.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -286,7 +289,7 @@ export default {
               name: "治安事件",
               icon: "image://" + legend2,
               textStyle: {
-                color: "#7ac3ff",
+                color: OptionIndexChartConfig.publicOrder.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -294,7 +297,7 @@ export default {
               name: "信访相关",
               icon: "image://" + legend3,
               textStyle: {
-                color: "#ffb966",
+                color: OptionIndexChartConfig.letterAndVisit.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -302,7 +305,7 @@ export default {
               name: "爱心帮扶",
               icon: "image://" + legend4,
               textStyle: {
-                color: "#f14b30",
+                color: OptionIndexChartConfig.loveHelp.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -310,7 +313,7 @@ export default {
               name: "矛盾纠纷",
               icon: "image://" + legend5,
               textStyle: {
-                color: "#6cb91e",
+                color: OptionIndexChartConfig.conflict.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -318,7 +321,7 @@ export default {
               name: "心理咨询",
               icon: "image://" + legend8,
               textStyle: {
-                color: "#7f58c3",
+                color: OptionIndexChartConfig.psychologicalCounseling.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -326,7 +329,7 @@ export default {
               name: "弱电告警",
               icon: "image://" + legend6,
               textStyle: {
-                color: "#25a59a",
+                color: OptionIndexChartConfig.weakElectrictyAlarm.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -334,7 +337,7 @@ export default {
               name: "弱电故障",
               icon: "image://" + legend7,
               textStyle: {
-                color: "#bdbdbd",
+                color: OptionIndexChartConfig.weakElectrictyTrouble.legendColor,
                 fontSize: Math.round(12 * times)
               }
             }
@@ -355,7 +358,8 @@ export default {
             axisLabel: {
               interval: 0, //横轴信息全部显示
               rotate: 20, //30度角倾斜显示
-              color: "#fff",
+              // color: "#fff",
+              color: "#1ebdde",
               fontSize: Math.round(12 * times)
             }
           }
@@ -373,7 +377,8 @@ export default {
               }
             },
             axisLabel: {
-              color: "#fff",
+              // color: "#fff",
+              color: "#1ebdde",   
               fontSize: Math.round(12 * times)
             }
           }
@@ -384,7 +389,7 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#28a1f7" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.troublesShooting.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -392,7 +397,7 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#7ac3ff" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.publicOrder.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -400,7 +405,7 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#ffb966" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.letterAndVisit.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -408,7 +413,7 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#f14b30" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.loveHelp.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -416,7 +421,7 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#6cb91e" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.conflict.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -424,7 +429,7 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#7f58c3" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.psychologicalCounseling.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -432,7 +437,7 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#25a59a" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyAlarm.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -440,13 +445,15 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#bdbdbd" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyTrouble.barColor } },
             data: [100, 100, 100, 100, 100]
           }
         ],
         animation: false
       };
     },
+
+    // 网格级
     setRankChartOption() {
       const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
       const times = parseInt(fontsize, 10) / 12;
@@ -493,6 +500,7 @@ export default {
             return str;
           }
         },
+        //  backgroundColor: '#49a9ee',
         textStyle: {
           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
           color: "rgba(255, 255, 255, 0.65)"
@@ -514,7 +522,7 @@ export default {
               name: "隐患排查",
               icon: "image://" + legend1,
               textStyle: {
-                color: "#28a1f7",
+                color: OptionIndexChartConfig.troublesShooting.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -522,7 +530,7 @@ export default {
               name: "治安事件",
               icon: "image://" + legend2,
               textStyle: {
-                color: "#7ac3ff",
+                color: OptionIndexChartConfig.publicOrder.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -530,7 +538,7 @@ export default {
               name: "信访相关",
               icon: "image://" + legend3,
               textStyle: {
-                color: "#ffb966",
+                color: OptionIndexChartConfig.letterAndVisit.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -538,7 +546,7 @@ export default {
               name: "爱心帮扶",
               icon: "image://" + legend4,
               textStyle: {
-                color: "#f14b30",
+                color: OptionIndexChartConfig.loveHelp.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -546,7 +554,7 @@ export default {
               name: "矛盾纠纷",
               icon: "image://" + legend5,
               textStyle: {
-                color: "#6cb91e",
+                color: OptionIndexChartConfig.conflict.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -554,7 +562,7 @@ export default {
               name: "心理咨询",
               icon: "image://" + legend8,
               textStyle: {
-                color: "#7f58c3",
+                color: OptionIndexChartConfig.psychologicalCounseling.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -562,7 +570,7 @@ export default {
               name: "弱电告警",
               icon: "image://" + legend6,
               textStyle: {
-                color: "#25a59a",
+                color: OptionIndexChartConfig.weakElectrictyAlarm.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -570,7 +578,7 @@ export default {
               name: "弱电故障",
               icon: "image://" + legend7,
               textStyle: {
-                color: "#bdbdbd",
+                color: OptionIndexChartConfig.weakElectrictyTrouble.legendColor,
                 fontSize: Math.round(12 * times)
               }
             }
@@ -597,7 +605,8 @@ export default {
 
             data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
             axisLabel: {
-              color: "#fff",
+              // color: "#fff",
+              color: "#1ebdde",   
               fontSize: Math.round(10 * times),
               interval: 0, //横轴信息全部显示
               rotate: 20 //30度角倾斜显示,
@@ -607,7 +616,8 @@ export default {
             type: "category",
             data: ["邬家山村", "大邱村", "湖口村", "汪田村", "九夫村"],
             axisLabel: {
-              color: "#fff",
+              // color: "#fff",
+              color: "#1ebdde",
               fontSize: Math.round(10 * times),
               interval: 0, //横轴信息全部显示
               rotate: -20 //30度角倾斜显示
@@ -620,7 +630,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#28a1f7" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.troublesShooting.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -628,7 +638,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#7ac3ff" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.publicOrder.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -636,7 +646,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#ffb966" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.letterAndVisit.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -644,7 +654,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#f14b30" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.loveHelp.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -652,7 +662,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#6cb91e" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.conflict.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -660,7 +670,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#7f58c3" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.psychologicalCounseling.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -668,7 +678,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#25a59a" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyAlarm.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -676,7 +686,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#bdbdbd" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyTrouble.barColor } },
             data: [100, 100, 100, 100, 100]
           },
           {
@@ -684,7 +694,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#28a1f7" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.troublesShooting.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -699,7 +709,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#7ac3ff" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.publicOrder.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -714,7 +724,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#ffb966" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.letterAndVisit.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -729,7 +739,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#f14b30" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.loveHelp.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -744,7 +754,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#6cb91e" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.conflict.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -759,7 +769,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#7f58c3" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.psychologicalCounseling.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -774,7 +784,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#25a59a" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyAlarm.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -789,7 +799,7 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: "#bdbdbd" } },
+            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyTrouble.barColor } },
             yAxisIndex: "1",
             label: {
               normal: {

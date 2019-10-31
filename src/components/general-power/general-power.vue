@@ -16,6 +16,7 @@
 <script>
 import { API } from "../../request/api";
 import { Util } from "../../utils/util";
+import { GeneralPowerChartConfig } from "../../utils/charts.config";
 export default {
   name: "general-power",
   data() {
@@ -155,7 +156,7 @@ export default {
                 }
               }
             },
-            color: ["#fac007", "#5551a8", "#1aa980", "#f86531", "#53c9ce"],
+            color: GeneralPowerChartConfig,
             data: data
           },
      

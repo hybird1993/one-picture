@@ -44,6 +44,10 @@
 import { API } from "../../request/api";
 import { TimeUtil } from "../../utils/time-util";
 import { Util } from "../../utils/util";
+import {
+  GlobalIndexChartConfig,
+  GlobalIndexChartAreaConfig
+} from "../../utils/charts.config";
 export default {
   name: "global-index",
   data() {
@@ -135,12 +139,35 @@ export default {
     },
     showGlobalIndexChart() {
       const self = this;
-      const seriesData = self.list.map(item => {
+      const length = GlobalIndexChartAreaConfig[0].length;
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      const seriesData = self.list.map((item, index) => {
+        const _index = index % length;
         return {
           name: item.orgName,
           data: item.scores,
           type: "line",
-          areaStyle: {},
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width: 3 * times // 0.1的线条是非常细的了
+              }
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: GlobalIndexChartAreaConfig[0][_index]
+                },
+                {
+                  offset: 1,
+                  color: GlobalIndexChartAreaConfig[1][_index]
+                }
+              ])
+            }
+          },
           smooth: true
         };
       });
@@ -178,23 +205,23 @@ export default {
       }
       this.getGlobalIndex();
     },
-   
+
     fullScreen() {
       this.isFullScreen = true;
-      this.$parent.fullScreen( 'globalIndex');
+      this.$parent.fullScreen("globalIndex");
       setTimeout(() => {
         this.lineChart.resize();
         this.lineChart.setOption(this.setIndexChartOption());
-      }, 0)
+      }, 0);
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-      this.$parent.fullScreenExit( 'globalIndex');
+      this.$parent.fullScreenExit("globalIndex");
       setTimeout(() => {
         this.lineChart.resize();
         this.lineChart.setOption(this.setIndexChartOption());
-      }, 0)
+      }, 0);
     },
     // 格式化时间
     formatDate(date) {
@@ -223,16 +250,7 @@ export default {
             fontSize: Math.round(12 * times)
           }
         },
-        color: [
-          "#28a1f7",
-          "#7ac3ff",
-          "#ffb966",
-          "#f14b30",
-          "#6cb91e",
-          "#7f58c3",
-          "#25a59a",
-          "#bdbdbd"
-        ],
+        color: GlobalIndexChartConfig,
         // dataZoom: [
         //   {
         //       show: true,
@@ -248,7 +266,7 @@ export default {
         //   }
         // ],
         grid: {
-          top:  Math.round(12 * times),
+          top: Math.round(12 * times),
           left: "3%",
           right: "4%",
           bottom: "3%",
@@ -260,7 +278,7 @@ export default {
             boundaryGap: false,
             data: xData,
             axisLabel: {
-              color: "#fff",
+              color: "#1ebdde",
               fontSize: Math.round(12 * times)
             }
           }
@@ -269,7 +287,7 @@ export default {
           {
             type: "value",
             axisLabel: {
-              color: "#fff",
+              color: "#1ebdde",
               fontSize: Math.round(12 * times)
             }
           }
