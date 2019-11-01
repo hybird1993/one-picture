@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">通行记录</div>
     <el-scrollbar class="panel-content">
       <div class="box-title">

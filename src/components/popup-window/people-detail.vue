@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">人员详情</div>
     <div class="panel-content">
       <div class="chart-title">

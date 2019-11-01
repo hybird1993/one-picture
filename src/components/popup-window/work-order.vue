@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-content">
          <iframe :src="prop.url"></iframe>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">{{prop.peopleType}}</div>
     <el-scrollbar class="panel-content">
       <ul v-if="prop.fromItem === 'people'" class="people-list">

@@ -82,13 +82,6 @@ export default {
   },
   mounted() {
     this.initChart();
-    this.list = Array.from(new Array(20)).map((item, index) => {
-      return {
-        id: `news${index + 1}`,
-        title: `佛祖岭B区${index + 1}`,
-        checked: !!(index % 2)
-      };
-    });
     const obj = TimeUtil.getWeeksAndDayInYear();
     this.year = obj.year;
     this.week = obj.index;

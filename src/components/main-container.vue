@@ -214,7 +214,11 @@ export default {
       itemStyle_: null, // 放大模块原有样式
 
       eventTime: null, // 当前给地图发消息的时间
-      roamingVideoWindowId: 10 // 漫游视频打开窗口id 不为1-9
+      roamingVideoWindowId: 10,// 漫游视频打开窗口id 不为1-9
+
+      availWidth: window.screen.availWidth,
+      availHeight: window.screen.availHeight,
+
     };
   },
   computed: {
@@ -273,6 +277,9 @@ export default {
   },
   methods: {
     init() {
+      window.onresize = function() {
+        console.log('change');
+      }
       const self = this;
       const mainContainer = this.$refs.mainContainer;
       const width = window.screen.availWidth;
@@ -286,13 +293,13 @@ export default {
       //   (parseInt(width, 10)) / 5;
       // let itemHeight =
       //   (parseInt(height, 10) - parseInt(self.itemMarginRow, 10) * 3) / 4;
-      let itemWidth =
-        (parseInt(width, 10) - parseInt(self.itemMarginCol, 10) * 3) / 4;
+      let itemWidth = parseInt(400 * (this.availWidth / 1920), 10);
+      // (parseInt(width, 10) - parseInt(self.itemMarginCol, 10) * 3) / 4;
 
-      itemWidth =
-        Math.floor(itemWidth) > self.itemMinWidth
-          ? Math.floor(itemWidth)
-          : self.itemMinWidth;
+      // itemWidth =
+      //   Math.floor(itemWidth) > self.itemMinWidth
+      //     ? Math.floor(itemWidth)
+      //     : self.itemMinWidth;
       let itemHeight =
         (parseInt(height, 10) - parseInt(self.itemMarginRow, 10) * 2) / 3;
   
@@ -385,6 +392,8 @@ export default {
       //   top: 0,
       //   left: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10) * 2}`
       // });
+      const left = this.availWidth - itemWidth;
+      const centerWidth = (this.availWidth - itemWidth * 2 - parseInt(self.itemMarginCol, 10) * 3) / 2;
 
       self.itemMap.set(8, {
         width: `${itemWidth}px`,
@@ -405,33 +414,33 @@ export default {
         top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
       });
       self.itemMap.set(5, {
-        width: `${itemWidth}px`,
+        width: `${centerWidth}px`,
         height: `${itemHeight}px`,
         left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
         top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
       });
       self.itemMap.set(4, {
-        width: `${itemWidth}px`,
+        width: `${centerWidth}px`,
         height: `${itemHeight}px`,
-        left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 2}px`,
+        left: `${itemWidth + centerWidth + (parseInt(self.itemMarginCol, 10)) * 2}px`,
         top: `${itemHeight * 2 + parseInt(self.itemMarginRow, 10) * 2}px`
       });
       self.itemMap.set(3, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
-        left: `${(itemWidth + parseInt(self.itemMarginCol, 10)) * 3}px`,
+        left: `${left}px`,
         top: `${(itemHeight + parseInt(self.itemMarginRow, 10)) * 2}px`
       });
       self.itemMap.set(2, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
-        left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
+        left: `${left}px`,
         top: `${itemHeight + parseInt(self.itemMarginRow, 10)}px`
       });
       self.itemMap.set(1, {
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
-        left: `${itemWidth * 3 + parseInt(self.itemMarginCol, 10) * 3}px`,
+        left: `${left}px`,
         top: 0
       });
       self.itemMap.set(9, {
@@ -441,7 +450,7 @@ export default {
         top: 0
       });
       self.styleMap.MapSetting = {
-        width: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
+        width: `${centerWidth * 2 + parseInt(self.itemMarginCol, 10)}px`,
         height: `3.5rem`,
         left: `${itemWidth + parseInt(self.itemMarginCol, 10)}px`,
         top: 0
@@ -1104,8 +1113,8 @@ export default {
 
     // 窗口还原
     fullScreenExit(id) {
-      document.getElementsByTagName("html")[0].style.fontSize =
-        this.defalutFontSize + "px";
+      // document.getElementsByTagName("html")[0].style.fontSize =
+      //   this.defalutFontSize + "px";
       const index = this.windowList.findIndex(item => item.id === id);
       if (index > -1) {
         this.windowList[index]["style"] = this.itemStyle_;
@@ -1137,8 +1146,8 @@ export default {
         this.styleMap[id]["style"]["zIndex"] = 1000;
         this.styleMap[id]["style"]["backgroundColor"] = "rgba(11, 60, 80, 1)";
       }
-      document.getElementsByTagName("html")[0].style.fontSize =
-        this.defalutFontSize * 3 + "px";
+      // document.getElementsByTagName("html")[0].style.fontSize =
+      //   this.defalutFontSize * 3 + "px";
     }
   },
   components: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">资讯详情</div>
     <el-scrollbar class="panel-content">
       <h2>{{prop.title}}</h2>

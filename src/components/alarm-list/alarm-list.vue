@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">告警信息</div>
     <div class="panel-content">
       <transition-group
@@ -139,37 +139,38 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  margin: 0.5rem 0;
+  margin: 6px 0;
   overflow: hidden;
   ul {
-    margin: 0 1.25rem;
+    margin: 0 15px;
     li {
       display: flex;
-      font-size: 1rem;
-      padding: 0.5rem;
+      font-size: 12px;
+      padding: 6px;
       position: relative;
       text-align: left;
       cursor: pointer;
-      min-height: 5rem;
-      border-bottom: 0.1rem solid rgba(50, 50, 50, 0.7);
+      min-height: 60px;
+      border-bottom: 1px solid rgba(50, 50, 50, 0.7);
       .alarm-index {
         display: inline-block;
-        width: 1.75rem;
-        margin-right: 1rem;
-        padding-top: 0.5rem;
+        width: 21px;
+        margin-right: 12px;
+        padding-top: 6px;
       }
       .alarm-title {
         flex: 1;
-        line-height: 1.5rem;
+        // line-height: 1.5rem;
+        line-height: 18px;
       }
       .alarm-status {
         display: inline-block;
-        width: 4rem;
-        margin-left: 1rem;
-        height: 2rem;
-        line-height: 2rem;
+        width: 48px;
+        margin-left: 12px;
+        height: 24px;
+        line-height: 24px;
         text-align: center;
-        border-radius: 0.5rem;
+        border-radius: 6px;
         background-color: #91a22c;
       }
       .status-alarm {

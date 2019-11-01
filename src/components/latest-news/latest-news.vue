@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">最新资讯</div>
     <div class="panel-content">
       <transition-group
@@ -112,41 +112,71 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
-.panel-content {
-  margin: 0.5rem 0;
-  overflow: hidden;
-  ul {
-    margin: 0 1.25rem;
-    li {
-      height: 2.5rem;
-      line-height: 2.5rem;
-      padding-left: 1.75rem;
-      padding-right: 0.5rem;
-      position: relative;
-      text-align: left;
-      cursor: pointer;
-    }
-    li:before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      margin-top: -0.25rem;
-      height: 0.5rem;
-      width: 0.5rem;
-      margin-left: -1.25rem;
-      display: block;
-      border-radius: 50%;
-      background: #01a5db;
-    }
-    .li-odd {
-      background-color: rgba(256, 256, 256, 0.1);
-    }
-    li:hover {
-      background-color: rgba(102, 179, 218, 0.6);
-    }
-    .li-last {
-      margin-bottom: 2rem;
+.panel-container {
+  .panel-content {
+    margin: 6px 0;
+    overflow: hidden;
+    ul {
+      margin: 0 15px;
+      li {
+        height: 30px;
+        line-height: 30px;
+        padding-left: 21px;
+        padding-right: 6px;
+        position: relative;
+        text-align: left;
+        cursor: pointer;
+      }
+      li:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        margin-top: -3px;
+        height: 6px;
+        width: 6px;
+        margin-left: -15px;
+        display: block;
+        border-radius: 50%;
+        background: #01a5db;
+      }
+      .li-odd {
+        background-color: rgba(256, 256, 256, 0.1);
+      }
+      li:hover {
+        background-color: rgba(102, 179, 218, 0.6);
+      }
+      .li-last {
+        margin-bottom: 24px;
+      }
     }
   }
 }
+
+.panel-container-fullscreen {
+  font-size: 36px;
+  .panel-content {
+    margin: 12px 0;
+    ul {
+      margin: 0 45px;
+      li {
+        height: 90px;
+        line-height: 90px;
+        padding-left: 63px;
+        padding-right: 18px;
+      }
+      li:before {
+        top: 50%;
+        margin-top: -9px;
+        height: 18px;
+        width: 18px;
+        margin-left: -45px;
+        border-radius: 50%;
+      }
+      .li-last {
+        margin-bottom: 72px;
+      }
+    }
+  }
+}
+
 </style>

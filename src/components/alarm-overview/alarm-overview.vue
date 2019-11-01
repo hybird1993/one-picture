@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">告警视图总览</div>
     <div id="alarmbar" :style="{width: '100%', height: '100%'}"></div>
     <div v-if="!isFullScreen" class="close-item">
@@ -25,11 +25,11 @@ export default {
     };
   },
   mounted() {
-    this.initChart(false);
+    this.initChart();
     this.getAlarmStatistics();
   },
   methods: {
-    initChart(isanimation) {
+    initChart() {
       this.indexChart = this.$echarts.init(document.getElementById("alarmbar"));
     },
     getAlarmStatistics() {
@@ -68,9 +68,7 @@ export default {
         value = this.value_;
       }
       this.name_ = name;
-      this.value_ = value;
-      // const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      // const times = parseInt(fontsize, 10) / 12;
+      this.value_ = value;;
       const times = Util.getFontSizeTimes(this.isFullScreen);
       const option = {
         tooltip: {
@@ -172,4 +170,12 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
+.panel-container {
+
+}
+
+.panel-container-fullscreen {
+
+}
+
 </style>

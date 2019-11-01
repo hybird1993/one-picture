@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">人口信息</div>
     <el-scrollbar class="panel-content">
       <div v-for="item of list" class="item-person" :key="item.id">
