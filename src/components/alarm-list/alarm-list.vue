@@ -45,6 +45,7 @@ export default {
       step: 4,
       showList: [],
       isMouseOver: false,
+      timestamp: null,
     };
   },
   mounted() {
@@ -70,7 +71,7 @@ export default {
           if (self.timer) {
             clearInterval(self.timer);
           }
-          this.startIndex = 0;
+          self.startIndex = 0;
           self.loop();
         },
         err => {}
@@ -96,6 +97,9 @@ export default {
       if (this.isMouseOver) {
         return;
       }
+      if (this.timestamp && (new Date().getTime() - this.timestamp < this.time)) {
+        return;
+      }
       if (this.startIndex > this.list.length) {
         this.startIndex = 0;
       }
@@ -115,14 +119,18 @@ export default {
     },
 
     fullScreen() {
-      console.log(this)
-      this.isFullScreen = true;
-      this.$parent.fullScreen("alarmList");
+      // console.log(this)
+      const self = this;
+      self.timestamp = new Date().getTime();
+      self.isFullScreen = true;
+      self.$parent.fullScreen("alarmList");
     },
 
     exitFullScreen() {
-      this.isFullScreen = false;
-      this.$parent.fullScreenExit("alarmList");
+      const self = this;
+      self.timestamp = new Date().getTime();
+      self.isFullScreen = false;
+      self.$parent.fullScreenExit("alarmList");
     }
   },
   watch: {
@@ -139,7 +147,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  margin: 6px 0;
   overflow: hidden;
   ul {
     margin: 0 15px;
@@ -178,6 +185,7 @@ export default {
       }
     }
   }
+
   // .flip-list-alarm-move {
   //   transition: transform 2s;
   // }
@@ -210,6 +218,33 @@ export default {
     visibility: hidden;
     opacity: 0;
    }
+}
+
+.panel-container-fullscreen {
+  ul {
+    margin: 0 45px;
+    li {
+      font-size: 36px;
+      padding: 18px;
+      min-height: 180px;
+      border-bottom: 3px solid rgba(50, 50, 50, 0.7);
+      .alarm-index {
+        width: 63px;
+        margin-right: 36px;
+        padding-top: 18px;
+      }
+      .alarm-title {
+        line-height: 54px;
+      }
+      .alarm-status {
+        width: 144px;
+        margin-left: 36px;
+        height: 72px;
+        line-height: 72px;
+        border-radius: 18px;
+      }
+    }
+  }
 }
 
 </style>

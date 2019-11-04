@@ -73,7 +73,7 @@ export default {
       year: null,
       week: null,
       weekList: [],
-      isFullScreen: false,
+      isFullScreen: false
     };
   },
   computed: {
@@ -227,56 +227,37 @@ export default {
 
     fullScreen() {
       this.isFullScreen = true;
-      this.$parent.fullScreen( 'optionIndex');
+      this.$parent.fullScreen("optionIndex");
       setTimeout(() => {
         this.indexChart.resize();
         this.rankChart.resize();
-        this.indexChart.setOption(this.setIndexChartOption());
-        this.rankChart.setOption(this.setRankChartOption());
-      }, 0)
+        // this.indexChart.setOption(this.setIndexChartOption());
+        this.indexChart.setOption(this.setIndexChartFontSize());
+        // this.rankChart.setOption(this.setRankChartOption());
+                this.rankChart.setOption(this.setRankChartFontSize());
+      }, 0);
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-      this.$parent.fullScreenExit( 'optionIndex');
+      this.$parent.fullScreenExit("optionIndex");
       setTimeout(() => {
         this.indexChart.resize();
         this.rankChart.resize();
-        this.indexChart.setOption(this.setIndexChartOption());
-        this.rankChart.setOption(this.setRankChartOption());
-      }, 0)
+        // this.indexChart.setOption(this.setIndexChartOption());
+          this.indexChart.setOption(this.setIndexChartFontSize());
+        // this.rankChart.setOption(this.setRankChartOption());
+        this.rankChart.setOption(this.setRankChartFontSize());
+      }, 0);
     },
 
     // 格式化时间
     formatDate(date) {
       return TimeUtil.formatDate(date, "yyyyMMdd");
     },
-    
-    // 社区级
-    setIndexChartOption() {
-      const times = Util.getFontSizeTimes(this.isFullScreen);
-      return {
-        tooltip: {
-          showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
-          },
-          trigger: "axis",
-          textStyle: {
-            color: "#fff",
-            fontSize: Math.round(12 * times)
-          }
-        },
-        legend: {
-          orient: "vertical", //垂直显示
-          y: "center", //延Y轴居中
-          x: "left", //居右显示
-          padding: [Math.round(15 * times), 0, 0, 0],
-          itemGap: Math.round(5 * times),
-          itemWidth: Math.round(15 * times),
-          itemHeight: Math.round(15 * times),
-          data: [
+
+    getLenged(times = 1) {
+      return [
             {
               name: "隐患排查",
               icon: "image://" + legend1,
@@ -321,7 +302,8 @@ export default {
               name: "心理咨询",
               icon: "image://" + legend8,
               textStyle: {
-                color: OptionIndexChartConfig.psychologicalCounseling.legendColor,
+                color:
+                  OptionIndexChartConfig.psychologicalCounseling.legendColor,
                 fontSize: Math.round(12 * times)
               }
             },
@@ -342,6 +324,33 @@ export default {
               }
             }
           ]
+    },
+
+    // 社区级
+    setIndexChartOption() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        tooltip: {
+          showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+          },
+          trigger: "axis",
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          }
+        },
+        legend: {
+          orient: "vertical", //垂直显示
+          y: "center", //延Y轴居中
+          x: "left", //居右显示
+          padding: [Math.round(15 * times), 0, 0, 0],
+          itemGap: Math.round(5 * times),
+          itemWidth: Math.round(15 * times),
+          itemHeight: Math.round(15 * times),
+          data: this.getLenged(times)
         },
         calculable: true,
         grid: {
@@ -354,7 +363,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
+            data: [],
             axisLabel: {
               interval: 0, //横轴信息全部显示
               rotate: 20, //30度角倾斜显示
@@ -378,7 +387,7 @@ export default {
             },
             axisLabel: {
               // color: "#fff",
-              color: "#1ebdde",   
+              color: "#1ebdde",
               fontSize: Math.round(12 * times)
             }
           }
@@ -389,74 +398,164 @@ export default {
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.troublesShooting.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.troublesShooting.barColor
+              }
+            },
+            data: []
           },
           {
             name: "治安事件",
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.publicOrder.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.publicOrder.barColor }
+            },
+            data: []
           },
           {
             name: "信访相关",
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.letterAndVisit.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.letterAndVisit.barColor }
+            },
+            data: []
           },
           {
             name: "爱心帮扶",
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.loveHelp.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.loveHelp.barColor }
+            },
+            data: []
           },
           {
             name: "矛盾纠纷",
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.conflict.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.conflict.barColor }
+            },
+            data: []
           },
           {
             name: "心理咨询",
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.psychologicalCounseling.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.psychologicalCounseling.barColor
+              }
+            },
+            data: []
           },
           {
             name: "弱电告警",
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyAlarm.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.weakElectrictyAlarm.barColor
+              }
+            },
+            data: []
           },
           {
             name: "弱电故障",
             type: "bar",
             barMaxWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyTrouble.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.weakElectrictyTrouble.barColor
+              }
+            },
+            data: []
           }
         ],
-        animation: false
+      };
+    },
+
+    // 社区级图表字体大小改变
+    setIndexChartFontSize() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        tooltip: {
+          textStyle: {
+            fontSize: Math.round(12 * times)
+          }
+        },
+        legend: {
+          padding: [Math.round(15 * times), 0, 0, 0],
+          itemGap: Math.round(5 * times),
+          itemWidth: Math.round(15 * times),
+          itemHeight: Math.round(15 * times),
+          data: this.getLenged(times)
+        },
+        grid: {
+          left: Math.round(80 * times),
+          top: Math.round(10 * times)
+        },
+        xAxis: [
+          {
+            axisLabel: {
+              fontSize: Math.round(12 * times)
+            }
+          }
+        ],
+        yAxis: [
+          {
+            splitLine: {
+              lineStyle: {
+                width: Math.round(0.5 * times)
+              }
+            },
+            axisLabel: {
+              fontSize: Math.round(12 * times)
+            }
+          }
+        ],
+        series: [
+          {
+            barMaxWidth: Math.round(25 * times)
+          },
+          {
+            barMaxWidth: Math.round(25 * times)
+          },
+          {
+            barMaxWidth: Math.round(25 * times)
+          },
+          {
+            barMaxWidth: Math.round(25 * times)
+          },
+          {
+            barMaxWidth: Math.round(25 * times)
+          },
+          {
+            barMaxWidth: Math.round(25 * times)
+          },
+          {
+            barMaxWidth: Math.round(25 * times)
+          },
+          {
+            barMaxWidth: Math.round(25 * times)
+          }
+        ]
       };
     },
 
     // 网格级
     setRankChartOption() {
-      const fontsize = document.getElementsByTagName("html")[0].style.fontSize;
-      const times = parseInt(fontsize, 10) / 12;
+      const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
         tooltip: {
           showDelay: 0, // 显示延迟，添加显示延迟可以避免频繁切换，单位ms
@@ -517,72 +616,7 @@ export default {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
             color: "rgba(255, 255, 255, 0.65)"
           },
-          data: [
-            {
-              name: "隐患排查",
-              icon: "image://" + legend1,
-              textStyle: {
-                color: OptionIndexChartConfig.troublesShooting.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "治安事件",
-              icon: "image://" + legend2,
-              textStyle: {
-                color: OptionIndexChartConfig.publicOrder.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "信访相关",
-              icon: "image://" + legend3,
-              textStyle: {
-                color: OptionIndexChartConfig.letterAndVisit.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "爱心帮扶",
-              icon: "image://" + legend4,
-              textStyle: {
-                color: OptionIndexChartConfig.loveHelp.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "矛盾纠纷",
-              icon: "image://" + legend5,
-              textStyle: {
-                color: OptionIndexChartConfig.conflict.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "心理咨询",
-              icon: "image://" + legend8,
-              textStyle: {
-                color: OptionIndexChartConfig.psychologicalCounseling.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "弱电告警",
-              icon: "image://" + legend6,
-              textStyle: {
-                color: OptionIndexChartConfig.weakElectrictyAlarm.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "弱电故障",
-              icon: "image://" + legend7,
-              textStyle: {
-                color: OptionIndexChartConfig.weakElectrictyTrouble.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            }
-          ]
+          data: this.getLenged(times)
         },
         calculable: true,
         grid: {
@@ -603,10 +637,10 @@ export default {
           {
             type: "category",
 
-            data: ["佛祖岭B区", "同心村", "棕黄村", "流芳社区", "大谭村"],
+            data: [],
             axisLabel: {
               // color: "#fff",
-              color: "#1ebdde",   
+              color: "#1ebdde",
               fontSize: Math.round(10 * times),
               interval: 0, //横轴信息全部显示
               rotate: 20 //30度角倾斜显示,
@@ -614,7 +648,7 @@ export default {
           },
           {
             type: "category",
-            data: ["邬家山村", "大邱村", "湖口村", "汪田村", "九夫村"],
+            data: [],
             axisLabel: {
               // color: "#fff",
               color: "#1ebdde",
@@ -630,71 +664,99 @@ export default {
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.troublesShooting.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.troublesShooting.barColor
+              }
+            },
+            data: []
           },
           {
             name: "治安事件",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.publicOrder.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.publicOrder.barColor }
+            },
+            data: []
           },
           {
             name: "信访相关",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.letterAndVisit.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.letterAndVisit.barColor }
+            },
+            data: []
           },
           {
             name: "爱心帮扶",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.loveHelp.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.loveHelp.barColor }
+            },
+            data: []
           },
           {
             name: "矛盾纠纷",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.conflict.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.conflict.barColor }
+            },
+            data: []
           },
           {
             name: "心理咨询",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.psychologicalCounseling.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.psychologicalCounseling.barColor
+              }
+            },
+            data: []
           },
           {
             name: "弱电告警",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyAlarm.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.weakElectrictyAlarm.barColor
+              }
+            },
+            data: []
           },
           {
             name: "弱电故障",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyTrouble.barColor } },
-            data: [100, 100, 100, 100, 100]
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.weakElectrictyTrouble.barColor
+              }
+            },
+            data: []
           },
           {
             name: "隐患排查",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.troublesShooting.barColor } },
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.troublesShooting.barColor
+              }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -702,14 +764,16 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           },
           {
             name: "治安事件",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.publicOrder.barColor } },
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.publicOrder.barColor }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -717,14 +781,16 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           },
           {
             name: "信访相关",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.letterAndVisit.barColor } },
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.letterAndVisit.barColor }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -732,14 +798,16 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           },
           {
             name: "爱心帮扶",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.loveHelp.barColor } },
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.loveHelp.barColor }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -747,14 +815,16 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           },
           {
             name: "矛盾纠纷",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.conflict.barColor } },
+            itemStyle: {
+              normal: { color: OptionIndexChartConfig.conflict.barColor }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -762,14 +832,18 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           },
           {
             name: "心理咨询",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.psychologicalCounseling.barColor } },
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.psychologicalCounseling.barColor
+              }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -777,14 +851,18 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           },
           {
             name: "弱电告警",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyAlarm.barColor } },
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.weakElectrictyAlarm.barColor
+              }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -792,14 +870,18 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           },
           {
             name: "弱电故障",
             type: "bar",
             barWidth: Math.round(25 * times),
             stack: "总量",
-            itemStyle: { normal: { color: OptionIndexChartConfig.weakElectrictyTrouble.barColor } },
+            itemStyle: {
+              normal: {
+                color: OptionIndexChartConfig.weakElectrictyTrouble.barColor
+              }
+            },
             yAxisIndex: "1",
             label: {
               normal: {
@@ -807,8 +889,93 @@ export default {
                 position: "left"
               }
             },
-            data: [-100, -100, -100, -100, -100]
+            data: []
           }
+        ],
+      };
+    },
+
+    // 社区级图表字体大小改变
+    setRankChartFontSize() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        tooltip: {
+          textStyle: {
+            fontSize: Math.round(12 * times)
+          },
+        },
+        legend: {
+          padding: [Math.round(15 * times), 0, 0, 0],
+          itemGap: Math.round(5 * times),
+          itemWidth: Math.round(15 * times),
+          itemHeight: Math.round(15 * times),
+          data: this.getLenged(times)
+        },
+        grid: {
+          left: Math.round(80 * times),
+          top: Math.round(10 * times),
+        },
+        yAxis: [
+          {
+            axisLabel: {
+              fontSize: Math.round(10 * times),
+            }
+          },
+          {
+            axisLabel: {
+              fontSize: Math.round(10 * times),
+            }
+          }
+        ],
+        series: [
+          {
+            barWidth: Math.round(25 * times),
+          },
+            {
+            barWidth: Math.round(25 * times),
+          },
+           {
+            barWidth: Math.round(25 * times),
+          },
+            {
+            barWidth: Math.round(25 * times),
+          },
+             {
+            barWidth: Math.round(25 * times),
+          },
+            {
+            barWidth: Math.round(25 * times),
+          },
+           {
+            barWidth: Math.round(25 * times),
+          },
+            {
+            barWidth: Math.round(25 * times),
+          },
+            {
+            barWidth: Math.round(25 * times),
+          },
+          {
+            barWidth: Math.round(25 * times),
+          },
+           {
+            barWidth: Math.round(25 * times),
+          },
+           {
+            barWidth: Math.round(25 * times),
+          },
+           {
+            barWidth: Math.round(25 * times),
+          },
+           {
+            barWidth: Math.round(25 * times),
+          },
+             {
+            barWidth: Math.round(25 * times),
+          },
+          {
+            barWidth: Math.round(25 * times),
+          },
         ],
         animation: false
       };
@@ -823,44 +990,44 @@ export default {
   z-index: 20;
   .chart-title {
     display: flex;
-    padding: 0 2rem;
-    height: 3rem;
+    padding: 0 24px;
+    height: 36px;
     align-items: center;
     justify-content: space-between;
     .date {
       color: #49a9ee;
       span {
         cursor: pointer;
-        margin: 0 0.5rem;
+        margin: 0 6px;
       }
     }
   }
   .chart-container {
     display: flex;
-    padding-left: 1rem;
+    padding-left: 12px;
     justify-content: center;
     #indexbar {
-      width: 29rem;
-      height: 20rem;
+      width: 330px;
+      height: 240px;
     }
     .chart-content {
-      height: 20rem;
+      height: 240px;
       ul li {
         text-align: left;
-        padding-right: 0.5rem;
+        padding-right: 6px;
         color: #1ebdde;
-        margin: 0.2rem;
+        margin: 2px;
         cursor: pointer;
         span {
           display: inline-block;
-          width: 0.5rem;
-          height: 1rem;
+          width: 6px;
+          height: 12px;
           border-color: rgba(255, 255, 255, 0);
           border-style: solid;
-          border-width: 0 0.25rem 0.25rem 0;
+          border-width: 0 3px 3px 0;
           transform: rotate(45deg);
-          margin-right: 0.5rem;
-          margin-left: 0.5rem;
+          margin-right: 6px;
+          margin-left: 6px;
         }
         .checked {
           border-color: rgba(117, 200, 43, 1);
@@ -869,10 +1036,10 @@ export default {
     }
   }
   .rank-container {
-    padding-left: 1rem;
+    padding-left: 12px;
     #rankbar {
-      width: 36rem;
-      height: 18rem;
+      width: 432px;
+      height: 216px;
       margin-left: 50%;
       transform: translateX(-50%);
     }
@@ -881,15 +1048,66 @@ export default {
       position: relative;
       .refueling-list {
         position: absolute;
-        left: 9.5rem;
-        margin-top: 0.5rem;
+        left: 120px;
+        margin-top: 6px;
         color: green;
       }
       .praise-list {
         position: absolute;
-        left: 30rem;
-        margin-top: 0.5rem;
+        left: 400px;
+        margin-top: 6px;
         color: red;
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+  .panel-content {
+    .chart-title {
+      padding: 0 72px;
+      height: 108px;
+      .date {
+        span {
+          margin: 0 18px;
+        }
+      }
+    }
+    .chart-container {
+      padding-left: 36px;
+      #indexbar {
+        width: 1000px;
+        height: 720px;
+      }
+      .chart-content {
+        height: 720px;
+        ul li {
+          padding-right: 18px;
+          margin: 6px;
+          span {
+            width: 18px;
+            height: 36px;
+            border-width: 0 9px 9px 0;
+            margin-right: 18px;
+            margin-left: 18px;
+          }
+        }
+      }
+    }
+    .rank-container {
+      padding-left: 36px;
+      #rankbar {
+        width: 1296px;
+        height: 648px;
+      }
+      .rank-label {
+        .refueling-list {
+          left: 360px;
+          margin-top: 18px;
+        }
+        .praise-list {
+          left: 1200px;
+          margin-top: 18px;
+        }
       }
     }
   }

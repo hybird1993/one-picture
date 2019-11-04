@@ -134,23 +134,38 @@ export default {
   background-image: url("../../assets/image/detail-bg.png");
   background-size: 100% 100%;
   .chart-title {
-    margin: 1rem;
+    margin: 12px;
   }
   .panel-content {
     z-index: 1;
     table {
-      margin-bottom: 1rem;
+      margin-bottom: 12px;
       margin-left: 50%;
       transform: translateX(-50%);
       td {
         cursor: pointer;
-        width: 9rem;
-        height: 3rem;
+        width: 108px;
+        height: 36px;
         text-align: center;
-        border: .2rem solid #eee;
+        border: 2px solid #eee;
       }
       .select-house {
         background-color: #1ebdde;
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+  .chart-title {
+    margin: 36px;
+  }
+  .panel-content {
+    table {
+      margin-bottom: 36px;
+      td {
+        width: 324px;
+        height: 108px;
+        border: 6px solid #eee;
       }
     }
   }

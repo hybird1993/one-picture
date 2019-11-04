@@ -147,9 +147,9 @@ export default {
       this.$parent.fullScreen( 'peopleHouse');
       setTimeout(() => {
         this.peopleChart.resize();
-        this.peopleChart.setOption(this.getPeopleChartOption());
+        this.peopleChart.setOption(this.setPeopleChartFontSize());
         this.houseChart.resize();
-        this.houseChart.setOption(this.getHouseChartOption());
+        this.houseChart.setOption(this.setHouseChartFontSize());
       }, 0)
     },
     
@@ -158,9 +158,9 @@ export default {
       this.$parent.fullScreenExit( 'peopleHouse');
       setTimeout(() => {
         this.peopleChart.resize();
-        this.peopleChart.setOption(this.getPeopleChartOption());
+        this.peopleChart.setOption(this.setPeopleChartFontSize());
         this.houseChart.resize();
-        this.houseChart.setOption(this.getHouseChartOption());
+        this.houseChart.setOption(this.setHouseChartFontSize());
       }, 0)
     },
 
@@ -201,7 +201,7 @@ export default {
             clockWise: true,
             startAngle: 135,
             minAngle: 20,
-            center: ["50%", "50%"],
+            center: ["45%", "50%"],
             radius: ["50%", "80%"],
             //标签
             label: {
@@ -233,6 +233,29 @@ export default {
         animation: false
       };
     },
+
+    setHouseChartFontSize() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        tooltip: {
+          textStyle: {
+            fontSize: Math.round(12 * times)
+          }
+        },
+        series: [
+          {
+            label: {
+              normal: {
+                textStyle: {
+                  fontSize: Math.round(12 * times),
+                }
+              }
+            },
+          }
+        ],
+      };
+    },
+
     getPeopleChartOption(data1, data2, color1, color2) {
       if (!data1) {
         data1 = this.data1_;
@@ -320,7 +343,44 @@ export default {
         ],
         animation: false
       };
+    },
+
+    setPeopleChartFontSize() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        title: {
+          textStyle: {
+            fontSize: Math.round(14 * times)
+          }
+        },
+        tooltip: {
+          textStyle: {
+            fontSize: Math.round(12 * times)
+          }
+        },
+        series: [
+          {
+            label: {
+              normal: {
+                textStyle: {
+                  fontSize: Math.round(12 * times),
+                }
+              }
+            },
+          },
+          {
+            label: {
+              normal: {
+                textStyle: {
+                  fontSize: Math.round(12 * times),
+                }
+              }
+            },
+          }
+        ],
+      };
     }
+
   }
 };
 </script>
@@ -330,29 +390,32 @@ export default {
 .chart-container {
   display: flex;
   justify-content: center;
-  padding-left: 1rem;
+  padding-left: 12px;
   .chart-item {
-    margin-top: .5rem;
+    margin-top: 6px;
     #peoplepie {
-      margin-left: 1.5rem;
-      width: 16rem;
-      height: 16rem;
+      width: 192px;
+      height: 192px;
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
     #housepie {
-      width: 16rem;
-      height: 16rem;
+      width: 192px;
+      height: 192px;
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
     .statistics-container {
       display: flex;
       justify-content: center;
       .statistics-text {
         position: relative;
-        width: 9.5rem;
-        height: 5rem;
-        padding: 0.5rem 1rem;
-        margin-left: 1rem;
-        margin-bottom: .5rem;
-        margin-top: .5rem;
+        width: 110px;
+        height: 60px;
+        padding: 6px 12px;
+        margin-left: 12px;
+        margin-bottom: 6px;
+        margin-top: 6px;
         text-align: left;
         color: #49a9ee;
         .statistics-bg {
@@ -368,14 +431,48 @@ export default {
           span {
             display: inline-block;
             color: #ffffff;
-            font-size: 2rem;
-            min-width: 5rem;
+            font-size: 24px;
+            min-width: 60px;
             text-align: right;
-            padding-right: 0.5rem;
+            padding-right: 6px;
           }
         }
       }
     }
   }
+}
+
+.panel-container-fullscreen {
+  .chart-container {
+  padding-left: 36px;
+  .chart-item {
+    margin-top: 18px;
+    #peoplepie {
+      width: 576px;
+      height: 576px;
+    }
+    #housepie {
+      width: 576px;
+      height: 576px;
+    }
+    .statistics-container {
+      .statistics-text {
+        width: 330px;
+        height: 180px;
+        padding: 18px 36px;
+        margin-left: 36px;
+        margin-bottom: 18px;
+        margin-top: 18px;
+        .statistics-value {
+          span {
+            font-size: 72px;
+            min-width: 180px;
+            padding-right: 18px;
+          }
+        }
+      }
+    }
+  }
+}
 }
 </style>

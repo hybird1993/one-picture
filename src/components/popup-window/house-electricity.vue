@@ -13,9 +13,9 @@
       </div>
       <div class="electricity-title">{{showDate}}分时电量</div>
       <div class="chart-container">
-        <img class="icon-arrow" src="../../assets/image/icon-left-arrow.png" @click="preDay"/>
+        <img class="icon-arrow" src="../../assets/image/icon-left-arrow.png" @click="preDay" />
         <div id="barChart" class="bar-chart"></div>
-        <img class="icon-arrow" src="../../assets/image/icon-right-arrow.png" @click="nextDay"/>
+        <img class="icon-arrow" src="../../assets/image/icon-right-arrow.png" @click="nextDay" />
       </div>
     </div>
     <div v-if="!isFullScreen" class="fullscreen-item">
@@ -51,12 +51,15 @@ export default {
       date: null,
       isFullScreen: false,
       xData_: null,
-      sData_: null,
+      sData_: null
     };
   },
   computed: {
     showDate: function() {
-      return this.date ? `${this.date.getFullYear()}年${this.date.getUTCMonth() + 1}月${this.date.getDate()}日` : '';
+      return this.date
+        ? `${this.date.getFullYear()}年${this.date.getUTCMonth() +
+            1}月${this.date.getDate()}日`
+        : "";
     }
   },
   mounted() {
@@ -95,25 +98,31 @@ export default {
       this.date = new Date(timestamp);
       this.getHouseElectricity();
     },
-    
+
     getHouseElectricity() {
       const self = this;
       const date = TimeUtil.formatDate(self.date, "yyyyMMdd");
       // API.getHouseElectricity(1039, '20190820').then(res => {
-      API.getHouseElectricity(self.prop, date).then(res => {
-        self.electricityCount = res.electricNum ? res.electricNum.toString() : '0';
-        let xData = [], sData = [];
-        if (res.electricCount) {
-          xData = res.electricCount.map(item => item.countHour); 
-          sData = res.electricCount.map(item => item.electricNum); 
-        } 
-        this.xData_ = xData;
-        this.sData_ = sData;
-        self.chart.setOption({
-          xAxis: {data: xData}, series: {data: sData}
-        })
-      }, err => {
-      });
+      API.getHouseElectricity(self.prop, date).then(
+        res => {
+          self.electricityCount = res.electricNum
+            ? res.electricNum.toString()
+            : "0";
+          let xData = [],
+            sData = [];
+          if (res.electricCount) {
+            xData = res.electricCount.map(item => item.countHour);
+            sData = res.electricCount.map(item => item.electricNum);
+          }
+          this.xData_ = xData;
+          this.sData_ = sData;
+          self.chart.setOption({
+            xAxis: { data: xData },
+            series: { data: sData }
+          });
+        },
+        err => {}
+      );
     },
 
     setChartOption() {
@@ -147,90 +156,85 @@ export default {
           containLabel: true
         },
         calculable: true,
-        xAxis: 
-          {
-            type: "category",
-            data: [
-            ],
-            axisTick: {
-              alignWithLabel: true
-            },
-            axisLabel: {
-              interval: 0 //横轴信息全部显示
-              // rotate: 40 //30度角倾斜显示
+        xAxis: {
+          type: "category",
+          data: [],
+          axisTick: {
+            alignWithLabel: true
+          },
+          axisLabel: {
+            interval: 0 //横轴信息全部显示
+            // rotate: 40 //30度角倾斜显示
+          }
+        },
+        yAxis: {
+          type: "value",
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ["rgba(255,255,255,0.2)"],
+              width: 0.5,
+              type: "solid"
             }
           }
-        ,
-        yAxis: 
-          {
-            type: "value",
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: ["rgba(255,255,255,0.2)"],
-                width: 0.5,
-                type: "solid"
-              }
-            },
-          }
-        ,
-        series: 
-          {
-            type: "bar",
-            data: [],
-            barWidth: 8 * times,
-            itemStyle: {
-              normal: {
-                barBorderRadius: 4 * times, // 柱条边线圆角
-                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  {
-                    offset: 1,
-                    color: "#925dff"
-                  },
-                  {
-                    offset: 0,
-                    color: "#00baff"
-                  }
-                ]),
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowBlur: 10 * times
-              }
+        },
+        series: {
+          type: "bar",
+          data: [],
+          barWidth: 8 * times,
+          itemStyle: {
+            normal: {
+              barBorderRadius: 4 * times, // 柱条边线圆角
+              color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 1,
+                  color: "#925dff"
+                },
+                {
+                  offset: 0,
+                  color: "#00baff"
+                }
+              ]),
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 10 * times
             }
           }
-        ,
+        },
         animation: false
-      }
+      };
     },
-    
+
     fullScreen() {
       this.isFullScreen = true;
       this.$parent.eventListener({
-        type: 'fullScreen',
+        type: "fullScreen",
         id: this.componentId
       });
       setTimeout(() => {
         this.chart.resize();
         this.chart.setOption(this.setChartOption());
         this.chart.setOption({
-          xAxis: {data: this.xData_}, series: {data: this.sData_}
+          xAxis: { data: this.xData_ },
+          series: { data: this.sData_ }
         });
-      }, 0)
+      }, 0);
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-       this.$parent.eventListener({
-        type: 'fullScreenExit',
+      this.$parent.eventListener({
+        type: "fullScreenExit",
         id: this.componentId
       });
       setTimeout(() => {
         this.chart.resize();
         this.chart.setOption(this.setChartOption());
         this.chart.setOption({
-          xAxis: {data: this.xData_}, series: {data: this.sData_}
+          xAxis: { data: this.xData_ },
+          series: { data: this.sData_ }
         });
-      }, 0)
-    },
+      }, 0);
+    }
   },
   watch: {
     prop: function(val, oldVal) {
@@ -247,52 +251,80 @@ export default {
 .panel-container {
   background-image: url("../../assets/image/detail-bg.png");
   background-size: 100% 100%;
-}
-.electricity-count {
-  text-align: left;
-  padding-left: 3rem;
-  margin: 1rem;
-  span {
-    display: inline-block;
-  }
-  .electricity-count-label {
-    color: #49a9ee;
-  }
-  .electricity-count-num {
-    width: 2rem;
-    height: 2rem;
-    background-color: rgba(230, 230, 230, 0.3);
-    text-align: center;
-    line-height: 2rem;
-    border-radius: 0.5rem;
-    margin: 0.2rem;
-    &:last-child {
-      background-color: #ff2400;
+  .electricity-count {
+    text-align: left;
+    padding-left: 36px;
+    margin: 12px;
+    span {
+      display: inline-block;
+    }
+    .electricity-count-label {
+      color: #49a9ee;
+    }
+    .electricity-count-num {
+      width: 24px;
+      height: 24px;
+      background-color: rgba(230, 230, 230, 0.3);
+      text-align: center;
+      line-height: 24px;
+      border-radius: 6px;
+      margin: 2px;
+      &:last-child {
+        background-color: #ff2400;
+      }
+    }
+    .electricity-count-unit {
+      color: rgba(255, 255, 255, 0.65);
     }
   }
-  .electricity-count-unit {
-    color: rgba(255, 255, 255, 0.65);
+  .electricity-title {
+    text-align: right;
+    padding-right: 36px;
+    color: #49a9ee;
+  }
+  .chart-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    .icon-arrow {
+      width: 24px;
+      height: 54px;
+      margin: 0 12px;
+      cursor: pointer;
+    }
+    .bar-chart {
+      flex: 1;
+      width: 312px;
+      height: 192px;
+    }
   }
 }
-.electricity-title {
-  text-align: right;
-  padding-right: 3rem;
-  color: #49a9ee;
-}
-.chart-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  .icon-arrow {
-    width: 2rem;
-    height: 4.5rem;
-    margin: 0 1rem;
-    cursor: pointer;
+
+.panel-container-fullscreen {
+  .electricity-count {
+    padding-left: 108px;
+    margin: 36px;
+    .electricity-count-num {
+      width: 72px;
+      height: 72px;
+      line-height: 72px;
+      border-radius: 18px;
+      margin: 6px;
+    }
   }
-  .bar-chart {
-    flex: 1;
-    width: 26rem;
-    height: 16rem;
+  .electricity-title {
+    padding-right: 108px;
+  }
+  .chart-container {
+    .icon-arrow {
+      width: 72px;
+      height: 162px;
+      margin: 0 36px;
+    }
+    .bar-chart {
+      width: 936px;
+      height: 576px;
+    }
   }
 }
 </style>

@@ -70,11 +70,15 @@ export default {
   .panel-content {
     z-index: 1;
     background: #fff;
+    padding-bottom: 24px;
     iframe {
       width: 100%;
       height: 100%;
       margin-top: 1%;
     }
   }
+}
+.panel-container-fullscreen {
+
 }
 </style>

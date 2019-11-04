@@ -17,7 +17,11 @@
         </li>
         <li>
           <span class="item-title">告警状态：</span>
-          <span class="item-content alarm-status" :class="{'status-alarm': !detail.isAlreadyDeal}" @click="dealAlarm">{{detail.status}}</span>
+          <span
+            class="item-content alarm-status"
+            :class="{'status-alarm': !detail.isAlreadyDeal}"
+            @click="dealAlarm"
+          >{{detail.status}}</span>
         </li>
         <li>
           <span class="item-title">告警分类：</span>
@@ -54,16 +58,16 @@ export default {
   name: "alarm-detail",
   props: {
     prop: {
-      type: Number,
+      type: Number
     },
     componentId: {
-      type: String,
+      type: String
     }
   },
   data() {
     return {
       detail: {},
-      isFullScreen: false,
+      isFullScreen: false
     };
   },
   mounted() {
@@ -73,7 +77,7 @@ export default {
   methods: {
     close() {
       this.$parent.eventListener({
-        type: 'close',
+        type: "close",
         id: this.componentId
       });
     },
@@ -82,38 +86,37 @@ export default {
       API.getAlarmDetail(self.prop).then(
         res => {
           self.detail = res;
-          self.detail['isAlreadyDeal'] = self.detail.status === '已处理';
+          self.detail["isAlreadyDeal"] = self.detail.status === "已处理";
         },
         err => {}
       );
     },
     dealAlarm() {
-      if (this.detail['isAlreadyDeal']) {
+      if (this.detail["isAlreadyDeal"]) {
         return;
       }
       // auth-token实际也可不传
       this.$parent.eventListener({
-        type: 'alarmDeal',
+        type: "alarmDeal",
         url: `${process.env.VUE_APP_API}/s/routine/workPc.html?alertId=${this.prop}`
       });
-
     },
 
     fullScreen() {
       this.isFullScreen = true;
       this.$parent.eventListener({
-        type: 'fullScreen',
+        type: "fullScreen",
         id: this.componentId
       });
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-       this.$parent.eventListener({
-        type: 'fullScreenExit',
+      this.$parent.eventListener({
+        type: "fullScreenExit",
         id: this.componentId
       });
-    },
+    }
   },
   watch: {
     prop: function(val, oldVal) {
@@ -131,21 +134,21 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 12px;
+    padding-bottom: 12px;
     ul {
-      margin: 0 1.25rem;
+      margin: 0 15px;
       li {
         display: flex;
-        line-height: 2.5rem;
-        padding-left: 2rem;
-        padding-right: .5rem;
+        line-height: 30px;
+        padding-left: 24px;
+        padding-right: 6px;
         position: relative;
         text-align: left;
         // cursor: pointer;
         .item-title {
           display: inline-block;
-          min-width: 7.5rem;
+          min-width: 90px;
           text-align: left;
         }
         .item-content {
@@ -156,11 +159,28 @@ export default {
         }
         .status-alarm {
           cursor: pointer;
-          color:red;
+          color: red;
         }
       }
       li:nth-child(odd) {
         background-color: rgba(256, 256, 256, 0.1);
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+  .panel-content {
+    padding-top: 36px;
+    padding-bottom: 36px;
+    ul {
+      margin: 0 45px;
+      li {
+        line-height: 90px;
+        padding-left: 72px;
+        padding-right: 18px;
+        .item-title {
+          min-width: 270px;
+        }
       }
     }
   }

@@ -14,20 +14,6 @@
         <span class="text">{{room}}人口信息</span>
       </div>
       <div class="box-content">
-        <!-- <div v-for="item of list" class="item-person" :key="item.id">
-          <div class="item-person-left">
-            <img :src="item.picUrl" />
-          </div>
-          <div class="item-person-center">
-            <div class="person-info">姓名：{{item.name}}</div>
-            <div class="person-info">联系方式：{{item.phone}}</div>
-            <div class="person-info">身份证号：{{item.idCard}}</div>
-          </div>
-          <div class="item-person-right">
-            <div class="custom-btn btn-small detail-btn" @click="showPeopleDetail(item)">详细信息</div>
-            <div class="custom-btn btn-small" @click="getUnInportantPersonTrace(item)">显示轨迹</div>
-          </div>
-        </div> -->
         <div v-for="item of list" class="item-person" :key="item.id">
           <div class="item-person-left">
             <img :src="item.picUrl" />
@@ -66,7 +52,7 @@ export default {
   name: "pass-records",
   props: {
     prop: {
-      type: Object,
+      type: Object
     },
     componentId: {
       type: String
@@ -76,8 +62,8 @@ export default {
     return {
       list: [],
       list1: [],
-      room: '',
-      isFullScreen: false,
+      room: "",
+      isFullScreen: false
     };
   },
   mounted() {
@@ -86,10 +72,10 @@ export default {
   methods: {
     showData() {
       const self = this;
-      self.list1 = self.prop['captureImageUri'].map(item => {
-        return process.env.VUE_APP_API + '/' + item;
+      self.list1 = self.prop["captureImageUri"].map(item => {
+        return process.env.VUE_APP_API + "/" + item;
       });
-      self.getPeopleDetail(self.prop['identityCard']);
+      self.getPeopleDetail(self.prop["identityCard"]);
     },
     getPeopleDetail(id) {
       const self = this;
@@ -111,8 +97,10 @@ export default {
       API.getHouseList(id).then(
         res => {
           if (res[0] && res[0]["houseInfo"]) {
-            self.getHousePeopleList(res[0]["houseInfo"]['houseId']);
-            self.room = res[0]["houseInfo"]['buildingInfo']['address'] + res[0]["houseInfo"]['doorplate'];
+            self.getHousePeopleList(res[0]["houseInfo"]["houseId"]);
+            self.room =
+              res[0]["houseInfo"]["buildingInfo"]["address"] +
+              res[0]["houseInfo"]["doorplate"];
           } else {
           }
         },
@@ -124,44 +112,48 @@ export default {
 
     getHousePeopleList(id) {
       const self = this;
-      API.getHousePeopleList(id).then(res => {
-        self.list = res.map(item => {
+      API.getHousePeopleList(id).then(
+        res => {
+          self.list = res.map(item => {
             const person = item.residentBaseInfo;
             let labels = [];
             labels.push(person.formerName);
-            if (person.ethnicity && person.ethnicity !== '无') {
-              labels = labels.concat(person.ethnicity.split(','));
+            if (person.ethnicity && person.ethnicity !== "无") {
+              labels = labels.concat(person.ethnicity.split(","));
             }
-          return {
-            id: person.residentBaseId,
-            name: person.name,
-            idCard: person.idNo,
-            phone: person.contact,
-            picUrl: self.getPeopleIconUrl(person.residentBaseId),
-            labels: labels
-          }
-        });
-      }, err => {
-        self.list = [];
-      })
+            return {
+              id: person.residentBaseId,
+              name: person.name,
+              idCard: person.idNo,
+              phone: person.contact,
+              picUrl: self.getPeopleIconUrl(person.residentBaseId),
+              labels: labels
+            };
+          });
+        },
+        err => {
+          self.list = [];
+        }
+      );
     },
 
     getUnInportantPersonTrace(item) {
       const self = this;
-      const startTime = TimeUtil.formatDate(new Date((new Date().getTime() - 30 * 24 * 60 *60 * 1000)), 'yyyy-MM-dd hh:mm:ss')
-      const endTime = TimeUtil.formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
+      const startTime = TimeUtil.formatDate(
+        new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000),
+        "yyyy-MM-dd hh:mm:ss"
+      );
+      const endTime = TimeUtil.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
       API.getUnInportantPersonTrace(item.idCard, startTime, endTime).then(
         res => {
           if (res.data.length > 0) {
             this.$parent.eventListener({
               type: "unImportantPersonTrace",
-              data: res.data,
+              data: res.data
             });
           }
         },
-        err => {
-      
-        }
+        err => {}
       );
     },
 
@@ -172,7 +164,7 @@ export default {
     showPeopleDetail(item) {
       this.$parent.eventListener({
         type: "peopleDetail",
-        id: item.idCard,
+        id: item.idCard
       });
     },
 
@@ -182,22 +174,22 @@ export default {
         id: this.componentId
       });
     },
-    
+
     fullScreen() {
       this.isFullScreen = true;
       this.$parent.eventListener({
-        type: 'fullScreen',
+        type: "fullScreen",
         id: this.componentId
       });
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-       this.$parent.eventListener({
-        type: 'fullScreenExit',
+      this.$parent.eventListener({
+        type: "fullScreenExit",
         id: this.componentId
       });
-    },
+    }
   },
   watch: {
     prop: function(val, oldVal) {
@@ -215,102 +207,162 @@ export default {
 .panel-container {
   background-image: url("../../assets/image/detail-bg.png");
   background-size: 100% 100%;
-}
-.panel-content {
-  padding: 0.5rem 0;
-}
-.box-title {
-  border-bottom: 0.1rem solid rgba(30, 189, 222, 0.5);
-  text-align: left;
-  .text {
-    display: inline-block;
-    height: 100%;
-    padding: 0px 1.25rem 0 1.75rem;
-    background-color: rgba(30, 189, 222, 0.5);
-    position: relative;
-    height: 2rem;
-    line-height: 2rem;
-    &:after {
-      content: "";
-      position: absolute;
-      right: -2rem;
-      top: 0;
-      width: 0;
-      border-right: 2rem solid transparent;
-      border-bottom: 2rem solid rgba(30, 189, 222, 0.5);
-    }
-  }
-}
-.box-content {
-  padding: 0.5rem;
-  .item-person {
-    display: flex;
-    margin: 1.25rem 0;
-    .item-person-left {
-      margin-left: 1rem;
-      margin-right: 1.75rem;
-      img {
-        width: 5rem;
-        height: 5rem;
-        border-radius: 50%;
-      }
-    }
-    .item-person-center {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      .person-info {
-        text-align: left;
-      }
-      .person-label {
-        text-align: left;
-        span {
-          background-color: red;
-          padding: 0.1rem;
-          display: inline-block;
-          margin: 0 0.5rem;
+  .panel-content {
+    padding: 6px 0;
+    .box-title {
+      border-bottom: 1px solid rgba(30, 189, 222, 0.5);
+      text-align: left;
+      .text {
+        display: inline-block;
+        height: 100%;
+        padding: 0px 15px 0 21px;
+        background-color: rgba(30, 189, 222, 0.5);
+        position: relative;
+        height: 24px;
+        line-height: 24px;
+        &:after {
+          content: "";
+          position: absolute;
+          right: -24px;
+          top: 0;
+          width: 0;
+          border-right: 24px solid transparent;
+          border-bottom: 24px solid rgba(30, 189, 222, 0.5);
         }
       }
     }
-    .item-person-right {
-      display: flex;
-      margin-right: 0.5rem;
-      flex-direction: column;
-      justify-content: space-around;
-      .detail-btn, .custom-btn {
-        cursor: pointer;
+    .box-content-top {
+      overflow: hidden;
+      min-height: 114px;
+      margin: 6px;
+      .item-person-pic {
+        width: 102px;
+        height: 102px;
+        margin: 6px;
+        float: left;
+        background: linear-gradient(to left, #1cb6d7, #1cb6d7) left top
+            no-repeat,
+          linear-gradient(to bottom, #1cb6d7, #1cb6d7) left top no-repeat,
+          linear-gradient(to left, #1cb6d7, #1cb6d7) right top no-repeat,
+          linear-gradient(to bottom, #1cb6d7, #1cb6d7) right top no-repeat,
+          linear-gradient(to left, #1cb6d7, #1cb6d7) left bottom no-repeat,
+          linear-gradient(to bottom, #1cb6d7, #1cb6d7) left bottom no-repeat,
+          linear-gradient(to left, #1cb6d7, #1cb6d7) right bottom no-repeat,
+          linear-gradient(to left, #1cb6d7, #1cb6d7) right bottom no-repeat;
+        background-size: 3px 24px, 24px 3px, 3px 24px, 24px 3px;
+        img {
+          margin-top: 3px;
+          width: 96px;
+          height: 96px;
+        }
+        &:hover {
+          transform: scale(1.1);
+          transition: all 0.5s;
+        }
+      }
+    }
+    .box-content {
+      padding: 6px;
+      .item-person {
+        display: flex;
+        margin: 15px 0;
+        .item-person-left {
+          margin-left: 12px;
+          margin-right: 21px;
+          img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+          }
+        }
+        .item-person-center {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          .person-info {
+            text-align: left;
+          }
+          .person-label {
+            text-align: left;
+            span {
+              background-color: red;
+              padding: 1px;
+              display: inline-block;
+              margin: 0 6px;
+            }
+          }
+        }
+        .item-person-right {
+          display: flex;
+          margin-right: 6px;
+          flex-direction: column;
+          justify-content: space-around;
+          .detail-btn,
+          .custom-btn {
+            cursor: pointer;
+          }
+        }
       }
     }
   }
 }
 
-.box-content-top {
-  overflow: hidden;
-  min-height: 9.5rem;
-  margin: 0.5rem;
-  .item-person-pic {
-    width: 8.5rem;
-    height: 8.5rem;
-    margin: 0.5rem;
-    float: left;
-    background: linear-gradient(to left, #1cb6d7,#1cb6d7) left top no-repeat,
-    linear-gradient(to bottom, #1cb6d7, #1cb6d7) left top no-repeat,
-    linear-gradient(to left, #1cb6d7, #1cb6d7) right top no-repeat,
-    linear-gradient(to bottom, #1cb6d7, #1cb6d7) right top no-repeat,
-    linear-gradient(to left, #1cb6d7, #1cb6d7) left bottom no-repeat,
-    linear-gradient(to bottom, #1cb6d7, #1cb6d7) left bottom no-repeat,
-    linear-gradient(to left, #1cb6d7, #1cb6d7) right bottom no-repeat,
-    linear-gradient(to left, #1cb6d7, #1cb6d7) right bottom no-repeat;
-    background-size: .25rem 2rem, 2rem .25rem, .25rem 2rem, 2rem .25rem;
-    img {
-      margin-top: .25rem;
-      width: 8rem;
-      height: 8rem;
+.panel-container-fullscreen {
+  .panel-content {
+    padding: 18px 0;
+    .box-title {
+      border-bottom: 3px solid rgba(30, 189, 222, 0.5);
+      .text {
+        padding: 0px 45px 0 63px;
+        height: 72px;
+        line-height: 72px;
+        &:after {
+          right: -72px;
+          border-right: 72px solid transparent;
+          border-bottom: 72px solid rgba(30, 189, 222, 0.5);
+        }
+      }
     }
-    &:hover {
-      transform: scale(1.1);
-      transition: all 0.5s;
+    .box-content-top {
+      min-height: 342px;
+      margin: 18px;
+      .item-person-pic {
+        width: 306px;
+        height: 306px;
+        margin: 18px;
+        background-size: 9px 72px, 72px 9px, 9px 72px, 72px 9px;
+        img {
+          margin-top: 9px;
+          width: 288px;
+          height: 288px;
+        }
+      }
+    }
+    .box-content {
+      padding: 18px;
+      .item-person {
+        margin: 45px 0;
+        .item-person-left {
+          margin-left: 36px;
+          margin-right: 63px;
+          img {
+            width: 180px;
+            height: 180px;
+          }
+        }
+        .item-person-center {
+          .person-label {
+            span {
+              padding: 3px;
+              margin: 0 18px;
+            }
+          }
+        }
+        .item-person-right {
+          margin-right: 18px;
+        }
+      }
     }
   }
 }

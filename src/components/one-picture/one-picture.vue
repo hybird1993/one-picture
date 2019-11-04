@@ -166,9 +166,9 @@ export default {
   z-index: 1;
   bottom: 34%;
   position: absolute;
-  right: 25.5%;
-  width: 9rem;
-  height: 7rem;
+  right: 410px;
+  width: 108px;
+  height: 84px;
   img {
     width: 100%;
     height: 100%;

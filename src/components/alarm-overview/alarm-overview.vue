@@ -1,7 +1,7 @@
 <template>
   <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">告警视图总览</div>
-    <div id="alarmbar" :style="{width: '100%', height: '100%'}"></div>
+    <div id="alarmbar"></div>
     <div v-if="!isFullScreen" class="close-item">
       <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
     </div>
@@ -49,7 +49,7 @@ export default {
       this.$parent.fullScreen("alarmOverview");
       setTimeout(() => {
         this.indexChart.resize();
-        this.indexChart.setOption(this.setChartOption());
+        this.indexChart.setOption(this.setChartFontSize());
       }, 0);
     },
 
@@ -58,8 +58,8 @@ export default {
       this.$parent.fullScreenExit("alarmOverview");
       setTimeout(() => {
         this.indexChart.resize();
-        this.indexChart.setOption(this.setChartOption());
-      }, 10);
+        this.indexChart.setOption(this.setChartFontSize());
+      }, 0);
     },
 
     setChartOption(name, value) {
@@ -68,7 +68,7 @@ export default {
         value = this.value_;
       }
       this.name_ = name;
-      this.value_ = value;;
+      this.value_ = value;
       const times = Util.getFontSizeTimes(this.isFullScreen);
       const option = {
         tooltip: {
@@ -91,7 +91,7 @@ export default {
         toolbox: {
           show: false
         },
-        calculable: true,
+        // calculable: true,
         xAxis: {
           type: "value",
           splitLine: {
@@ -110,7 +110,6 @@ export default {
         },
         yAxis: {
           type: "category",
-          // boundaryGap: false,
           splitLine: {
             show: true,
             lineStyle: {
@@ -129,16 +128,8 @@ export default {
           type: "bar",
           barWidth: Math.round(12 * times),
           data: value,
-
-          // itemStyle: {
-          //   normal: {
-          //     color: "#fac007"
-          //   }
-          // },
-
           itemStyle: {
             normal: {
-              // barBorderRadius: 4 * times, // 柱条边线圆角
               color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
                   offset: 1,
@@ -152,7 +143,53 @@ export default {
               borderColor: '#1ebdde',
               borderWidth: Math.round(1 * times),
               shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 10 * times
+              shadowBlur: Math.round(10 * times),
+            }
+          },
+
+          textStyle: {
+            color: "#fff",
+            fontSize: Math.round(12 * times)
+          }
+        },
+      };
+      return option;
+    },
+
+    setChartFontSize() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        tooltip: {
+          textStyle: {
+            fontSize: Math.round(12 * times)
+          }
+        },
+        xAxis: {
+          splitLine: {
+            lineStyle: {
+              width: Math.round(1 * times),
+            }
+          },
+          axisLabel: {
+            fontSize: Math.round(12 * times)
+          }
+        },
+        yAxis: {
+          splitLine: {
+            lineStyle: {
+              width: Math.round(1 * times),
+            }
+          },
+          axisLabel: {
+            fontSize: Math.round(12 * times)
+          },
+        },
+        series: {
+          barWidth: Math.round(12 * times),
+          itemStyle: {
+            normal: {
+              borderWidth: Math.round(1 * times),
+              shadowBlur: Math.round(10 * times),
             }
           },
 
@@ -162,7 +199,6 @@ export default {
           }
         }
       };
-      return option;
     }
   }
 };
@@ -171,11 +207,17 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-container {
-
+  #alarmbar {
+    width: 400px;
+    height: 280px;
+  }
 }
 
 .panel-container-fullscreen {
-
+  #alarmbar {
+    width: 1600px;
+    height: 840px;
+  }
 }
 
 </style>

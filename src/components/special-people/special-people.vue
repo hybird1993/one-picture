@@ -35,6 +35,7 @@ export default {
       time: 1000 * 4,
       isFullScreen: false,
       isMouseOver: false,
+      timestamp: null,
     };
   },
   mounted() {
@@ -82,6 +83,9 @@ export default {
       if (this.isMouseOver) {
         return;
       }
+      if (this.timestamp && (new Date().getTime() - this.timestamp < this.time)) {
+        return;
+      }
       const item = self.list.shift();
       setTimeout(() => {
          self.list.push(item);
@@ -96,11 +100,13 @@ export default {
     },
 
     fullScreen() {
+      this.timestamp = new Date().getTime();
       this.isFullScreen = true;
       this.$parent.fullScreen( 'specialPeople');
     },
     
     exitFullScreen() {
+      this.timestamp = new Date().getTime();
       this.isFullScreen = false;
       this.$parent.fullScreenExit( 'specialPeople');
     },
@@ -111,37 +117,36 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  margin: 0.5rem 0;
   overflow: hidden;
   ul {
-    margin: 0 1.25rem;
+    margin: 0 15px;
     li {
       display: flex;
-      font-size: 1rem;
-      padding: 0.5rem;
+      font-size: 12px;
+      padding: 6px;
       position: relative;
       text-align: left;
       cursor: pointer;
-      min-height: 4rem;
-      border-bottom: 0.1rem solid rgba(50, 50, 50, 0.7);
+      min-height: 32px;
+      border-bottom: 1px solid rgba(50, 50, 50, 0.7);
       .alarm-index {
         display: inline-block;
-        width: 1.75rem;
-        margin-right: 1rem;
-        padding-top: 0.5rem;
+        width: 21px;
+        margin-right: 12px;
+        padding-top: 6px;
       }
       .alarm-title {
         flex: 1;
-        line-height: 1.75rem;
+        line-height: 21px;
       }
       .alarm-status {
         display: inline-block;
-        width: 4rem;
-        margin-left: 1rem;
-        height: 2rem;
-        line-height: 2rem;
+        width: 48px;
+        margin-left: 12px;
+        height: 24px;
+        line-height: 24px;
         text-align: center;
-        border-radius: 0.5rem;
+        border-radius: 6px;
         background-color: #91a22c;
       }
       .status-alarm {
@@ -183,5 +188,32 @@ export default {
     opacity: 1;
   }
 
+}
+
+.panel-container-fullscreen {
+  ul {
+    margin: 0 45px;
+    li {
+      font-size: 36px;
+      padding: 18px;
+      min-height: 96px;
+      border-bottom: 3px solid rgba(50, 50, 50, 0.7);
+      .alarm-index {
+        width: 63px;
+        margin-right: 36px;
+        padding-top: 18px;
+      }
+      .alarm-title {
+        line-height: 63px;
+      }
+      .alarm-status {
+        width: 144px;
+        margin-left: 36px;
+        height: 72px;
+        line-height: 72px;
+        border-radius: 18px;
+      }
+    }
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
-    <div class="panel-title">资讯详情</div>
+    <!-- <div class="panel-title">资讯详情</div> -->
     <el-scrollbar class="panel-content">
       <h2>{{prop.title}}</h2>
       <div>
@@ -78,17 +78,16 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 24px;
+    padding-bottom: 24px;
     h2 {
-      margin: 0.5rem 0 10px 0;
+      margin: 6px 0 10px 0;
     }
     span {
-      padding: 0.5rem 2rem;
+      padding: 6px 24px;
     }
     .news-content {
-      margin: 2rem;
+      margin: 24px;
     }
   }
 }

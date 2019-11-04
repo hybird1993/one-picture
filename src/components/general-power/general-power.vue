@@ -80,7 +80,7 @@ export default {
       const self = this;
       setTimeout(() => {
         self.powerChart.resize();
-        self.powerChart.setOption(self.setChartOption());
+        self.powerChart.setOption(self.setChartFontSize());
       }, 0)
     },
     
@@ -90,7 +90,7 @@ export default {
       const self = this;
       setTimeout(() => {
         self.powerChart.resize();
-        self.powerChart.setOption(self.setChartOption());
+        self.powerChart.setOption(self.setChartFontSize());
       }, 0)
     },
 
@@ -164,6 +164,32 @@ export default {
       };
       return option;
     },
+
+    setChartFontSize() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        title: {
+          textStyle: {
+            fontSize: Math.round(24 * times),
+          }
+        },
+        tooltip: {
+          textStyle: {
+            fontSize: Math.round(12 * times)
+          }
+        },
+        series: 
+          {
+            label: {
+              normal: {
+                textStyle: {
+                  fontSize: Math.round(12 * times),
+                }
+              }
+            },
+          },
+      };
+    },
   }
 };
 </script>
@@ -171,12 +197,15 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  padding-top: 2.5rem;
+  padding-top: 30px;
   #pieChart {
-    width: 39rem;
-    height: 22rem;
+    width: 100%;
+    height: 100%;
     margin-left: 50%;
     transform: translateX(-50%);
   }
+}
+.panel-container-fullscreen {
+  
 }
 </style>

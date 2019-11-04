@@ -327,23 +327,23 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 12px;
+    padding-bottom: 12px;
     height: 100%;
     display: flex;
     flex-direction: column;
     .chart-title {
-      margin-bottom: 1rem;
-      font-size: 1rem;
+      margin-bottom: 12px;
+      font-size: 12px;
     }
     .info-content {
       flex: 1;
       ul {
-        margin: 0 1.25rem;
+        margin: 0 15px;
         position: relative;
         .people-icon {
-          width: 7.5rem;
-          height: 7.5rem;
+          width: 90px;
+          height: 90px;
           position: absolute;
           top: 0;
           right: 0;
@@ -351,63 +351,63 @@ export default {
         }
         li {
           display: flex;
-          line-height: 2.5rem;
-          padding-right: 0.5rem;
+          line-height: 30px;
+          padding-right: 6px;
           position: relative;
           text-align: left;
           .item-title {
             display: inline-block;
-            min-width: 10rem;
+            min-width: 120px;
             text-align: left;
-            margin-left: 1.25rem;
+            margin-left: 15px;
           }
           .item-content {
             word-break: break-all;
           }
           .car-number {
             width: 25%;
-            padding-left: 1rem;
+            padding-left: 12px;
           }
           .car-color {
             width: 25%;
-            padding-left: 1rem;
+            padding-left: 12px;
           }
           .car-usage {
             width: 50%;
-            padding-left: 1rem;
+            padding-left: 12px;
           }
           .box-title {
-            border-bottom: 0.1rem solid rgba(30, 189, 222, 0.5);
+            border-bottom: 1px solid rgba(30, 189, 222, 0.5);
             text-align: left;
-            margin-bottom: 0.5rem;
+            margin-bottom: 6px;
             .text {
               display: inline-block;
               height: 100%;
-              padding: 0px 1.25rem 0 2rem;
+              padding: 0px 15px 0 24px;
               background-color: rgba(30, 189, 222, 0.5);
               position: relative;
-              height: 2rem;
-              line-height: 2rem;
+              height: 24px;
+              line-height: 24px;
               &:after {
                 content: "";
                 position: absolute;
-                right: -2rem;
+                right: -24px;
                 top: 0;
                 width: 0;
-                border-right: 2rem solid transparent;
-                border-bottom: 2rem solid rgba(30, 189, 222, 0.5);
+                border-right: 24px solid transparent;
+                border-bottom: 24px solid rgba(30, 189, 222, 0.5);
               }
             }
           }
           .people-item {
             width: 100%;
-            padding-bottom: 0.5rem;
-            padding: 0.5rem 0 0.5rem 0.5rem;
+            padding-bottom: 6px;
+            padding: 6px 0 6px 6px;
             table {
               width: 100%;
               td {
-                padding-left: 1rem;
-                border: 0.1rem solid rgba(255, 255, 255, 0.4);
+                padding-left: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.4);
               }
             }
           }
@@ -416,11 +416,11 @@ export default {
           &:before {
             content: "";
             position: absolute;
-            top: 1.25rem;
-            margin-top: -0.25rem;
-            height: 0.5rem;
-            width: 0.5rem;
-            margin-left: -1.25rem;
+            top: 15px;
+            margin-top: -3px;
+            height: 6px;
+            width: 6px;
+            margin-left: -15px;
             display: block;
             border-radius: 50%;
             background: #01a5db;
@@ -432,6 +432,79 @@ export default {
         .people-relation:nth-child(n) {
           background-color: rgba(256, 256, 256, 0.1);
           margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+  .panel-content {
+    padding-top: 36px;
+    padding-bottom: 36px;
+    .chart-title {
+      margin-bottom: 36px;
+      font-size: 36px;
+    }
+    .info-content {
+      ul {
+        margin: 0 45px;
+        .people-icon {
+          width: 270px;
+          height: 270px;
+        }
+        li {
+          line-height: 90px;
+          padding-right: 18px;
+          .item-title {
+            min-width: 360px;
+            margin-left: 45px;
+          }
+          .car-number {
+            padding-left: 36px;
+          }
+          .car-color {
+            padding-left: 36px;
+          }
+          .car-usage {
+            padding-left: 36px;
+          }
+          .box-title {
+            border-bottom: 3px solid rgba(30, 189, 222, 0.5);
+            margin-bottom: 18px;
+            .text {
+              padding: 0px 45px 0 72px;
+              height: 72px;
+              line-height: 72px;
+              &:after {
+                right: -72px;
+                border-right: 72px solid transparent;
+                border-bottom: 72px solid rgba(30, 189, 222, 0.5);
+              }
+            }
+          }
+          .people-item {
+            padding-bottom: 18px;
+            padding: 18px 0 18px 18px;
+            table {
+              td {
+                padding-left: 36px;
+                border: 3px solid rgba(255, 255, 255, 0.4);
+              }
+            }
+          }
+        }
+        .li-dot {
+          &:before {
+            top: 45px;
+            margin-top: -9px;
+            height: 18px;
+            width: 18px;
+            margin-left: -45px;
+            border-radius: 50%;
+          }
+        }
+        .people-relation:nth-child(n) {
+          margin-bottom: 30px;
         }
       }
     }

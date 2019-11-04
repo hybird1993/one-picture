@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-container">
+  <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">全局指数</div>
     <div class="panel-content">
       <div class="chart-title">
@@ -298,13 +298,13 @@ export default {
   z-index: 20;
   .chart-title {
     display: flex;
-    padding: 1rem 2rem;
-    height: 3.5rem;
+    padding: 12px 24px;
+    height: 42px;
     align-items: center;
     justify-content: space-between;
     .avg-count {
       text-align: left;
-      margin: 1rem;
+      margin: 12px;
       span {
         display: inline-block;
       }
@@ -312,13 +312,13 @@ export default {
         color: #49a9ee;
       }
       .avg-count-num {
-        width: 2rem;
-        height: 2rem;
+        width: 24px;
+        height: 24px;
         background-color: rgba(230, 230, 230, 0.3);
         text-align: center;
-        line-height: 2rem;
-        border-radius: 0.5rem;
-        margin: 0.2rem;
+        line-height: 24px;
+        border-radius: 6px;
+        margin: 2px;
         &:last-child {
           background-color: #ff2400;
         }
@@ -328,36 +328,36 @@ export default {
       color: #49a9ee;
       span {
         cursor: pointer;
-        margin: 0 0.5rem;
+        margin: 0 6px;
       }
     }
   }
   .chart-container {
     display: flex;
     justify-content: center;
-    padding-left: 1rem;
+    padding-left: 12px;
     #indexline {
-      width: 29rem;
-      height: 20rem;
+      width: 360px;
+      height: 240px;
     }
     .chart-content {
-      height: 20rem;
+      height: 240px;
       ul li {
         text-align: left;
-        padding-right: 0.5rem;
+        padding-right: 6px;
         color: #1ebdde;
-        margin: 0.2rem;
+        margin: 2px;
         cursor: pointer;
         span {
           display: inline-block;
-          width: 0.5rem;
-          height: 1rem;
+          width: 6px;
+          height: 12px;
           border-color: rgba(255, 255, 255, 0);
           border-style: solid;
-          border-width: 0 0.25rem 0.25rem 0;
+          border-width: 0 3px 3px 0;
           transform: rotate(45deg);
-          margin-right: 0.5rem;
-          margin-left: 0.5rem;
+          margin-right: 6px;
+          margin-left: 6px;
         }
         .checked {
           border-color: rgba(117, 200, 43, 1);
@@ -372,13 +372,68 @@ export default {
       position: relative;
       .refueling-list {
         position: absolute;
-        left: 8rem;
+        left: 96px;
         color: green;
       }
       .praise-list {
         position: absolute;
-        right: 2rem;
+        right: 24px;
         color: red;
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+  .panel-content {
+    .chart-title {
+      padding: 36px 72px;
+      height: 126px;
+      .avg-count {
+        margin: 108px;
+        .avg-count-num {
+          width: 72px;
+          height: 72px;
+          line-height: 72px;
+          border-radius: 18px;
+          margin: 6px;
+        }
+      }
+      .date {
+        span {
+          margin: 0 18px;
+        }
+      }
+    }
+    .chart-container {
+      padding-left: 36px;
+      #indexline {
+        width: 1080px;
+        height: 720px;
+      }
+      .chart-content {
+        height: 720px;
+        ul li {
+          padding-right: 18px;
+          margin: 6px;
+          span {
+            width: 18px;
+            height: 36px;
+            border-width: 0 9px 9px 0;
+            margin-right: 18px;
+            margin-left: 18px;
+          }
+        }
+      }
+    }
+    .rank-container {
+      padding-left: 30px;
+      .rank-label {
+        .refueling-list {
+          left: 288px;
+        }
+        .praise-list {
+          right: 72px;
+        }
       }
     }
   }

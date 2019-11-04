@@ -174,15 +174,15 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 12px;
+    padding-bottom: 12px;
     ul {
-      margin: 0 1.25rem;
+      margin: 0 15px;
       li {
         display: flex;
-        line-height: 2.5rem;
-        padding-left: 2rem;
-        padding-right: 0.5rem;
+        line-height: 30px;
+        padding-left: 24px;
+        padding-right: 6px;
         position: relative;
         text-align: left;
       }
@@ -223,27 +223,56 @@ export default {
     }
     .power-people-list {
       li {
-        padding-left: 2.5rem;
+        padding-left: 30px;
         &:before {
           content: "";
           position: absolute;
-          top: 1.25rem;
-          margin-top: -0.35rem;
-          height: 0.7rem;
-          width: 0.7rem;
-          margin-left: -1.35rem;
+          top: 15px;
+          margin-top: -4px;
+          height: 8px;
+          width: 8px;
+          margin-left: -16px;
           display: block;
           border-radius: 50%;
         }
         .item-name {
           width: 30%;
-          padding-left: 0.5rem;
+          padding-left: 6px;
         }
         .item-grid {
           width: 45%;
         }
         .item-phone {
           width: 25%;
+        }
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+ .panel-content {
+    padding-top: 36px;
+    padding-bottom: 36px;
+    ul {
+      margin: 0 45px;
+      li {
+        line-height: 90px;
+        padding-left: 72px;
+        padding-right: 18px;
+      }
+    }
+    .power-people-list {
+      li {
+        padding-left: 90px;
+        &:before {
+          top: 45px;
+          margin-top: -12px;
+          height: 24px;
+          width: 24px;
+          margin-left: -48px;
+        }
+        .item-name {
+          padding-left: 18px;
         }
       }
     }

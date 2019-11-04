@@ -163,16 +163,16 @@ export default {
   background-image: url("../../assets/image/detail-bg.png");
   background-size: 100% 100%;
   .panel-content {
-    margin: 1rem;
+    margin: 12px;
     .item-person {
       display: flex;
-      margin: 1.25rem 0;
+      margin: 15px 0;
       .item-person-left {
-        margin-left: 1rem;
-        margin-right: 1.75rem;
+        margin-left: 12px;
+        margin-right: 21px;
         img {
-          width: 5rem;
-          height: 5rem;
+          width: 60px;
+          height: 60px;
           border-radius: 50%;
         }
       }
@@ -188,20 +188,47 @@ export default {
           text-align: left;
           span {
             background-color: red;
-            padding: 0.1rem;
+            padding: 1px;
             display: inline-block;
-            margin: 0 0.5rem;
+            margin: 0 6px;
           }
         }
       }
       .item-person-right {
         display: flex;
-        margin-right: 0.5rem;
+        margin-right: 6px;
         flex-direction: column;
         justify-content: space-around;
         .custom-btn {
           cursor: pointer;
         }
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+  .panel-content {
+    margin: 36px;
+    .item-person {
+      margin: 45px 0;
+      .item-person-left {
+        margin-left: 36px;
+        margin-right: 63px;
+        img {
+          width: 180px;
+          height: 180px;
+        }
+      }
+      .item-person-center {
+        .person-label {
+          span {
+            padding: 3px;
+            margin: 0 18px;
+          }
+        }
+      }
+      .item-person-right {
+        margin-right: 18px;
       }
     }
   }

@@ -160,14 +160,14 @@ export default {
   background-size: 100% 100%;
   .panel-content {
     z-index: 1;
-    padding-top: 0.5rem;
+    padding-top: 6px;
     height: 100%;
     display: flex;
     flex-direction: column;
     .trace-title {
       display: flex;
-      padding: 0 2rem;
-      height: 3rem;
+      padding: 0 24px;
+      height: 36px;
       align-items: center;
       .people-name {
         flex: 1;
@@ -175,28 +175,28 @@ export default {
       }
       .date {
         color: #49a9ee;
-        margin-left: 1rem;
-        margin-right: 2rem;
+        margin-left: 12px;
+        margin-right: 24px;
         span {
           cursor: pointer;
-          margin: 0 0.5rem;
+          margin: 0 6px;
         }
       }
       button {
-        font-size: 1rem;
-        margin-left: 1rem;
-        padding: 0.1rem 0.5rem;
+        font-size: 12px;
+        margin-left: 12px;
+        padding: 1px 6px;
       }
     }
     .trace-content {
       flex: 1;
       ul {
-        margin: 0 1.25rem;
+        margin: 0 15px;
         li {
           display: flex;
-          line-height: 2.5rem;
-          padding-left: 2rem;
-          padding-right: 0.5rem;
+          line-height: 30px;
+          padding-left: 24px;
+          padding-right: 6px;
           position: relative;
           text-align: left;
           // cursor: pointer;
@@ -209,6 +209,37 @@ export default {
         }
         li:nth-child(odd) {
           background-color: rgba(256, 256, 256, 0.1);
+        }
+      }
+    }
+  }
+}
+.panel-container-fullscreen {
+  .panel-content {
+    padding-top: 18px;
+    .trace-title {
+      padding: 0 72px;
+      height: 108px;
+      .date {
+        margin-left: 36px;
+        margin-right: 72px;
+        span {
+          margin: 0 18px;
+        }
+      }
+      button {
+        font-size: 36px;
+        margin-left: 36px;
+        padding: 3px 18px;
+      }
+    }
+    .trace-content {
+      ul {
+        margin: 0 45px;
+        li {
+          line-height: 90px;
+          padding-left: 72px;
+          padding-right: 18px;
         }
       }
     }
