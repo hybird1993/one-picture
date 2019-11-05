@@ -50,8 +50,6 @@ export default {
       chart: null,
       date: null,
       isFullScreen: false,
-      xData_: null,
-      sData_: null
     };
   },
   computed: {
@@ -114,8 +112,6 @@ export default {
             xData = res.electricCount.map(item => item.countHour);
             sData = res.electricCount.map(item => item.electricNum);
           }
-          this.xData_ = xData;
-          this.sData_ = sData;
           self.chart.setOption({
             xAxis: { data: xData },
             series: { data: sData }
@@ -181,10 +177,10 @@ export default {
         series: {
           type: "bar",
           data: [],
-          barWidth: 8 * times,
+          barWidth: Math.round(8 * times),
           itemStyle: {
             normal: {
-              barBorderRadius: 4 * times, // 柱条边线圆角
+              barBorderRadius: Math.round(4 * times), // 柱条边线圆角
               color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
                 {
                   offset: 1,
@@ -196,11 +192,41 @@ export default {
                 }
               ]),
               shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 10 * times
+              shadowBlur: Math.round(10 * times)
             }
           }
         },
         animation: false
+      };
+    },
+
+    setChartFontSize() {
+      const times = Util.getFontSizeTimes(this.isFullScreen);
+      return {
+        tooltip: {
+          textStyle: {
+            fontSize: Math.round(12 * times)
+          }
+        },
+        textStyle: {
+          fontSize: Math.round(12 * times)
+        },
+        yAxis: {
+          splitLine: {
+            lineStyle: {
+              width: Math.round(0.5 * times),
+            }
+          }
+        },
+        series: {
+          barWidth: Math.round(8 * times),
+          itemStyle: {
+            normal: {
+              barBorderRadius: Math.round(4 * times), // 柱条边线圆角
+              shadowBlur: Math.round(10 * times)
+            }
+          }
+        },
       };
     },
 
@@ -212,11 +238,7 @@ export default {
       });
       setTimeout(() => {
         this.chart.resize();
-        this.chart.setOption(this.setChartOption());
-        this.chart.setOption({
-          xAxis: { data: this.xData_ },
-          series: { data: this.sData_ }
-        });
+        this.chart.setOption(this.setChartFontSize());
       }, 0);
     },
 
@@ -228,11 +250,7 @@ export default {
       });
       setTimeout(() => {
         this.chart.resize();
-        this.chart.setOption(this.setChartOption());
-        this.chart.setOption({
-          xAxis: { data: this.xData_ },
-          series: { data: this.sData_ }
-        });
+        this.chart.setOption(this.setChartFontSize());
       }, 0);
     }
   },

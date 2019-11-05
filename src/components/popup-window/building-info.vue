@@ -2,19 +2,35 @@
   <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">楼栋信息</div>
     <div class="chart-title">
-      <el-radio
+      <!-- <el-radio
         v-for="unit in unitList"
         :key="unit"
         v-model="selectUint"
         :label="unit"
         @change="showHouseList"
-      >单元{{unit}}</el-radio>
+      >单元{{unit}}</el-radio>-->
+
+      <div class="radio" v-for="unit in unitList" :key="unit">
+        <input
+          type="radio"
+          :id="'unit'+ unit"
+          :value="unit"
+          v-model="selectUint"
+          @change="showHouseList"
+        />
+        <label :for="'unit'+ unit">单元{{unit}}</label>
+      </div>
     </div>
     <el-scrollbar class="panel-content">
       <table v-if="selectUint">
         <tbody>
           <tr v-for="(floor, index) in houseList" :key="'floor' + index">
-            <td v-for="house in floor" :key="house.id" @click="showPeopleInfo(house)" :class="{'select-house': house.id === selectHouseId}">{{house.doorplate}}</td>
+            <td
+              v-for="house in floor"
+              :key="house.id"
+              @click="showPeopleInfo(house)"
+              :class="{'select-house': house.id === selectHouseId}"
+            >{{house.doorplate}}</td>
           </tr>
         </tbody>
       </table>
@@ -49,7 +65,7 @@ export default {
       unitList: [],
       buildingTileData: null,
       houseList: [],
-      selectHouseId: null,
+      selectHouseId: null
     };
   },
   mounted() {
@@ -84,12 +100,12 @@ export default {
 
     showHouseList() {
       console.log();
-      this.houseList = Object.values(
-        this.buildingTileData[this.selectUint]
-      ).reverse().map(item => {
-        return Object.values(item);
-      });
-      console.log(this.selectHouseId)
+      this.houseList = Object.values(this.buildingTileData[this.selectUint])
+        .reverse()
+        .map(item => {
+          return Object.values(item);
+        });
+      console.log(this.selectHouseId);
       console.log(this.houseList);
     },
 
@@ -98,7 +114,7 @@ export default {
       this.$parent.eventListener({
         type: "peopleInfo",
         id: this.componentId,
-        data: item.id,
+        data: item.id
       });
     },
 
@@ -134,7 +150,24 @@ export default {
   background-image: url("../../assets/image/detail-bg.png");
   background-size: 100% 100%;
   .chart-title {
+    z-index: 1;
     margin: 12px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .radio {
+      display: flex;
+      align-items: center;
+      input {
+        cursor: pointer;
+      }
+      label {
+        cursor: pointer;
+        margin-left: 4px;
+        margin-right: 10px;
+      }
+    }
   }
   .panel-content {
     z-index: 1;
@@ -158,6 +191,17 @@ export default {
 .panel-container-fullscreen {
   .chart-title {
     margin: 36px;
+    font-size: 36px;
+    .radio {
+      input {
+        width: 39px;
+        height: 39px;
+      }
+      label {
+        margin-left: 12px;
+        margin-right: 30px;
+      }
+    }   
   }
   .panel-content {
     table {

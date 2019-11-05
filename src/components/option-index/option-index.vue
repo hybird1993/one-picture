@@ -3,9 +3,12 @@
     <div class="panel-title">分项指数</div>
     <div class="panel-content">
       <div class="chart-title">
-        <div>
-          <el-radio v-model="radio" label="1" @change="getOptionIndex">社区级</el-radio>
-          <el-radio v-model="radio" label="2" @change="getOptionIndex">网格级</el-radio>
+        <div class="type-radio">
+          <input type="radio" id="community" value="1" v-model="radio" @change="getOptionIndex" />
+          <label for="community">社区级</label>
+
+          <input type="radio" id="grid" value="2" v-model="radio" @change="getOptionIndex" />
+          <label for="grid">网格级</label>
         </div>
         <div class="date">
           <span @click="preWeek">&lt;</span>
@@ -234,7 +237,7 @@ export default {
         // this.indexChart.setOption(this.setIndexChartOption());
         this.indexChart.setOption(this.setIndexChartFontSize());
         // this.rankChart.setOption(this.setRankChartOption());
-                this.rankChart.setOption(this.setRankChartFontSize());
+        this.rankChart.setOption(this.setRankChartFontSize());
       }, 0);
     },
 
@@ -245,7 +248,7 @@ export default {
         this.indexChart.resize();
         this.rankChart.resize();
         // this.indexChart.setOption(this.setIndexChartOption());
-          this.indexChart.setOption(this.setIndexChartFontSize());
+        this.indexChart.setOption(this.setIndexChartFontSize());
         // this.rankChart.setOption(this.setRankChartOption());
         this.rankChart.setOption(this.setRankChartFontSize());
       }, 0);
@@ -258,72 +261,71 @@ export default {
 
     getLenged(times = 1) {
       return [
-            {
-              name: "隐患排查",
-              icon: "image://" + legend1,
-              textStyle: {
-                color: OptionIndexChartConfig.troublesShooting.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "治安事件",
-              icon: "image://" + legend2,
-              textStyle: {
-                color: OptionIndexChartConfig.publicOrder.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "信访相关",
-              icon: "image://" + legend3,
-              textStyle: {
-                color: OptionIndexChartConfig.letterAndVisit.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "爱心帮扶",
-              icon: "image://" + legend4,
-              textStyle: {
-                color: OptionIndexChartConfig.loveHelp.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "矛盾纠纷",
-              icon: "image://" + legend5,
-              textStyle: {
-                color: OptionIndexChartConfig.conflict.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "心理咨询",
-              icon: "image://" + legend8,
-              textStyle: {
-                color:
-                  OptionIndexChartConfig.psychologicalCounseling.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "弱电告警",
-              icon: "image://" + legend6,
-              textStyle: {
-                color: OptionIndexChartConfig.weakElectrictyAlarm.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            },
-            {
-              name: "弱电故障",
-              icon: "image://" + legend7,
-              textStyle: {
-                color: OptionIndexChartConfig.weakElectrictyTrouble.legendColor,
-                fontSize: Math.round(12 * times)
-              }
-            }
-          ]
+        {
+          name: "隐患排查",
+          icon: "image://" + legend1,
+          textStyle: {
+            color: OptionIndexChartConfig.troublesShooting.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        },
+        {
+          name: "治安事件",
+          icon: "image://" + legend2,
+          textStyle: {
+            color: OptionIndexChartConfig.publicOrder.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        },
+        {
+          name: "信访相关",
+          icon: "image://" + legend3,
+          textStyle: {
+            color: OptionIndexChartConfig.letterAndVisit.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        },
+        {
+          name: "爱心帮扶",
+          icon: "image://" + legend4,
+          textStyle: {
+            color: OptionIndexChartConfig.loveHelp.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        },
+        {
+          name: "矛盾纠纷",
+          icon: "image://" + legend5,
+          textStyle: {
+            color: OptionIndexChartConfig.conflict.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        },
+        {
+          name: "心理咨询",
+          icon: "image://" + legend8,
+          textStyle: {
+            color: OptionIndexChartConfig.psychologicalCounseling.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        },
+        {
+          name: "弱电告警",
+          icon: "image://" + legend6,
+          textStyle: {
+            color: OptionIndexChartConfig.weakElectrictyAlarm.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        },
+        {
+          name: "弱电故障",
+          icon: "image://" + legend7,
+          textStyle: {
+            color: OptionIndexChartConfig.weakElectrictyTrouble.legendColor,
+            fontSize: Math.round(12 * times)
+          }
+        }
+      ];
     },
 
     // 社区级
@@ -481,7 +483,7 @@ export default {
             },
             data: []
           }
-        ],
+        ]
       };
     },
 
@@ -891,7 +893,7 @@ export default {
             },
             data: []
           }
-        ],
+        ]
       };
     },
 
@@ -902,7 +904,7 @@ export default {
         tooltip: {
           textStyle: {
             fontSize: Math.round(12 * times)
-          },
+          }
         },
         legend: {
           padding: [Math.round(15 * times), 0, 0, 0],
@@ -913,69 +915,69 @@ export default {
         },
         grid: {
           left: Math.round(80 * times),
-          top: Math.round(10 * times),
+          top: Math.round(10 * times)
         },
         yAxis: [
           {
             axisLabel: {
-              fontSize: Math.round(10 * times),
+              fontSize: Math.round(10 * times)
             }
           },
           {
             axisLabel: {
-              fontSize: Math.round(10 * times),
+              fontSize: Math.round(10 * times)
             }
           }
         ],
         series: [
           {
-            barWidth: Math.round(25 * times),
-          },
-            {
-            barWidth: Math.round(25 * times),
-          },
-           {
-            barWidth: Math.round(25 * times),
-          },
-            {
-            barWidth: Math.round(25 * times),
-          },
-             {
-            barWidth: Math.round(25 * times),
-          },
-            {
-            barWidth: Math.round(25 * times),
-          },
-           {
-            barWidth: Math.round(25 * times),
-          },
-            {
-            barWidth: Math.round(25 * times),
-          },
-            {
-            barWidth: Math.round(25 * times),
+            barWidth: Math.round(25 * times)
           },
           {
-            barWidth: Math.round(25 * times),
-          },
-           {
-            barWidth: Math.round(25 * times),
-          },
-           {
-            barWidth: Math.round(25 * times),
-          },
-           {
-            barWidth: Math.round(25 * times),
-          },
-           {
-            barWidth: Math.round(25 * times),
-          },
-             {
-            barWidth: Math.round(25 * times),
+            barWidth: Math.round(25 * times)
           },
           {
-            barWidth: Math.round(25 * times),
+            barWidth: Math.round(25 * times)
           },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          },
+          {
+            barWidth: Math.round(25 * times)
+          }
         ],
         animation: false
       };
@@ -994,6 +996,18 @@ export default {
     height: 36px;
     align-items: center;
     justify-content: space-between;
+    .type-radio {
+      display: flex;
+      align-items: center;
+      input {
+        cursor: pointer;
+      }
+      label {
+        cursor: pointer;
+        margin-left: 4px;
+        margin-right: 10px;
+      }
+    }
     .date {
       color: #49a9ee;
       span {
@@ -1066,6 +1080,16 @@ export default {
     .chart-title {
       padding: 0 72px;
       height: 108px;
+      .type-radio {
+        input {
+          width: 39px;
+          height: 39px;
+        }
+        label {
+          margin-left: 12px;
+          margin-right: 30px;
+        }
+      }
       .date {
         span {
           margin: 0 18px;

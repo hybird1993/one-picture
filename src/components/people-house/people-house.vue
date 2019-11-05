@@ -62,11 +62,6 @@ export default {
       color1: PeopleChartConfig[0],
       color2: PeopleChartConfig[1],
       isFullScreen: false,
-      data_: [],
-      data1_: [],
-      data2_: [],
-      color1_: [],
-      color2_: [],
     };
   },
   mounted() {
@@ -123,6 +118,7 @@ export default {
         err => {}
       );
     },
+    
     getHouseStatistics() {
       const self = this;
       API.getHouseStatistics().then(
@@ -164,11 +160,7 @@ export default {
       }, 0)
     },
 
-    getHouseChartOption(data) {
-      if (!data) {
-        data = this.data_;
-      }
-      this.data_ = data;
+    getHouseChartOption(data = []) {
       const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
         // title: {
@@ -256,17 +248,7 @@ export default {
       };
     },
 
-    getPeopleChartOption(data1, data2, color1, color2) {
-      if (!data1) {
-        data1 = this.data1_;
-        data2 = this.data2_;
-        color1 = this.color1_;
-        color2 = this.color2_;
-      }
-      this.data1_ = data1;
-      this.data2_ = data2;
-      this.color1_ = color1;
-      this.color2_ = color2;
+    getPeopleChartOption(data1 = [], data2 = [], color1 = [], color2 = []) {
       const times = Util.getFontSizeTimes(this.isFullScreen);
       return {
         title: {

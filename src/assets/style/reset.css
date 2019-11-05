@@ -143,11 +143,3 @@ button {
   cursor: pointer;
   outline: none;
 }
-
-.el-radio__inner {
-  width: 1rem!important;
-  height: 1rem!important;
-}
-.el-radio__label {
-  font-size: 1rem!important;
-}

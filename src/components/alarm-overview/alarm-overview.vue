@@ -19,9 +19,7 @@ export default {
   data() {
     return {
       indexChart: null,
-      isFullScreen: false,
-      name_: [],
-      vaule_: []
+      isFullScreen: false
     };
   },
   mounted() {
@@ -31,6 +29,7 @@ export default {
   methods: {
     initChart() {
       this.indexChart = this.$echarts.init(document.getElementById("alarmbar"));
+      this.indexChart.setOption(this.setChartOption());
     },
     getAlarmStatistics() {
       const self = this;
@@ -38,7 +37,10 @@ export default {
         res => {
           const name = Object.keys(res);
           const value = name.map(item => res[item]);
-          this.indexChart.setOption(this.setChartOption(name, value));
+          this.indexChart.setOption({
+            yAxis: { data: name },
+            series: { data: value }
+          });
         },
         err => {}
       );
@@ -62,13 +64,7 @@ export default {
       }, 0);
     },
 
-    setChartOption(name, value) {
-      if (!name || !value) {
-        name = this.name_;
-        value = this.value_;
-      }
-      this.name_ = name;
-      this.value_ = value;
+    setChartOption(name = [], value = []) {
       const times = Util.getFontSizeTimes(this.isFullScreen);
       const option = {
         tooltip: {
@@ -133,17 +129,17 @@ export default {
               color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
                   offset: 1,
-                  color: 'rgba(18, 112, 172, 0.8)'
+                  color: "rgba(18, 112, 172, 0.8)"
                 },
                 {
                   offset: 0,
-                  color: 'rgba(6, 46, 60, 0.8)'
+                  color: "rgba(6, 46, 60, 0.8)"
                 }
               ]),
-              borderColor: '#1ebdde',
+              borderColor: "#1ebdde",
               borderWidth: Math.round(1 * times),
               shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: Math.round(10 * times),
+              shadowBlur: Math.round(10 * times)
             }
           },
 
@@ -151,7 +147,7 @@ export default {
             color: "#fff",
             fontSize: Math.round(12 * times)
           }
-        },
+        }
       };
       return option;
     },
@@ -167,7 +163,7 @@ export default {
         xAxis: {
           splitLine: {
             lineStyle: {
-              width: Math.round(1 * times),
+              width: Math.round(1 * times)
             }
           },
           axisLabel: {
@@ -177,19 +173,19 @@ export default {
         yAxis: {
           splitLine: {
             lineStyle: {
-              width: Math.round(1 * times),
+              width: Math.round(1 * times)
             }
           },
           axisLabel: {
             fontSize: Math.round(12 * times)
-          },
+          }
         },
         series: {
           barWidth: Math.round(12 * times),
           itemStyle: {
             normal: {
               borderWidth: Math.round(1 * times),
-              shadowBlur: Math.round(10 * times),
+              shadowBlur: Math.round(10 * times)
             }
           },
 
@@ -210,6 +206,8 @@ export default {
   #alarmbar {
     width: 400px;
     height: 280px;
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
 }
 
@@ -219,5 +217,4 @@ export default {
     height: 840px;
   }
 }
-
 </style>

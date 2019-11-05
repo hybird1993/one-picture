@@ -23,17 +23,15 @@ export default {
     return {
       powerChart: null,
       isFullScreen: false,
-      data_: [],
-      total_: '',
       timer: null,
     };
   },
   mounted() {
     this.initChart();
     this.getPowerStatistics();
-    // this.timer = setInterval(() => {
-    //   this.getPowerStatistics();
-    // }, 1000 * 10);
+    this.timer = setInterval(() => {
+      this.getPowerStatistics();
+    }, 1000 * 10);
   },
   destroyed() {
     if (this.timer) {
@@ -94,13 +92,7 @@ export default {
       }, 0)
     },
 
-    setChartOption(data, total) {
-      if (!data) {
-        data = this.data_;
-        total = this.total_;
-      }
-      this.data_ = data;
-      this.total_ = total;
+    setChartOption(data = [], total = []) {
       const times = Util.getFontSizeTimes(this.isFullScreen);
       const option = {
         title: {

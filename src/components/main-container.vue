@@ -223,7 +223,8 @@ export default {
   },
   computed: {
     isAbleDrag: function() {
-      return false; //this.windowList.length === 0 && !this.itemStyle_;
+      return false; 
+      // return this.windowList.length === 0 && !this.itemStyle_;
     }
   },
   mounted() {

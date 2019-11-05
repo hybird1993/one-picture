@@ -3,9 +3,12 @@
     <div class="panel-title">人员详情</div>
     <div class="panel-content">
       <div class="chart-title">
-        <el-radio v-model="radio" label="1" @change="getInfo">个人信息</el-radio>
-        <el-radio v-model="radio" label="2" @change="getInfo">家庭信息</el-radio>
-        <el-radio v-model="radio" label="3" @change="getInfo">车辆信息</el-radio>
+        <input type="radio" id="person" value="1" v-model="radio" @change="getInfo" />
+        <label for="person">个人信息</label>
+        <input type="radio" id="house" value="2" v-model="radio" @change="getInfo" />
+        <label for="house">家庭信息</label>
+        <input type="radio" id="car" value="3" v-model="radio" @change="getInfo" />
+        <label for="car">车辆信息</label>
       </div>
 
       <el-scrollbar class="info-content">
@@ -168,7 +171,7 @@ export default {
       carList: [],
       dict: {},
       relationlist: [],
-      isFullScreen: false,
+      isFullScreen: false
     };
   },
   mounted() {
@@ -203,17 +206,17 @@ export default {
               _res["sexName"] = self.dict["性别"][_res.sex];
               _res["ethnicityName"] = self.dict["民族"][_res.ethnicity];
               _res["politicalStatusName"] =
-                      self.dict["政治面貌"][_res.politicalStatus];
+                self.dict["政治面貌"][_res.politicalStatus];
               _res["educationalDegreeName"] =
-                      self.dict["学历"][_res.educationalDegree];
+                self.dict["学历"][_res.educationalDegree];
               _res["maritalStatusName"] =
-                      self.dict["婚姻状况"][_res.maritalStatus];
+                self.dict["婚姻状况"][_res.maritalStatus];
               _res["registeredResidenceName"] =
-                      self.dict["行政区划"][_res.registeredResidence];
+                self.dict["行政区划"][_res.registeredResidence];
               _res["religiousBeliefName"] =
-                      self.dict["宗教信仰"][_res.religiousBelief];
+                self.dict["宗教信仰"][_res.religiousBelief];
               _res["occupationCategoryName"] =
-                      self.dict["职业类别"][_res.occupationCategory];
+                self.dict["职业类别"][_res.occupationCategory];
               _res["icon"] = self.getPeopleIconUrl(_res.residentBaseId);
               self.detail = _res;
               self.residentBaseId = _res.residentBaseId;
@@ -275,13 +278,13 @@ export default {
             this.$parent.eventListener({
               type: "house",
               id: this.componentId,
-              data: res[0]["houseInfo"],
+              data: res[0]["houseInfo"]
             });
           } else {
             this.$parent.eventListener({
               type: "house",
               id: this.componentId,
-              data: null,
+              data: null
             });
           }
         },
@@ -292,22 +295,22 @@ export default {
     getPeopleIconUrl(id) {
       return `${process.env.VUE_APP_API}/pscm/m/resident/base/picture/${id}`;
     },
-    
+
     fullScreen() {
       this.isFullScreen = true;
       this.$parent.eventListener({
-        type: 'fullScreen',
+        type: "fullScreen",
         id: this.componentId
       });
     },
-    
+
     exitFullScreen() {
       this.isFullScreen = false;
-       this.$parent.eventListener({
-        type: 'fullScreenExit',
+      this.$parent.eventListener({
+        type: "fullScreenExit",
         id: this.componentId
       });
-    },
+    }
   },
   watch: {
     prop: function(val, oldVal) {
@@ -333,8 +336,20 @@ export default {
     display: flex;
     flex-direction: column;
     .chart-title {
+      z-index: 1;
       margin-bottom: 12px;
       font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      input {
+        cursor: pointer;
+      }
+      label {
+        cursor: pointer;
+        margin-left: 4px;
+        margin-right: 10px;
+      }
     }
     .info-content {
       flex: 1;
@@ -444,6 +459,14 @@ export default {
     .chart-title {
       margin-bottom: 36px;
       font-size: 36px;
+      input {
+        width: 39px;
+        height: 39px;
+      }
+      label {
+        margin-left: 12px;
+        margin-right: 30px;
+      }
     }
     .info-content {
       ul {
