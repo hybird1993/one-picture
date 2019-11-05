@@ -30,7 +30,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 ## 目录：  
-
+```
 ├─public
 │  └─img    // 背景设置所用的图片
 ├─src
@@ -52,3 +52,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 │  ├─request    // 请求封装
 │  └─utils    // 公共配置及方法
 └─.env *  一些环境配置
+```
