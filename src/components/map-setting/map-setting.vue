@@ -104,6 +104,7 @@ export default {
       activedThemeId: "",
       usedBgId: "",
       themeManager: null,
+      themeObj: null,
       paramList: []
     };
   },
@@ -198,14 +199,17 @@ export default {
         return;
       }
       self.themeManager.setThemeName(themeId);
-      const themeObj = self.themeManager.getThemeObj(themeId);
-      themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
+      if (this.themeObj) {
+        this.themeObj.stopAnimate();
+      }
+      this.themeObj = self.themeManager.getThemeObj(themeId);
+      this.themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
       const config = {};
       self.paramList.forEach(item => {
         config[item["name"]] = item["value"];
       });
-      themeObj.setOption(config); //初始化主题参数默认
-      themeObj.startAnimate();
+      this.themeObj.setOption(config); //初始化主题参数默认
+      this.themeObj.startAnimate();
       localStorage.setItem("themeConfig", JSON.stringify(config));
       self.isShowMapSetting = false;
     },
@@ -221,11 +225,11 @@ export default {
         self.activedThemeId = themeId;
         self.creatThemeDiv(themeId);
         self.themeManager.setThemeName(themeId);
-        const themeObj = self.themeManager.getThemeObj(themeId);
-        themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
+        this.themeObj = self.themeManager.getThemeObj(themeId);
+        this.themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
         const config = JSON.parse(localStorage.getItem("themeConfig"));
-        themeObj.setOption(config); //初始化主题参数默认
-        themeObj.startAnimate();
+        this.themeObj.setOption(config); //初始化主题参数默认
+        this.themeObj.startAnimate();
       } else {
         self.activedThemeId = "default";
       }

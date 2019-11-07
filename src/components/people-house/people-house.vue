@@ -171,7 +171,7 @@ export default {
         //   itemGap: 5,
         //   textStyle: {
         //     // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-        //     color: "rgba(255, 255, 255)"
+        //     color: "#fff"
         //   }
         // },
         tooltip: {
@@ -257,7 +257,7 @@ export default {
           y: "center",
           textStyle: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            color: "rgba(255, 255, 255)",
+            color: "#fff",
             fontSize: Math.round(14 * times)
           }
         },
@@ -374,7 +374,7 @@ export default {
   justify-content: center;
   padding-left: 12px;
   .chart-item {
-    margin-top: 6px;
+    margin-top: 12px;
     #peoplepie {
       width: 192px;
       height: 192px;
@@ -428,7 +428,7 @@ export default {
   .chart-container {
   padding-left: 36px;
   .chart-item {
-    margin-top: 18px;
+    margin-top: 36px;
     #peoplepie {
       width: 576px;
       height: 576px;

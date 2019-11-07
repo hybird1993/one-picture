@@ -117,11 +117,10 @@ export default {
     margin: 6px 0;
     overflow: hidden;
     ul {
-      margin: 0 15px;
       li {
         height: 30px;
         line-height: 30px;
-        padding-left: 21px;
+        padding-left: 30px;
         padding-right: 6px;
         position: relative;
         text-align: left;
@@ -157,11 +156,10 @@ export default {
   .panel-content {
     margin: 12px 0;
     ul {
-      margin: 0 45px;
       li {
         height: 90px;
         line-height: 90px;
-        padding-left: 63px;
+        padding-left: 90px;
         padding-right: 18px;
       }
       li:before {

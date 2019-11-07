@@ -112,7 +112,7 @@ export default {
     showPeopleInfo(item) {
       this.selectHouseId = item.id;
       this.$parent.eventListener({
-        type: "peopleInfo",
+        type: "houseInfo",
         id: this.componentId,
         data: item.id
       });
@@ -171,6 +171,7 @@ export default {
   }
   .panel-content {
     z-index: 1;
+    height: calc(100% - 72px);
     table {
       margin-bottom: 12px;
       margin-left: 50%;
@@ -204,6 +205,7 @@ export default {
     }   
   }
   .panel-content {
+    height: calc(100% - 216px);
     table {
       margin-bottom: 36px;
       td {

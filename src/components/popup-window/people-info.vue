@@ -163,7 +163,7 @@ export default {
   background-image: url("../../assets/image/detail-bg.png");
   background-size: 100% 100%;
   .panel-content {
-    margin: 12px;
+    margin-right: 6px;
     .item-person {
       display: flex;
       margin: 15px 0;
@@ -208,7 +208,7 @@ export default {
 }
 .panel-container-fullscreen {
   .panel-content {
-    margin: 36px;
+    margin-right: 18px;
     .item-person {
       margin: 45px 0;
       .item-person-left {

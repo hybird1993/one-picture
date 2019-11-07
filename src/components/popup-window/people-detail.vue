@@ -353,6 +353,7 @@ export default {
     }
     .info-content {
       flex: 1;
+      height: calc(100% - 72px);
       ul {
         margin: 0 15px;
         position: relative;
@@ -469,6 +470,7 @@ export default {
       }
     }
     .info-content {
+      height: calc(100% - 216px);
       ul {
         margin: 0 45px;
         .people-icon {

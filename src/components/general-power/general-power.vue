@@ -66,7 +66,14 @@ export default {
           const total = data.reduce((pre, next) => {
             return pre + next.value;
           }, 0);
-          self.powerChart.setOption(self.setChartOption(data, total));
+          self.powerChart.setOption({
+            title: {
+              text: total
+            },
+            series: {
+              data: data,
+            }
+          });
         },
         err => {}
       );
@@ -97,12 +104,12 @@ export default {
       const option = {
         title: {
           text: total,
-          x: "center",
-          y: "center",
+          left: "center",
+          top: "center",
           textStyle: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            color: "rgba(255, 255, 255)",
-                fontSize: Math.round(24 * times),
+            color: "#fff",
+            fontSize: Math.round(24 * times),
           }
         },
         tooltip: {
@@ -189,15 +196,19 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/style/common.scss";
 .panel-content {
-  padding-top: 30px;
   #pieChart {
-    width: 100%;
-    height: 100%;
+    margin-top: 20px;
+    width: 250px;
+    height: 250px;
     margin-left: 50%;
     transform: translateX(-50%);
   }
 }
 .panel-container-fullscreen {
-  
+  #pieChart {
+    margin-top: 60px;
+    width: 750px;
+    height: 750px;
+  }
 }
 </style>

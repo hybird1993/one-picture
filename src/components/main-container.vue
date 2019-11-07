@@ -223,8 +223,8 @@ export default {
   },
   computed: {
     isAbleDrag: function() {
-      return false; 
-      // return this.windowList.length === 0 && !this.itemStyle_;
+      // return false; 
+      return this.windowList.length === 0 && !this.itemStyle_;
     }
   },
   mounted() {
@@ -240,7 +240,6 @@ export default {
       )};Path=/;expires=" + ${exp.toGMTString()}`;
       // alert(document.cookie)
       self.getDict();
-      self.init();
       self.showItems();
       self.isLogin = true;
       self.userId = Util.getRequest("userId");
@@ -267,11 +266,9 @@ export default {
           self.initWebSocket();
         },
         err => {
-          // self.init();
           // self.isLogin = true;
         }
       );
-      //  self.init();
       //  self.isLogin = true;
     }
     window.mainContainer = this;
@@ -389,7 +386,7 @@ export default {
         top: 0,
         left: `${itemWidth * 2 + parseInt(self.itemMarginCol, 10) * 2}`
       });
-
+      console.log(self.itemMap)
       self.cacheItems();
     },
 
@@ -415,6 +412,8 @@ export default {
 
     showItems() {
       const self = this;
+      console.log('self.itemMap ---> ', self.itemMap)
+      console.log('self.cacheStyle --> ', self.cacheStyle)
       for (const key in self.cacheStyle) {
         if (self.cacheStyle.hasOwnProperty(key)) {
           self.styleMap[key]["style"] = Object.assign(
@@ -422,8 +421,10 @@ export default {
             self.itemMap.get(self.cacheStyle[key]["position"])
           );
           self.styleMap[key]["isShow"] = self.cacheStyle[key]["isShow"];
+          console.log(`self.styleMap  -- ${key}  --> `, self.styleMap[key]);
         }
       }
+      console.log('self.styleMap --> ', self.styleMap)
     },
 
     dropEvent(event, id) {
@@ -669,7 +670,10 @@ export default {
         }
       } else if (event.type === "peopleInfo") {
         this.openPopupWindow(event.data, "people-info", "peopleInfo");
-        this.getHouseDetail(event.data);
+      } else if (event.type === 'houseInfo') {
+        this.openPopupWindow(event.data, "people-info", "peopleInfo");
+        this.openPopupWindow(event.data, "house-tile", "houseTile");
+        this.openPopupWindow(event.data, "house-electricity", "houseElectricity");
       } else if (mapEventMap.includes(event.type)) {
         this.sendMessageToMap(event.type, event.data);
       } else if (event.type === "fullScreen") {
@@ -816,13 +820,6 @@ export default {
         );
       }
       this.sendMessageToMap("importantPeopleLocation", event);
-    },
-
-    getHouseDetail(id) {
-      API.getHouseDetail(id).then(res => {
-        if (res.drawingPath) {
-        }
-      });
     },
 
     initWebSocket() {

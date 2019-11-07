@@ -2,45 +2,46 @@
   <div class="panel-container" :class="{'panel-container-fullscreen': isFullScreen}">
     <div class="panel-title">告警详情</div>
     <el-scrollbar class="panel-content">
-      <ul>
-        <li>
-          <span class="item-title">发生时间：</span>
-          <span class="item-content">{{detail.alarmTime}}</span>
-        </li>
-        <li>
-          <span class="item-title">发生位置：</span>
-          <span class="item-content">{{detail.alarmLocation}}</span>
-        </li>
-        <li>
-          <span class="item-title">摄像头编号：</span>
-          <span class="item-content">{{detail.deviceId}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警状态：</span>
-          <span
-            class="item-content alarm-status"
-            :class="{'status-alarm': !detail.isAlreadyDeal}"
-            @click="dealAlarm"
-          >{{detail.status}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警分类：</span>
-          <span class="item-content">{{detail.alarmType}}</span>
-        </li>
-        <li>
-          <span class="item-title">二级分类：</span>
-          <span class="item-content">{{detail.alarmDesc}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警内容：</span>
-          <span class="item-content">{{detail.content}}</span>
-        </li>
-        <li>
-          <span class="item-title">告警人员：</span>
-          <span class="item-content">{{detail.relationPerson}}</span>
-        </li>
-      </ul>
+        <ul>
+          <li>
+            <span class="item-title">发生时间：</span>
+            <span class="item-content">{{detail.alarmTime}}</span>
+          </li>
+          <li>
+            <span class="item-title">发生位置：</span>
+            <span class="item-content">{{detail.alarmLocation}}</span>
+          </li>
+          <li>
+            <span class="item-title">摄像头编号：</span>
+            <span class="item-content">{{detail.deviceId}}</span>
+          </li>
+          <li>
+            <span class="item-title">告警状态：</span>
+            <span
+              class="item-content alarm-status"
+              :class="{'status-alarm': !detail.isAlreadyDeal}"
+              @click="dealAlarm"
+            >{{detail.status}}</span>
+          </li>
+          <li>
+            <span class="item-title">告警分类：</span>
+            <span class="item-content">{{detail.alarmType}}</span>
+          </li>
+          <li>
+            <span class="item-title">二级分类：</span>
+            <span class="item-content">{{detail.alarmDesc}}</span>
+          </li>
+          <li>
+            <span class="item-title">告警内容：</span>
+            <span class="item-content">{{detail.content}}</span>
+          </li>
+          <li>
+            <span class="item-title">告警人员：</span>
+            <span class="item-content">{{detail.relationPerson}}</span>
+          </li>
+        </ul>
     </el-scrollbar>
+
     <div v-if="!isFullScreen" class="fullscreen-item">
       <img @click="fullScreen" src="../../assets/image/icon-fullscreen.png" />
     </div>

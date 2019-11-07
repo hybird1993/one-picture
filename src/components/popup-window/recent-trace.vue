@@ -190,6 +190,8 @@ export default {
     }
     .trace-content {
       flex: 1;
+      height: calc(100% - 72px);
+      padding-bottom: 12px;
       ul {
         margin: 0 15px;
         li {
@@ -234,6 +236,8 @@ export default {
       }
     }
     .trace-content {
+      height: calc(100% - 216px);
+      padding-bottom: 36px;
       ul {
         margin: 0 45px;
         li {
