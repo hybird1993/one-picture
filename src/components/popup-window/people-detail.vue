@@ -84,7 +84,7 @@
           </li>
           <li>
             <span class="item-title">人员标签：</span>
-            <span class="item.content" style="color:red">{{detail.residentType}}</span>
+            <span class="item.content" style="color: #1ebdde">{{detail.residentType}}</span>
           </li>
           <li>
             <span class="item-title">现住门（楼）详址：</span>

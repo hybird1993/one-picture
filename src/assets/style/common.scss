@@ -13,6 +13,7 @@
 
   .panel-content {
     flex: 1;
+    z-index: 15;
     font-size: 12px;
     user-select: none;
     height: calc(100% - 36px);

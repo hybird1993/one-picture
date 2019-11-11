@@ -206,7 +206,7 @@ export default {
                   fontFamily: "微软雅黑",
                   color: "#fff",
                   fontWeight: "bolder",
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                 }
               }
               // emphasis: {
@@ -239,7 +239,7 @@ export default {
             label: {
               normal: {
                 textStyle: {
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                 }
               }
             },
@@ -292,7 +292,7 @@ export default {
                   fontFamily: "微软雅黑",
                   color: "#fff",
                   fontWeight: "bolder",
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                 }
               }
             },
@@ -316,7 +316,7 @@ export default {
                   fontFamily: "微软雅黑",
                   color: "#fff",
                   fontWeight: "bolder",
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                 }
               }
             },
@@ -345,7 +345,7 @@ export default {
             label: {
               normal: {
                 textStyle: {
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                 }
               }
             },
@@ -354,7 +354,7 @@ export default {
             label: {
               normal: {
                 textStyle: {
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                 }
               }
             },

@@ -147,10 +147,10 @@ export default {
         line-height: 24px;
         text-align: center;
         border-radius: 6px;
-        background-color: #91a22c;
+        background-color: #23ffb4;
       }
       .status-alarm {
-        background-color:red;
+        background-color:#05758f;
       }
     }
   }

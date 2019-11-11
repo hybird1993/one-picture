@@ -156,11 +156,11 @@ export default {
           word-break: break-all;
         }
         .alarm-status {
-          color: #91a22c;
+          color: #23ffb4;
         }
         .status-alarm {
           cursor: pointer;
-          color: red;
+          color: #05758f;
         }
       }
       li:nth-child(odd) {

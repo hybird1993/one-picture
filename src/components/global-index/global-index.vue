@@ -320,7 +320,7 @@ export default {
         border-radius: 6px;
         margin: 2px;
         &:last-child {
-          background-color: #ff2400;
+          background-color: #1ebdde;
         }
       }
     }

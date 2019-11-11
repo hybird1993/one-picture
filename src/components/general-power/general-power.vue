@@ -150,7 +150,7 @@ export default {
                   baseline: "middle",
                   fontFamily: "微软雅黑",
                   color: "#fff",
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                   fontWeight: "bolder"
                 }
               }
@@ -182,7 +182,7 @@ export default {
             label: {
               normal: {
                 textStyle: {
-                  fontSize: Math.round(12 * times),
+                  fontSize: Math.round(11 * times),
                 }
               }
             },

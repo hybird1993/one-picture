@@ -116,7 +116,7 @@ export default {
           },
           axisLabel: {
             color: "#fff",
-            fontSize: Math.round(12 * times)
+            fontSize: Math.round(11 * times)
           },
           data: name
         },
@@ -177,7 +177,7 @@ export default {
             }
           },
           axisLabel: {
-            fontSize: Math.round(12 * times)
+            fontSize: Math.round(11 * times)
           }
         },
         series: {

@@ -151,6 +151,9 @@ export default {
   position: absolute;
   left: 0;
   top:0;
+  .panel-content {
+    z-index: 0;
+  }
 }
 .map {
   width: 100%;

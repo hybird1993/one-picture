@@ -4,11 +4,10 @@
     <div class="panel-content">
       <div class="electricity-count">
         <span class="electricity-count-label">累计总电量：</span>
-        <span
-          v-for="(num, index) of electricityCount"
-          class="electricity-count-num"
-          :key="index"
-        >{{num}}</span>
+        <span v-for="(num, index) of restNumbers" class="electricity-count-num" :key="index">{{num}}</span>
+        <span class="electricity-count-last-num">
+          <span>{{lastNumber}}</span>
+        </span>
         <span class="electricity-count-unit">kw/h</span>
       </div>
       <div class="electricity-title">{{showDate}}分时电量</div>
@@ -49,7 +48,7 @@ export default {
       electricityCount: "",
       chart: null,
       date: null,
-      isFullScreen: false,
+      isFullScreen: false
     };
   },
   computed: {
@@ -58,6 +57,12 @@ export default {
         ? `${this.date.getFullYear()}年${this.date.getUTCMonth() +
             1}月${this.date.getDate()}日`
         : "";
+    },
+    lastNumber: function() {
+      return this.electricityCount.substr(this.electricityCount.length - 1, 1);
+    },
+    restNumbers: function() {
+      return this.electricityCount.slice(0, this.electricityCount.length - 1);
     }
   },
   mounted() {
@@ -214,7 +219,7 @@ export default {
         yAxis: {
           splitLine: {
             lineStyle: {
-              width: Math.round(0.5 * times),
+              width: Math.round(0.5 * times)
             }
           }
         },
@@ -226,7 +231,7 @@ export default {
               shadowBlur: Math.round(10 * times)
             }
           }
-        },
+        }
       };
     },
 
@@ -271,8 +276,8 @@ export default {
   background-size: 100% 100%;
   .electricity-count {
     text-align: left;
-    padding-left: 36px;
     margin: 12px;
+    padding-left: 24px;
     span {
       display: inline-block;
     }
@@ -287,8 +292,32 @@ export default {
       line-height: 24px;
       border-radius: 6px;
       margin: 2px;
-      &:last-child {
-        background-color: #ff2400;
+    }
+    .electricity-count-last-num {
+      width: 24px;
+      height: 24px;
+      margin: 2px 6px 2px 2px;
+      position: relative;
+      span {
+        width: 100%;
+        height: 100%;
+        line-height: 24px;
+        background-color: #1ebdde;
+        border-radius: 6px;
+        text-align: center;
+        animation: rotate 0.5s linear infinite;
+      }
+      &:before {
+        content: "";
+        height: 4px;
+        width: 24px;
+        background: #1ebdde;
+        border-radius: 50%;
+        position: absolute;
+        opacity: 0.7;
+        top: 30px;
+        left: 0;
+        animation: shadow 0.5s linear infinite;
       }
     }
     .electricity-count-unit {
@@ -320,7 +349,7 @@ export default {
 
 .panel-container-fullscreen {
   .electricity-count {
-    padding-left: 108px;
+    padding-left: 72px;
     margin: 36px;
     .electricity-count-num {
       width: 72px;
@@ -328,6 +357,22 @@ export default {
       line-height: 72px;
       border-radius: 18px;
       margin: 6px;
+    }
+    .electricity-count-last-num {
+      width: 72px;
+      height: 72px;
+      margin: 6px 18px 6px 6px;
+      span {
+        line-height: 72px;
+        border-radius: 18px;
+      }
+      &:before {
+        content: "";
+        height: 12px;
+        width: 72px;
+        top: 90px;
+        animation: shadow 0.5s linear infinite;
+      }
     }
   }
   .electricity-title {
@@ -343,6 +388,34 @@ export default {
       width: 936px;
       height: 576px;
     }
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10%);
+  }
+  50% {
+    transform: translateY(-20%) scale(1.1, 0.9);
+  }
+  75% {
+    ransform: translateY(-10%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(1.2);
   }
 }
 </style>

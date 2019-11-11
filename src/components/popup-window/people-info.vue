@@ -187,7 +187,7 @@ export default {
         .person-label {
           text-align: left;
           span {
-            background-color: red;
+            background-color: #1ebdde;
             padding: 1px;
             display: inline-block;
             margin: 0 6px;
