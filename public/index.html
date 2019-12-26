@@ -26,10 +26,16 @@
       window.mainContainer.recvUIMessage(name, data)
     }   
   }
-  // let i = 1;
-  // setInterval(() => {
-  //   RecvUIMessage('当前漫游完毕', ++i)
-  // }, 1000 * 10)
- 
+  document.onkeydown = function(event) {
+    console.log(event)
+    if (window.mainContainer) {
+        window.mainContainer.updateTimeStamp();
+      } 
+    if (event.ctrlKey && event.keyCode === 123) {
+      if (window.mainContainer) {
+        window.mainContainer.closePopupWindow();
+      }  
+    }
+  }
 </script>
 </html>

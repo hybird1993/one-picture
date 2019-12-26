@@ -3,12 +3,15 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.1);
+  // background-color: rgba(0, 0, 0, 0.8);
   .panel-title {
     height: 36px;
     line-height: 36px;
     z-index: 15;
-    font-size: 15px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 1px black;
+    text-align: center;
   }
 
   .panel-content {
@@ -21,12 +24,12 @@
 
   .close-item {
     z-index: 300;
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     display: block;
     position: absolute;
-    right: 15px;
-    top: 15px;
+    right: 10px;
+    top: 10px;
     cursor: pointer;
     img {
       visibility: hidden;
@@ -37,12 +40,12 @@
   
   .fullscreen-item {
     z-index: 300;
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     display: block;
     position: absolute;
-    right: 44px;
-    top: 15px;
+    right: 31px;
+    top: 10px;
     cursor: pointer;
     img {
       visibility: hidden;
@@ -81,6 +84,7 @@
     linear-gradient(#3c1443, #3c1443);
   background-blend-mode: normal, normal;
   border: solid 1px #1ebdde;
+  text-align: center;
 }
 
 .btn-small {
@@ -114,12 +118,16 @@ table {
 }
 
 .flip-list-enter-active, .flip-list-leave-active {
-  transition: all 1s;
+  transition: all 2s;
 }
 
-.flip-list-enter, .flip-list-leave-to {
+.flip-list-enter {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(0);
+} 
+.flip-list-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
 }
 
 .panel-container-fullscreen {
@@ -132,7 +140,9 @@ table {
     height: 108px;
     line-height: 108px;
     z-index: 15;
-    font-size: 45px;
+    font-size: 48px;
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 3px black;
   }
 
   .panel-content {
@@ -144,12 +154,12 @@ table {
 
   .close-item {
     z-index: 300;
-    width: 72px;
-    height: 72px;
+    width: 48px;
+    height: 48px;
     display: block;
     position: absolute;
-    right: 45px;
-    top: 45px;
+    right: 30px;
+    top: 30px;
     cursor: pointer;
     img {
       visibility: hidden;
@@ -160,12 +170,12 @@ table {
   
   .fullscreen-item {
     z-index: 300;
-    width: 72px;
-    height: 72px;
+    width: 48px;
+    height: 48px;
     display: block;
     position: absolute;
-    right: 132px;
-    top: 45px;
+    right: 93px;
+    top: 30px;
     cursor: pointer;
     img {
       visibility: hidden;

@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 import qs from 'qs';
+import { API } from "./api";
 
 axios.defaults.baseURL = process.env.VUE_APP_API;
 
@@ -13,12 +14,6 @@ axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 
 axios.defaults.withCredentials = true;    // 请求带上cookie
-
-// if (getCookie()) {
-//   document.cookie = `auth-token=${getCookie()};Path=/`;
-//   alert(`document.cookie: ${document.cookie}`)
-// }
-// axios.defaults.headers.Cookie = `auth-token=${getRequest()}`;    // 请求带上cookie
 
 // 请求拦截器
 // axios.interceptors.request.use( 
@@ -54,7 +49,15 @@ axios.interceptors.response.use(
   },
   // 服务器状态码不是200的情况 
   error => {
-    alert(error)
+    // alert(error)
+    if (error.response.status === 401) {
+      API.login("_ONSCREEN", "AF21B8C562854").then(
+        res => {
+        },
+        err => {
+        }
+      );
+    }
     if (error.response.status) {
       return Promise.reject(error.response);
     }
@@ -85,9 +88,19 @@ export function get(url, params) {
  * param {String} url 请求的url地址
  * param {Object} params 请求时携带的参数 
  */
-export function post(url, params) {
+export function post(url, params, type = "form") {
+  let query, header = {};
+  if (type === 'form') {
+    query = qs.stringify(params);
+  } else if (type === 'json') {
+    query = JSON.stringify(params);
+    header = {headers: {'Content-Type': 'application/json'}};
+  } else if (type === 'file') {
+    header = {headers: {'Content-Type': 'multipart/form-data'}};
+  } else {
+  }
   return new Promise((resolve, reject) => {
-    axios.post(url, qs.stringify(params))    // 参数序列化
+    axios.post(url, query, header)    // 参数序列化
       .then(res => {
         // console.log(res);
         resolve(res.data);
@@ -96,17 +109,4 @@ export function post(url, params) {
         reject(err.data)
       })
   });
-}
-
-function getCookie(name = 'auth-token') {
-  const strcookie = document.cookie; //获取cookie字符串
-  var arrcookie = strcookie.split("; ");//分割
-  //遍历匹配
-  for ( var i = 0; i < arrcookie.length; i++) {
-  var arr = arrcookie[i].split("=");
-  if (arr[0] == name){
-  return arr[1];
-  }
-  }
-  return "";
 }

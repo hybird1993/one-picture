@@ -6,7 +6,7 @@ const TimeUtil = {
    * return {string} 
    */
   formatDate: (date, fmt) => {
-    { //author: meizz   
+    { 
       const o = {
         "M+": date.getMonth() + 1, //月份   
         "d+": date.getDate(), //日   
@@ -48,9 +48,9 @@ const TimeUtil = {
       const startTimeStamp = catchTimeStamp + 24 * 60 * 60 * 1000;
       if (new Date(startTimeStamp).getFullYear() === year) {
         let endTimeStamp = startTimeStamp + 6 * 24 * 60 * 60 * 1000;
-        if (new Date(endTimeStamp).getFullYear() > year) {
-          endTimeStamp = new Date(year + 1, 0, 1).getTime() - 24 * 60 * 60 * 1000;
-        }
+        // if (new Date(endTimeStamp).getFullYear() > year) {
+        //   endTimeStamp = new Date(year + 1, 0, 1).getTime() - 24 * 60 * 60 * 1000;
+        // }
         list.push({
           startDate: new Date(startTimeStamp),
           endDate: new Date(endTimeStamp)

@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "build": "vue-cli-service build",
-    "build:test": "vue-cli-service build --mode test",
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "prod": "vue-cli-service serve --mode production",
-    "debug": "vue-cli-service serve --mode debug",
+    "dev:18": "vue-cli-service serve --mode dev18",
+    "dev:20": "vue-cli-service serve --mode dev20",
+    "dev:254": "vue-cli-service serve --mode dev254",
     "analyz": "vue-cli-service build --mode analyz--report"
   },
   "dependencies": {
@@ -60,12 +60,14 @@
     "plugins": {
       "autoprefixer": {},
       "postcss-pxtorem": {
-        "rootValue": 12,   
-        "unitPrecision": 5,  
-        "propList": ["*"],    
-        "selectorBlackList": [],  
-        "mediaQuery": false,   
-        "minPixelValue": 0   
+        "rootValue": 12,
+        "unitPrecision": 5,
+        "propList": [
+          "*"
+        ],
+        "selectorBlackList": [],
+        "mediaQuery": false,
+        "minPixelValue": 0
       }
     }
   },

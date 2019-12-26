@@ -1,0 +1,212 @@
+@media screen and (max-width: 3840px) {
+    .leaflet-left {
+        left: 15px;
+    }
+
+    .leaflet-top {
+        top: 20px;
+    }
+
+    .leaflet-touch .leaflet-bar a {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    .leaflet-touch .leaflet-control-zoom-in {
+        font-size: 48px;
+    }
+
+    .leaflet-touch .leaflet-control-zoom-out {
+        font-size: 48px;
+    }
+
+    .searchDiv {
+      top: 100px;
+      left: 820px;
+      width: 600px;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 28px;
+    }
+
+    .form-control {
+        padding: 12px 24px;
+        font-size: 28px;
+    }
+
+    .searchDiv #searchText {
+        height: 66px;
+    }
+
+    #layerSwitch {
+      top: 100px;
+      right: 820px;
+    }
+
+    .title {
+        width: 300px;
+        font-size: 28px;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    .title1 {
+        width: 300px;
+        font-size: 28px;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    #layerSwitch li img {
+        padding: 0px;
+        margin-left: 20px;
+        margin-top: 10px;
+        height: 24px;
+        width: 24px;
+    }
+
+    #layerSwitch li span {
+        margin-left: 10px;
+        font-size: 28px;
+    }
+
+    .subtitle1 li span {
+        font-size: 24px !important;
+    }
+
+    #layerSwitch li input {
+        margin-top: 8px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .dropdown-menu {
+        font-size: 28px;
+    }
+
+    .searchContent {
+      top: 175px;
+      left: 820px;
+      /* width: 600px; */
+    }
+
+    .searchContent li {
+        height: 68px;
+        font-size: 28px;
+        padding: 16px 24px 8px 24px;
+    }
+
+    .faceRecognition {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (max-width: 4096px) {
+  .leaflet-left {
+      left: 15px;
+  }
+
+  .leaflet-top {
+      top: 20px;
+  }
+
+  .leaflet-touch .leaflet-bar a {
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+  }
+
+  .leaflet-touch .leaflet-control-zoom-in {
+      font-size: 48px;
+  }
+
+  .leaflet-touch .leaflet-control-zoom-out {
+      font-size: 48px;
+  }
+
+  .searchDiv {
+    top: 100px;
+    left: 870px;
+    width: 600px;
+  }
+
+  .btn {
+      padding: 12px 24px;
+      font-size: 28px;
+  }
+
+  .form-control {
+      padding: 12px 24px;
+      font-size: 28px;
+  }
+
+  .searchDiv #searchText {
+      height: 66px;
+  }
+
+  #layerSwitch {
+    top: 100px;
+    right: 870px;
+  }
+
+  .title {
+      width: 300px;
+      font-size: 28px;
+      height: 60px;
+      line-height: 60px;
+  }
+
+  .title1 {
+      width: 300px;
+      font-size: 28px;
+      height: 60px;
+      line-height: 60px;
+  }
+
+  #layerSwitch li img {
+      padding: 0px;
+      margin-left: 20px;
+      margin-top: 10px;
+      height: 24px;
+      width: 24px;
+  }
+
+  #layerSwitch li span {
+      margin-left: 10px;
+      font-size: 28px;
+  }
+
+  .subtitle1 li span {
+      font-size: 24px !important;
+  }
+
+  #layerSwitch li input {
+      margin-top: 8px;
+      width: 24px;
+      height: 24px;
+  }
+
+  .dropdown-menu {
+      font-size: 28px;
+  }
+
+  .searchContent {
+    top: 180px;
+    left: 870px;
+    /* width: 600px; */
+  }
+
+  .searchContent li {
+      height: 68px;
+      font-size: 28px;
+      padding: 16px 24px 8px 24px;
+  }
+
+  .faceRecognition {
+      margin-top: 100px;
+  }
+}
+

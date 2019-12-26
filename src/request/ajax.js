@@ -22,7 +22,9 @@ const ajaxHttp = function (options) {
         xhr.send(msg);
       };
       var setHeaders = function (xhr, headers) {
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        if (!headers['Content-Type']) {
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        }
         if (!headers) {
           return false;
         }

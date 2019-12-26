@@ -1,0 +1,79 @@
+@media screen and (max-width: 3840px) {
+    .keyInputDiv {
+        left: 30px;
+        top: 30px;
+        width: 470px;
+    }
+
+    #searchValue {
+        width: 470px;
+        height: 66px;
+        font-size: 28px;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 28px;
+    }
+
+    .layersDiv {
+        top: 130px;
+        left: 30px;
+        width: 360px;
+    }
+
+    .layersDiv .title {
+        font-size: 28px;
+    }
+
+    .layersDiv li {
+        height: 66px;
+    }
+
+    .layersDiv li input {
+        width: 24px;
+        height: 24px;
+        margin-left: 20px;
+    }
+
+    .layersDiv li .icon {
+        background-size: 24px 24px;
+        margin-left: 10px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .layersDiv li span {
+        margin-left: 10px;
+        font-size: 28px;
+    }
+
+    .ui-autocomplete {
+        max-height: 520px;
+        width: auto;
+    }
+
+    .ui-menu .ui-menu-item {
+        height: 40px;
+        font-size: 24px;
+    }
+
+    .place {
+        top: 30px;
+        right: 30px;
+    }
+
+    .place p {
+        font-size: 28px;
+    }
+
+    .cesium-infoBox {
+        top: 100px;
+        max-width: 960px;
+    }
+
+    .cesium-infoBox-title {
+        height: 40px;
+        font-size: 26px;
+    }
+}

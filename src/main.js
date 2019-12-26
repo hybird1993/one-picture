@@ -4,6 +4,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import echarts from 'echarts';
 import x2js from "x2js";
+
 // import Install from './request/vueajax.js'
 // Vue.use(Install)
 Vue.config.productionTip = false;

@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import MainContainer from './components/main-container.vue'; 
+import MainContainer from './views/main-container.vue'; 
 
 export default {
   name: 'app',
@@ -21,7 +21,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
 }
 .el-scrollbar__wrap{
   overflow-x:hidden!important;
