@@ -140,6 +140,7 @@ import {
   RESUME_TIME,
   ISABLE_CTRL_RESUME_HOME
 } from "../../config/config";
+import MateorDrop from '../../theme/meteorDrop/main';
 export default {
   name: "map-container",
   props: ["itemMap"],
@@ -305,32 +306,42 @@ export default {
       self.isShowMapSetting = false;
     },
     initTheme() {
-      const self = this;
-      self.themeManager = new ThemeManager();
-      self.themeManager.add("starsky", new StarSkyTheme());
-      self.themeManager.add("clouds", new CloudsTheme());
-      self.themeManager.add("starflash", new ShootingstarTheme());
-      self.themeManager.add("starplait", new StarplaitTheme());
-      const themeId = localStorage.getItem("themeId") || this.defalutTheme;
-      if (themeId && themeId !== "static") {
-        self.activedThemeId = themeId;
-        self.creatThemeDiv(themeId);
-        self.themeManager.setThemeName(themeId);
-        this.themeObj = self.themeManager.getThemeObj(themeId);
-        this.themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
-        let config = {};
-        if (localStorage.getItem("themeConfig")) {
-          config = JSON.parse(localStorage.getItem("themeConfig"));
-        } else {
-          THEME_CONFIG[themeId]["config"].forEach(item => {
-            config[item.name] = item.default;
-          });
-        }
-        this.themeObj.setOption(config); //初始化主题参数默认
-        this.themeObj.startAnimate();
-      } else {
-        self.activedThemeId = "static";
-      }
+
+      const theme = new MateorDrop(document.getElementById("themeBox"));
+      theme.draw();
+      // theme.frame();
+
+
+
+
+
+
+      // const self = this;
+      // self.themeManager = new ThemeManager();
+      // self.themeManager.add("starsky", new StarSkyTheme());
+      // self.themeManager.add("clouds", new CloudsTheme());
+      // self.themeManager.add("starflash", new ShootingstarTheme());
+      // self.themeManager.add("starplait", new StarplaitTheme());
+      // const themeId = localStorage.getItem("themeId") || this.defalutTheme;
+      // if (themeId && themeId !== "static") {
+      //   self.activedThemeId = themeId;
+      //   self.creatThemeDiv(themeId);
+      //   self.themeManager.setThemeName(themeId);
+      //   this.themeObj = self.themeManager.getThemeObj(themeId);
+      //   this.themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
+      //   let config = {};
+      //   if (localStorage.getItem("themeConfig")) {
+      //     config = JSON.parse(localStorage.getItem("themeConfig"));
+      //   } else {
+      //     THEME_CONFIG[themeId]["config"].forEach(item => {
+      //       config[item.name] = item.default;
+      //     });
+      //   }
+      //   this.themeObj.setOption(config); //初始化主题参数默认
+      //   this.themeObj.startAnimate();
+      // } else {
+      //   self.activedThemeId = "static";
+      // }
     },
     useBg(item, param) {
       this.$set(param, "value", item.id);

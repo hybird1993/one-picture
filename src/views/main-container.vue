@@ -5,7 +5,9 @@
     @mouseup="mouseup"
     @mouseover="mouseover"
   >
-    <div id="themeContainer" style="width: 100%;height: 100%;"></div>
+    <div id="themeContainer" style="width: 100%;height: 100%;">
+      <canvas id="themeBox" style="width: 100%;height: 100%;">Internet Explorer 8 Not Supported</canvas>
+    </div>
     <div
       v-for="item of defalutItemList"
       :key="item.name"
@@ -1290,7 +1292,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url("../../public/img/icon-bg.jpg");
+  // background: url("../../public/img/icon-bg.jpg");
   background-size: 100% 100%;
   background-attachment: fixed;
   .item-box {
