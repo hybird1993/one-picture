@@ -41,6 +41,7 @@ export default class Meteor {
     ctx.arc(this.x, this.y, 1, PI / 4, (5 * PI) / 4);
     //绘制流星尾，三角形
     ctx.lineTo(this.x + this.len, this.y - this.len);
+    // console.log('---> X: ' + this.x + '---> Y: '+ this.y);
     ctx.closePath();
     ctx.fill();
     ctx.restore();

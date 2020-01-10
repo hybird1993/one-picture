@@ -36,13 +36,15 @@
               'icon-part-checked': isPartChecked
             }"
             @click="changeAllItemStatus()"
-          >全部</a>
+            >全部</a
+          >
         </li>
         <li v-for="item of itemList" :key="item.id">
           <a
             :class="{ 'icon-checked': item.checked }"
             @click="changeItemStatus(item)"
-          >{{ item.name }}</a>
+            >{{ item.name }}</a
+          >
         </li>
       </ul>
       <div v-if="type === 'theme'" class="theme-container">
@@ -51,7 +53,7 @@
             v-for="theme of themeList"
             :key="theme.id"
             class="theme-item"
-            @click="changeTheme(theme)"
+            @click="changeTheme(theme.id)"
           >
             <div v-if="theme.id === activedThemeId" class="actived-theme">
               <img src="../../assets/image/icon-checked-theme.png" />
@@ -65,7 +67,11 @@
             <span>参数设置</span>
           </p>
           <div class="param-list">
-            <div class="param-item" v-for="(param, index) of paramList" :key="index">
+            <div
+              class="param-item"
+              v-for="(param, index) of paramList"
+              :key="index"
+            >
               <template v-if="param.dataType === 'number'">
                 <span class="param-name">{{ param.desc }}：</span>
                 <el-slider
@@ -76,20 +82,21 @@
                   class="slider"
                 ></el-slider>
                 <span id="plait_speed" class="range-value">
-                  {{
-                  param.value
-                  }}
+                  {{ param.value }}
                 </span>
               </template>
-              <template v-else-if="param.dataType === 'color'">
+              <template v-else-if="param.dataType === 'bg'">
                 <span class="param-name">{{ param.desc }}：</span>
                 <div class="color-list">
                   <div
                     class="bg-item"
-                    v-for="item of param.bgcolor"
-                    :key="item.id"
+                    v-for="(item, index) of param.options"
+                    :key="index"
                     :style="{ background: item.bg }"
-                    :class="{ 'used-bg': item.id === param.value }"
+                    :class="{
+                      'used-bg': item.bg === param.value,
+                      'is-img': item.type === 'img'
+                    }"
                     @click="useBg(item, param)"
                   ></div>
                 </div>
@@ -114,7 +121,8 @@
           分钟恢复主页
         </div>
         <div class="home-setting-ctrl">
-          <el-switch v-model="value2" active-color="#13ce66"></el-switch>Ctrl+F12恢复首页
+          <el-switch v-model="value2" active-color="#13ce66"></el-switch
+          >Ctrl+F12恢复首页
         </div>
         <div class="btn-container">
           <button class="default" @click="closeBox">取消</button>
@@ -125,13 +133,6 @@
   </div>
 </template>
 <script>
-import {
-  ThemeManager,
-  StarSkyTheme,
-  CloudsTheme,
-  ShootingstarTheme,
-  StarplaitTheme
-} from "../../config/theme_manager";
 import { setTimeout } from "timers";
 import { THEME_CONFIG } from "../../config/theme.config";
 import { DEFALUT_THEME } from "../../config/config";
@@ -140,7 +141,11 @@ import {
   RESUME_TIME,
   ISABLE_CTRL_RESUME_HOME
 } from "../../config/config";
-import MateorDrop from '../../theme/meteorDrop/main';
+import StaticBg from "../../theme/staticBg/main";
+import MeteorDrop from "../../theme/meteorDrop/main";
+import StarPlait from "../../theme/starPlait/main";
+import StarFly from "../../theme/starFly/main";
+import { ThemeManager } from "../../theme/theme-manage";
 export default {
   name: "map-container",
   props: ["itemMap"],
@@ -164,8 +169,7 @@ export default {
     };
   },
   mounted() {
-    const self = this;
-    self.itemList = [
+    this.itemList = [
       { id: "latestNews", name: "最新资讯", checked: true },
       { id: "alarmOverview", name: "告警视图总览", checked: true },
       { id: "alarmList", name: "告警信息", checked: true },
@@ -178,17 +182,17 @@ export default {
     const cacheStyle = localStorage.getItem("cacheStyle");
     if (cacheStyle) {
       const itemMap = JSON.parse(cacheStyle);
-      self.itemList.forEach(item => {
+      this.itemList.forEach(item => {
         item.checked = itemMap[item.id].isShow;
       });
     }
-    self.setAllCheckedIconStatus();
-    self.themeList = [
-      "static",
-      "starsky",
-      "starflash",
-      "clouds",
-      "starplait"
+    this.setAllCheckedIconStatus();
+    this.themeList = [
+      "staticBg",
+      "starFly",
+      "meteorDrop",
+      // "clouds",
+      "starPlait",
     ].map(item => {
       const theme = THEME_CONFIG[item];
       return {
@@ -197,8 +201,8 @@ export default {
         imgUrl: theme.descImg
       };
     });
-    self.initTheme();
-    self.initSystemSetting();
+    this.initTheme();
+    this.initSystemSetting();
   },
   methods: {
     showMapSetting() {
@@ -256,104 +260,65 @@ export default {
       }
       if (this.type === "theme") {
         const themeId = localStorage.getItem("themeId") || this.defalutTheme;
-        this.changeTheme({ id: themeId });
+        this.changeTheme(themeId);
       }
     },
-    changeTheme(theme) {
-      const self = this;
-      self.activedThemeId = theme.id;
-      const themeObj = self.themeManager.getThemeObj(self.activedThemeId); //取得所需的背景动画对象
-      self.paramList = themeObj.getOptionsDefine() || [];
-      const themeId = localStorage.getItem("themeId");
-      if (self.activedThemeId === themeId) {
-        // 如果有缓存值
-        const config = JSON.parse(localStorage.getItem("themeConfig"));
-        self.paramList.forEach(item => {
-          self.$set(item, "value", config[item.name]);
-        });
-      } else {
-        self.paramList.forEach(item => {
-          self.$set(item, "value", item.default);
-        });
-      }
+    changeTheme(themeId) {
+      this.paramList = THEME_CONFIG[themeId]["config"];
+      this.activedThemeId = themeId;
+      const config =
+        themeId === this.themeManager.getThemeName()
+          ? this.themeObj.getConfig()
+          : this.themeObj.getDefalutConfig();
+      this.paramList.forEach(item => {
+        this.$set(item, "value", config[item.name]);
+      });
     },
     closeBox() {
       this.type = "";
     },
     saveAndStartTheme() {
-      const self = this;
-      const themeId = self.activedThemeId;
-      self.creatThemeDiv(themeId);
+      const themeId = this.activedThemeId;
       localStorage.setItem("themeId", themeId);
-      // TODO 待优化
-      if (themeId === "static") {
-        self.isShowMapSetting = false;
-        return;
-      }
-      self.themeManager.setThemeName(themeId);
+      this.themeManager.setThemeName(themeId);
       if (this.themeObj) {
-        this.themeObj.stopAnimate();
+        this.themeObj.clear();
       }
-      this.themeObj = self.themeManager.getThemeObj(themeId);
-      this.themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
+      this.themeObj = this.themeManager.getThemeObj(themeId);
       const config = {};
-      self.paramList.forEach(item => {
+      this.paramList.forEach(item => {
         config[item["name"]] = item["value"];
       });
-      this.themeObj.setOption(config); //初始化主题参数默认
+      this.themeObj.setOption(config);
+      this.themeObj.draw();
       this.themeObj.startAnimate();
       localStorage.setItem("themeConfig", JSON.stringify(config));
-      self.isShowMapSetting = false;
+      this.isShowMapSetting = false;
     },
     initTheme() {
-
-      const theme = new MateorDrop(document.getElementById("themeBox"));
-      theme.draw();
-      // theme.frame();
-
-
-
-
-
-
-      // const self = this;
-      // self.themeManager = new ThemeManager();
-      // self.themeManager.add("starsky", new StarSkyTheme());
-      // self.themeManager.add("clouds", new CloudsTheme());
-      // self.themeManager.add("starflash", new ShootingstarTheme());
-      // self.themeManager.add("starplait", new StarplaitTheme());
-      // const themeId = localStorage.getItem("themeId") || this.defalutTheme;
-      // if (themeId && themeId !== "static") {
-      //   self.activedThemeId = themeId;
-      //   self.creatThemeDiv(themeId);
-      //   self.themeManager.setThemeName(themeId);
-      //   this.themeObj = self.themeManager.getThemeObj(themeId);
-      //   this.themeObj.setDom(document.getElementById("themeBox")); //传递canvas dom
-      //   let config = {};
-      //   if (localStorage.getItem("themeConfig")) {
-      //     config = JSON.parse(localStorage.getItem("themeConfig"));
-      //   } else {
-      //     THEME_CONFIG[themeId]["config"].forEach(item => {
-      //       config[item.name] = item.default;
-      //     });
-      //   }
-      //   this.themeObj.setOption(config); //初始化主题参数默认
-      //   this.themeObj.startAnimate();
-      // } else {
-      //   self.activedThemeId = "static";
-      // }
+      const dom = document.getElementById("themeBox");
+      this.themeManager = new ThemeManager();
+      this.themeManager.add("staticBg", new StaticBg(dom));
+      // this.themeManager.add("clouds", new CloudsTheme(dom));
+      this.themeManager.add("starFly", new StarFly(dom));
+      this.themeManager.add("meteorDrop", new MeteorDrop(dom));
+      this.themeManager.add("starPlait", new StarPlait(dom));
+      const themeId = localStorage.getItem("themeId") || this.defalutTheme;
+      this.activedThemeId = themeId;
+      this.themeManager.setThemeName(themeId);
+      this.themeObj = this.themeManager.getThemeObj(themeId);
+      let config = {};
+      if (localStorage.getItem("themeConfig")) {
+        config = JSON.parse(localStorage.getItem("themeConfig"));
+      } else {
+        config = this.themeManager.getThemeObj(themeId).getDefalutConfig();
+      }
+      this.themeObj.setOption(config); //初始化主题参数默认
+      this.themeObj.draw();
+      this.themeObj.startAnimate();
     },
     useBg(item, param) {
-      this.$set(param, "value", item.id);
-    },
-    creatThemeDiv(type) {
-      if (type == "clouds") {
-        document.getElementById("themeContainer").innerHTML =
-          '<div id="themeBox" style="width: 100%;height: 100%;"><div id="dynamic-area1" class="dynamic-area1"></div></div>';
-      } else {
-        document.getElementById("themeContainer").innerHTML =
-          '<canvas id="themeBox" style="width: 100%;height: 100%;">Internet Explorer 8 Not Supported</canvas>';
-      }
+      this.$set(param, "value", item.bg);
     }
   }
 };
@@ -438,12 +403,14 @@ export default {
     border-radius: 1rem;
     background-color: #1e1f2a;
     left: 150px;
+    min-width: 500px;
     transform: translate(-50%);
     .theme-list {
       display: flex;
       .theme-item {
         margin: 6px;
         position: relative;
+        cursor: pointer;
         .actived-theme {
           position: absolute;
           top: 0;
@@ -509,9 +476,15 @@ export default {
               height: 42px;
               border-radius: 50%;
               margin-right: 12px;
+              cursor: pointer;
             }
             .used-bg {
               border: solid 0.1rem #01a5db;
+            }
+            .is-img {
+              border-radius: 0;
+              width: 60px;
+              background-size: cover !important;
             }
           }
         }
@@ -552,6 +525,9 @@ export default {
     }
     .el-switch {
       margin-right: 5px;
+      /deep/ .el-switch__core {
+        width: 40px !important;
+      }
     }
     .btn-container {
       margin-top: 6px;

@@ -3,7 +3,7 @@
     class="panel-container"
     :class="{ 'panel-container-fullscreen': isFullScreen }"
   >
-    <div class="panel-title">综治力量</div>
+    <div class="panel-title panel-title-basic">综治力量</div>
     <div class="panel-content">
       <div id="pieChart"></div>
       <div class="circle-box">
@@ -368,17 +368,17 @@ export default {
   position: relative;
   #pieChart {
     z-index: 1;
-    width: 250px;
+    width: 300px;
     height: 250px;
     margin-left: 50%;
-    margin-top: 10px;
+    margin-top: 20px;
     transform: translateX(-50%);
   }
   .circle-box {
     position: absolute;
     width: 250px;
     height: 250px;
-    top: 10px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     .circle {
@@ -429,9 +429,9 @@ export default {
 .panel-container-fullscreen {
   position: relative;
   #pieChart {
-    width: 750px;
+    width: 900px;
     height: 750px;
-    margin-top: 30px;
+    margin-top: 60px;
     margin-left: 50%;
     transform: translateX(-50%);
   }
@@ -439,7 +439,7 @@ export default {
     width: 750px;
     height: 750px;
     left: 50%;
-    top: 30px;
+    top: 60px;
     transform: translateX(-50%);
     .circle {
       left: 375px;

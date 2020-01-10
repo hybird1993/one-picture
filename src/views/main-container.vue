@@ -105,7 +105,7 @@
       ></PopupWindow>
     </div>
 
-    <OnePicture
+    <!-- <OnePicture
       v-if="isLogin"
       id="onePicture"
       ref="onePicture"
@@ -113,7 +113,7 @@
       :params="params"
       :event-time="eventTime"
       @mapEvent="mapEvent"
-    ></OnePicture>
+    ></OnePicture> -->
 
     <FaceSearchResult
       v-show="isShowFaceSearchResult"

@@ -35,11 +35,7 @@ function ThemeManager() {
       if (themetypes[i].type == themetype)
         index = i;
     }
-    return index > -1 ? themetypes[index].obj : {
-      getOptionsDefine: () => {
-        return []
-      }
-    };
+    return index > -1 ? themetypes[index].obj : {}
   }
 }
 

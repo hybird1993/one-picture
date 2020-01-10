@@ -69,6 +69,15 @@ const Util = {
   getImgUrl(url) {
     return `${process.env.VUE_APP_API}/${url}`;
   },
+
+  
+  /**
+   * 检查是否为对象
+   * return {boolean}   是否为对象
+   */
+  isObject(obj) {
+    return Object.prototype.toString.call(obj).toLowerCase() === '[object object]'
+  }
 };
 
 export { Util };

@@ -4,9 +4,9 @@
  * starsky    星空飞行穿梭
  * clouds     云朵
  * starplait  编织星空
- * starflash  流行划过
+ * meteorDrop  流行划过
  */
-export const DEFALUT_THEME = 'static';  
+export const DEFALUT_THEME = 'staticBg';  
 
 /**
  * 综治力量、特殊人群，告警信息轮询间隔
