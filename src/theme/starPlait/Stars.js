@@ -6,6 +6,7 @@ export default class Stars {
     this.width = width;
     this.height = height;
     this.maxR = 3;
+    this.speed = speed;
     this.stars = this.getStars(amount);
     this.nodeLines = new NodeLines(ctx, this.stars, lineWidth, this.width / 8);
   }
@@ -56,33 +57,30 @@ export default class Stars {
 
   move() {
     this.stars = this.stars.map(star => {
-      // star.alpha += star.ra;
-      // // 透明度判断，从0到1
-      // if (star.alpha <= 0) {
-      //   star.alpha = 0;
-      //   star.ra = -star.ra;
-      // } else if (star.alpha > 1) {
-      //   star.alpha = 1;
-      //   star.ra = -star.ra;
-      // }
       star.x += star.vx;
       // x轴坐标判断
-      if (star.x >= this.width) {
-        star.x = this.width;
-      } else if (star.x <= 0) {
-        star.x = 0;
+      if (star.x >= this.width || star.x <= 0) {
+        star.x = this.clamp(0, this.width, star.x);
+        star.vx *= -1;
       }
       star.y += star.vy;
       // y轴坐标判断
-      if (star.y >= this.height) {
-        star.y = this.height;
-      } else if (star.y < 0) {
-        star.y = 0;
+      if (star.y >= this.height || star.y <= 0) {
+        star.y = this.clamp(0, this.height, star.y);
+        star.vy *= -1;
       }
-      star.vy = (Math.random() * 0.2 - 0.1) * this.speed;
-      star.vx = (Math.random() * 0.2 - 0.1) * this.speed;
       return star;
     });
     this.nodeLines.update();
+  }
+
+  clamp(min, max, value) {
+    if (value > max) {
+      return max;
+    } else if (value < min) {
+      return min;
+    } else {
+      return value;
+    }
   }
 }

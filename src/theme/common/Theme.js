@@ -1,6 +1,7 @@
 export default class Theme {
   timer;
   req;
+  config;
   constructor(dom, defalutConfig, config) {
     this.dom = dom;
     this.ctx = dom.getContext("2d");

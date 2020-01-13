@@ -142,6 +142,7 @@ import {
   ISABLE_CTRL_RESUME_HOME
 } from "../../config/config";
 import StaticBg from "../../theme/staticBg/main";
+import Clouds from "../../theme/clouds/main";
 import MeteorDrop from "../../theme/meteorDrop/main";
 import StarPlait from "../../theme/starPlait/main";
 import StarFly from "../../theme/starFly/main";
@@ -191,7 +192,7 @@ export default {
       "staticBg",
       "starFly",
       "meteorDrop",
-      // "clouds",
+      "clouds",
       "starPlait",
     ].map(item => {
       const theme = THEME_CONFIG[item];
@@ -299,7 +300,7 @@ export default {
       const dom = document.getElementById("themeBox");
       this.themeManager = new ThemeManager();
       this.themeManager.add("staticBg", new StaticBg(dom));
-      // this.themeManager.add("clouds", new CloudsTheme(dom));
+      this.themeManager.add("clouds", new Clouds(dom));
       this.themeManager.add("starFly", new StarFly(dom));
       this.themeManager.add("meteorDrop", new MeteorDrop(dom));
       this.themeManager.add("starPlait", new StarPlait(dom));

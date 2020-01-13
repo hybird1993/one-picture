@@ -20,8 +20,8 @@ export default class MateorDrop extends Theme {
     const _config = this.deepClone(this.config);
     this.setConfig(config);
     if (
-      (config.starNum && config.starNum !== _config.starNum) ||
-      (config.skyDepth && config.skyDepth !== _config.skyDepth)  
+      this.config.starNum !== _config.starNum ||
+      this.config.skyDepth !== _config.skyDepth  
     ) {
       this.stars = new Stars(this.ctx, this.width, this.height, this.config.starNum, this.config.skyDepth);
       this.clear();

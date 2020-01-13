@@ -74,43 +74,44 @@ export const THEME_CONFIG = {
     ]
   },
   // 云朵
-  // clouds: {
-  //   name: 'clouds',
-  //   desc: '云朵',
-  //   descImg: './img/clouds.png',
-  //   config: [{
-  //       'name': 'cloud_speed',
-  //       'desc': '漂移速度',
-  //       'dataType': 'number',
-  //       'min': 1,
-  //       'max': 10,
-  //       'default': 5
-  //     },
-  //     {
-  //       'name': 'animatebg',
-  //       'desc': '背景',
-  //       'dataType': 'color',
-  //       'bgcolor': [{
-  //           id: 'animatebg1',
-  //           bg: 'linear-gradient(#051b44,#051b44),linear-gradient(#051b44,#051b44)'
-  //         },
-  //         {
-  //           id: 'animatebg2',
-  //           bg: 'linear-gradient(45deg, #051b44 0%,#4f3258 100%),linear-gradient(#00010b,#00010b)'
-  //         },
-  //         {
-  //           id: 'animatebg3',
-  //           bg: 'linear-gradient(90deg,#311956 0%,#1d4350 100%),linear-gradient(#00010b, #00010b)'
-  //         },
-  //         {
-  //           id: 'animatebg4',
-  //           bg: 'linear-gradient(90deg, #061161 0%, #6f0000 100%),linear-gradient(#00010b, #00010b)'
-  //         },
-  //       ],
-  //       'default': 'animatebg1'
-  //     }
-  //   ]
-  // },
+  clouds: {
+    name: 'clouds',
+    desc: '云朵',
+    descImg: './img/clouds.png',
+    config: [{
+        'name': 'cloudSpeed',
+        'desc': '漂移速度',
+        'dataType': 'number',
+        'min': 1,
+        'max': 10,
+        'default': 5
+      },
+      {
+        'name': 'bg',
+        'desc': '背景',
+        'dataType': 'bg',
+        'options': [
+          {
+            type: "color",
+            bg: "#051b44"
+          },
+          {
+            type: "color",
+            bg: 'linear-gradient(45deg, #051b44 0%,#4f3258 100%),linear-gradient(#00010b,#00010b)'
+          },
+          {
+            type: "color",
+            bg: 'linear-gradient(90deg,#311956 0%,#1d4350 100%),linear-gradient(#00010b, #00010b)'
+          },
+          {
+            type: "color",
+            bg: 'linear-gradient(90deg, #061161 0%, #6f0000 100%),linear-gradient(#00010b, #00010b)'
+          },
+        ],
+        'default': 'animatebg1'
+      }
+    ]
+  },
   // 流行划过
   meteorDrop: {
     name: "meteorDrop",
@@ -160,25 +161,25 @@ export const THEME_CONFIG = {
     desc: "编织星空",
     descImg: "./img/starplait.png",
     config: [{
-        name: "starNnum",
+        name: "starNum",
         desc: "星星个数",
         dataType: "number",
-        min: 20,
+        min: 50,
         max: 200
       },
       {
         name: "plaitSpeed",
         desc: "漂移速度",
         dataType: "number",
-        min: 1,
-        max: 10
+        min: 5,
+        max: 50
       },
       {
         name: "lineWidth",
         desc: "线条粗细",
         dataType: "number",
         min: 1,
-        max: 10
+        max: 4
       },
       //  {'name':'plait_alpha', 'desc':'线条透明度','dataType':'alpha','min':1,'max':10,'default':5},
       {

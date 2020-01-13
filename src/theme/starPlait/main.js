@@ -17,10 +17,14 @@ export default class StarPlait extends Theme {
    * @param {object} config 
    */
   setOption(config) {
-    if (config.starNum && config.starNum !== this.config.starNum) {
-      this.stars = new Stars(this.ctx, this.width, this.height, config.starNum);
-    }
+    const _config = this.deepClone(this.config);
     this.setConfig(config);
+    if (this.config.starNum !== _config.starNum ||
+      this.config.plaitSpeed !== _config.plaitSpeed  || 
+      this.config.lineWidth !== _config.lineWidth 
+      ) {
+      this.stars = new Stars(this.ctx, this.width, this.height, this.config.starNum, this.config.plaitSpeed, this.config.lineWidth);
+    }
   }
 
   /**
