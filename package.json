@@ -21,7 +21,7 @@
     "qs": "^6.8.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vue": "^2.6.10",
-    "x2js": "^3.3.1"
+    "x2js": "^3.4.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.10.0",
