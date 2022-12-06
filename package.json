@@ -18,7 +18,7 @@
     "echarts": "^4.2.1",
     "element-ui": "^2.11.1",
     "node-sass": "^4.12.0",
-    "qs": "^6.8.0",
+    "qs": "^6.8.3",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vue": "^2.6.10",
     "x2js": "^3.3.1"
